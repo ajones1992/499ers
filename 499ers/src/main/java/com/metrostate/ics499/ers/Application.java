@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Application {
 
 	public static void main(String[] args) {
-		// Katherine made a successful commit
+		// Katherine commit attempt
 		SpringApplication.run(Application.class, args);
 	}
 
