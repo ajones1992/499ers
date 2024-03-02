@@ -1,11 +1,11 @@
 package com.metrostate.ics499.ers;
 
-public class Person {
+
      enum designation{
         Adoptee,
         Employee,
         Foster
-    }
+    }public class Person {
     private int id;
     private String name;
     private String phone;
