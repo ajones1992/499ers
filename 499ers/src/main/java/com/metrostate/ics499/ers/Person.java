@@ -1,7 +1,7 @@
 package com.metrostate.ics499.ers;
 
 public class Person {
-    enum designation{
+     enum designation{
         Adoptee,
         Employee,
         Foster
@@ -12,7 +12,50 @@ public class Person {
     private String address;
     private designation type;
 
-    public Person(){
+    public Person(int id, designation type){
 
+        this.id = id;
+        this.type = type;
+
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public designation getType() {
+        return type;
+    }
+
+    public void setType(designation type) {
+        this.type = type;
     }
 }
