@@ -12,6 +12,7 @@ public class Person {
     private String address;
     private designation type;
 
+
     public Person(){
 
     }
