@@ -3,12 +3,13 @@ package com.metrostate.ics499.ers;
 import java.util.Calendar;
 import java.util.List;
 
+enum exitCode{
+    Dead,
+    Runaway,
+    Adopt
+}
+
 public class Animal {
-    enum exitCode{
-        Dead,
-        Runaway,
-        Adopt
-    }
     private int id;
     private String name;
     private speciesAvailable species;
