@@ -5,7 +5,8 @@ package com.metrostate.ics499.ers;
         Adoptee,
         Employee,
         Foster
-    }public class Person {
+    }
+    public class Person {
     private int id;
     private String name;
     private String phone;

@@ -23,7 +23,6 @@ public class Animal {
     private String notes;
     private List<Record> records;
 
-
     //constructor with parameters
     public Animal(int id, String name, SpeciesAvailable species, String breed, double weight, Calendar dob, Calendar intakeDate, String notes) {
         this.id = id;
@@ -148,6 +147,15 @@ public class Animal {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+
+    public List<Record> getRecords() {
+        return records;
+    }
+
+    public void setRecords(List<Record> records) {
+        this.records = records;
     }
 
 
