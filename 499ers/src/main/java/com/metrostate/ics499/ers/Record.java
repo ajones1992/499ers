@@ -2,23 +2,17 @@ package com.metrostate.ics499.ers;
 
 import java.util.Calendar;
 
-enum RecordType{
-    Medical,
-    Behavioral,
-    Other
-}
-
 public class Record {
-    
+    private static int idCounter = 0;
     private int id;
     private int employeeID;
     private Calendar updateDate;
-    private RecordType type;
+    private Types.RecordType type;
     private String details;
 
     // Parameterized constructor for initializing record fields
-    public Record(int id, int employeeID, Calendar updateDate, RecordType type, String details) {
-        this.id = id;
+    public Record(int employeeID, Calendar updateDate, Types.RecordType type, String details) {
+        this.id = idCounter++;
         this.employeeID = employeeID;
         this.updateDate = updateDate;
         this.type = type;
@@ -93,10 +87,6 @@ public class Record {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public int getEmployeeID() {
         return employeeID;
     }
@@ -113,11 +103,11 @@ public class Record {
         this.updateDate = updateDate;
     }
 
-    public RecordType getType() {
+    public Types.RecordType getType() {
         return type;
     }
 
-    public void setType(RecordType type) {
+    public void setType(Types.RecordType type) {
         this.type = type;
     }
 

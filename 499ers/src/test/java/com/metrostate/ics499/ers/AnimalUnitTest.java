@@ -13,9 +13,9 @@ class AnimalUnitTest {
         Calendar cdob = Calendar.getInstance();
         cdob.set(1963, Calendar.FEBRUARY, 14);
         Calendar intakeDate = Calendar.getInstance();
-        Animal clifford = new Animal(1, "Clifford the Big Red Dog",
-                SpeciesAvailable.Dog, "Red Lab", 456.63, cdob, intakeDate, "Testing a unit :)");
-        Record cliffordTestRecord = new Record(1, 9, intakeDate, RecordType.Medical,
+        Animal clifford = new Animal("Clifford the Big Red Dog",
+                Types.SpeciesAvailable.Dog, "Red Lab", 456.63, cdob, intakeDate, "Testing a unit :)");
+        Record cliffordTestRecord = new Record(9, intakeDate, Types.RecordType.Medical,
                 "Testing a new record :)");
         clifford.addRecord(cliffordTestRecord);
 

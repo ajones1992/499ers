@@ -3,28 +3,19 @@ package com.metrostate.ics499.ers;
 import java.util.ArrayList;
 import java.util.List;
 
-enum LocType {
-    Shelter,
-    Foster
-}
-enum SpeciesAvailable {
-    Cat,
-    Dog,
-    Rabbit,
-    Bird
-}
+
 
 public class Location {
     private static int idCounter = 0;
     private final int id;
-    private final LocType type;
+    private final Types.LocType type;
     private String name;
     private String address;
-    private List<SpeciesAvailable> species;
+    private List<Types.SpeciesAvailable> species;
     private List<Animal> animals;
     private int maxCapacity;
 
-    public Location(LocType type, String name, String address, int maxCapacity, List<SpeciesAvailable> species) {
+    public Location(Types.LocType type, String name, String address, int maxCapacity, List<Types.SpeciesAvailable> species) {
         this.id = idCounter++;
         this.type = type;
         this.name = name;
@@ -32,6 +23,13 @@ public class Location {
         this.maxCapacity = maxCapacity;
         this.species = species;
         animals = new ArrayList<>(); // Do we just want to add animals separately? What if we have a list of animals known to that shelter?
+    }
+
+    public int getId(){
+        return id;
+    }
+    public Types.LocType getType(){
+        return type;
     }
 
     public String getName(){
@@ -58,19 +56,29 @@ public class Location {
         this.maxCapacity = maxCapacity;
     }
 
-    public void setSpecies(List<SpeciesAvailable> species) {
+    public List<Types.SpeciesAvailable> getSpecies(){
+        return species;
+    }
+
+    public void setSpecies(List<Types.SpeciesAvailable> species) {
         this.species = species;
     }
 
-    public void addSpecies(SpeciesAvailable addition){
+    public void addSpecies(Types.SpeciesAvailable addition){
         species.add(addition);
     }
 
-    public void removeSpecies(SpeciesAvailable takeaway){
+    public void removeSpecies(Types.SpeciesAvailable takeaway){
         species.remove(takeaway);
     }
-    public List<SpeciesAvailable> getSpecies(){
-        return species;
+
+    public List<Animal> getAnimals(){
+        return animals;
+    }
+
+    public void setAnimals(List<Animal> animals){
+        this.animals.clear();
+        this.animals.addAll(animals);
     }
 
     public void addAnimal(Animal addition){
@@ -79,15 +87,6 @@ public class Location {
 
     public void removeAnimal(Animal takeaway){
         animals.remove(takeaway);
-    }
-
-    public void setAnimals(List<Animal> animals){
-        this.animals.clear();
-        this.animals.addAll(animals);
-    }
-
-    public List<Animal> getAnimals(){
-        return animals;
     }
 
     public boolean atCapacity(){

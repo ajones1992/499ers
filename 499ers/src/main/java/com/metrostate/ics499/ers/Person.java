@@ -1,31 +1,21 @@
 package com.metrostate.ics499.ers;
 
-
-     enum designation{
-        Adoptee,
-        Employee,
-        Foster
-    }
-    public class Person {
+public class Person {
+    private static int idCounter = 0;
     private int id;
     private String name;
     private String phone;
     private String address;
-    private designation type;
+    private Types.designation type;
 
-    public Person(int id, designation type){
-
-        this.id = id;
+    public Person(Types.designation type){
+        this.id = idCounter++;
         this.type = type;
 
     }
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -52,11 +42,11 @@ package com.metrostate.ics499.ers;
         this.address = address;
     }
 
-    public designation getType() {
+    public Types.designation getType() {
         return type;
     }
 
-    public void setType(designation type) {
+    public void setType(Types.designation type) {
         this.type = type;
     }
 }

@@ -4,28 +4,23 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-enum ExitCode{
-    Dead,
-    Runaway,
-    Adopt
-}
-
 public class Animal {
+    private static int idCounter = 0;
     private int id;
     private String name;
-    private SpeciesAvailable species;
+    private Types.SpeciesAvailable species;
     private String breed;
     private double weight;
     private Calendar DOB;
     private Calendar intakeDate;
     private Calendar exitDate;
-    private ExitCode code;
+    private Types.ExitCode code;
     private String notes;
     private List<Record> records;
 
     //constructor with parameters
-    public Animal(int id, String name, SpeciesAvailable species, String breed, double weight, Calendar dob, Calendar intakeDate, String notes) {
-        this.id = id;
+    public Animal(String name, Types.SpeciesAvailable species, String breed, double weight, Calendar dob, Calendar intakeDate, String notes) {
+        this.id = idCounter++;
         this.name = name;
         this.species = species;
         this.breed = breed;
@@ -78,11 +73,11 @@ public class Animal {
     }
 
     // Getter and setter for species
-    public SpeciesAvailable getSpecies() {
+    public Types.SpeciesAvailable getSpecies() {
         return species;
     }
 
-    public void setSpecies(SpeciesAvailable species) {
+    public void setSpecies(Types.SpeciesAvailable species) {
         this.species = species;
     }
 
@@ -132,11 +127,11 @@ public class Animal {
     }
 
     // Getter and setter for exitCode
-    public ExitCode getCode() {
+    public Types.ExitCode getCode() {
         return code;
     }
 
-    public void setCode(ExitCode code) {
+    public void setCode(Types.ExitCode code) {
         this.code = code;
     }
 
