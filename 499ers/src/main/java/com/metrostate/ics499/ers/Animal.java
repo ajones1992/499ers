@@ -18,7 +18,6 @@ public class Animal {
     private String notes;
     private List<Record> records;
 
-    //constructor with parameters
     public Animal(String name, Types.SpeciesAvailable species, String breed, double weight, Calendar dob, Calendar intakeDate, String notes) {
         this.id = idCounter++;
         this.name = name;
@@ -31,7 +30,6 @@ public class Animal {
         this.records = new ArrayList<>();
     }
 
-    // Method to add a record to the animal's records list
     public void createRecord(Record record) {
         if (record != null) {
             this.records.add(record);
@@ -39,22 +37,6 @@ public class Animal {
         }
     }
 
-    // Method to update an existing record - implementation depends on the requirement
-    public void updateRecord(Record updatedRecord) {
-//        if (updatedRecord != null) {
-//            for (int i = 0; i < records.size(); i++) {
-//                Record existingRecord = records.get(i);
-//                // Assuming Record has a unique ID or similar property to identify the correct one
-//                if (existingRecord.getId() == updatedRecord.getId()) {
-//                    records.set(i, updatedRecord);
-//                    // Additional logic can be added here if needed, such as logging or notifications
-//                    break;
-//                }
-//            }
-//        }
-    }
-
-    // Getter and setter for id
     public int getId() {
         return id;
     }
@@ -63,7 +45,6 @@ public class Animal {
         this.id = id;
     }
 
-    // Getter and setter for name
     public String getName() {
         return name;
     }
@@ -72,7 +53,6 @@ public class Animal {
         this.name = name;
     }
 
-    // Getter and setter for species
     public Types.SpeciesAvailable getSpecies() {
         return species;
     }
@@ -81,7 +61,6 @@ public class Animal {
         this.species = species;
     }
 
-    // Getter and setter for breed
     public String getBreed() {
         return breed;
     }
@@ -90,7 +69,6 @@ public class Animal {
         this.breed = breed;
     }
 
-    // Getter and setter for weight
     public double getWeight() {
         return weight;
     }
@@ -99,7 +77,6 @@ public class Animal {
         this.weight = weight;
     }
 
-    // Getter and setter for DOB
     public Calendar getDOB() {
         return DOB;
     }
@@ -108,7 +85,6 @@ public class Animal {
         this.DOB = DOB;
     }
 
-    // Getter and setter for intakeDate
     public Calendar getIntakeDate() {
         return intakeDate;
     }
@@ -117,7 +93,6 @@ public class Animal {
         this.intakeDate = intakeDate;
     }
 
-    // Getter and setter for exitDate
     public Calendar getExitDate() {
         return exitDate;
     }
@@ -126,7 +101,6 @@ public class Animal {
         this.exitDate = exitDate;
     }
 
-    // Getter and setter for exitCode
     public Types.ExitCode getCode() {
         return code;
     }
@@ -135,7 +109,6 @@ public class Animal {
         this.code = code;
     }
 
-    // Getter and setter for notes
     public String getNotes() {
         return notes;
     }
@@ -143,7 +116,6 @@ public class Animal {
     public void setNotes(String notes) {
         this.notes = notes;
     }
-
 
     public List<Record> getRecords() {
         return records;
@@ -153,8 +125,6 @@ public class Animal {
         this.records = records;
     }
 
-
-    // Methods for manipulating records list
     public void addRecord(Record record) {
         if (record != null) {
             this.records.add(record);
@@ -163,6 +133,10 @@ public class Animal {
 
     public void removeRecord(Record record) {
         this.records.remove(record);
+    }
+
+    public void updateRecord(Record updatedRecord) {
+
     }
 
 }

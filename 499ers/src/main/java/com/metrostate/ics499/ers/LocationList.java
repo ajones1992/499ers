@@ -45,7 +45,7 @@ public class LocationList {
         if (locations.contains(origin) && locations.contains(destination)
                 && origin.getAnimals().contains(animal)
                 && destination.getSpecies().contains(animal.getSpecies())) {
-            // animal.setCode(ExitCode.inTransit); // inTransit
+            animal.setCode(Types.ExitCode.inTransit);
             origin.removeAnimal(animal);
             destination.addAnimal(animal);
             return true; //TODO update database for both locations

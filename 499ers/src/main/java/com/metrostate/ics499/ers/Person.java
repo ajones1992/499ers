@@ -11,7 +11,6 @@ public class Person {
     public Person(Types.designation type){
         this.id = idCounter++;
         this.type = type;
-
     }
 
     public int getId() {
