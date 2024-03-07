@@ -25,6 +25,25 @@ public class Location {
         animals = new ArrayList<>(); // Do we just want to add animals separately? What if we have a list of animals known to that shelter?
     }
 
+    public void setAnimals(List<Animal> animals){
+        this.animals.clear();
+        this.animals.addAll(animals);
+    }
+
+    public void addAnimal(Animal addition){
+        animals.add(addition);
+    }
+
+    public void removeAnimal(Animal takeaway){
+        animals.remove(takeaway);
+    }
+
+    public boolean atCapacity(){
+        return maxCapacity <= animals.size();
+    }
+
+    // GETTERS AND SETTERS ############################################################################################
+    // ################################################################################################################
     public int getId(){
         return id;
     }
@@ -76,20 +95,4 @@ public class Location {
         return animals;
     }
 
-    public void setAnimals(List<Animal> animals){
-        this.animals.clear();
-        this.animals.addAll(animals);
-    }
-
-    public void addAnimal(Animal addition){
-        animals.add(addition);
-    }
-
-    public void removeAnimal(Animal takeaway){
-        animals.remove(takeaway);
-    }
-
-    public boolean atCapacity(){
-        return maxCapacity <= animals.size();
-    }
 }

@@ -37,6 +37,23 @@ public class Animal {
         }
     }
 
+    public void addRecord(Record record) {
+        if (record != null) {
+            this.records.add(record);
+        }
+    }
+
+    public void removeRecord(Record record) {
+        this.records.remove(record);
+    }
+
+    public void updateRecord(Record updatedRecord) {
+
+    }
+
+    // GETTERS AND SETTERS ############################################################################################
+    // ################################################################################################################
+
     public int getId() {
         return id;
     }
@@ -123,20 +140,6 @@ public class Animal {
 
     public void setRecords(List<Record> records) {
         this.records = records;
-    }
-
-    public void addRecord(Record record) {
-        if (record != null) {
-            this.records.add(record);
-        }
-    }
-
-    public void removeRecord(Record record) {
-        this.records.remove(record);
-    }
-
-    public void updateRecord(Record updatedRecord) {
-
     }
 
 }
