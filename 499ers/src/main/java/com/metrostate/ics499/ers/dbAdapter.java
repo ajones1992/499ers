@@ -20,42 +20,32 @@ public class dbAdapter {
     /**
      * privately constructs and initializes the dbAdapter
      *
-     * @param url host and database url (i.e. jdbc:sqlite://localhost/myDBdemo.db)
-     * @param user valid user of the database
-     * @param password password of the valid user to access
      */
-    private dbAdapter(String url, String user, String password) {
-            connect(url, user, password);
+    private dbAdapter() {
+            connect();
     }
 
     /**
      * Gets the instance of the dbAdapter.
      *
-     * @param url host and database url (i.e. jdbc:sqlite://localhost/myDBdemo.db)
-     * @param user valid user of the database
-     * @param password password of the valid user to access
      * @return The instance of the dbAdapter
      */
-    public static dbAdapter getInstance(String url, String user, String password) {
+    public static dbAdapter getInstance() {
         if (database == null) {
-            database = new dbAdapter(url, user, password);
+            database = new dbAdapter();
         }
         return database;
     }
 
     /**
-     * initializes and connects to the database with the specified host and name from a
-     * user with a valid password.
+     * initializes and connects to the database with the specified host url
      *
-     * @param url host and database url (i.e. jdbc:sqlite://localhost:3306/myDBdemo)
-     * @param user valid user of the database
-     * @param password password of the valid user to access
      * @throws IllegalArgumentException when connection fails due to bad arguments
      */
-    private void connect(String url, String user, String password)
+    private void connect()
             throws IllegalArgumentException {
         try {
-            connect = DriverManager.getConnection(url, user, password);
+            connect = DriverManager.getConnection("jdbc:sqlite:shelterRDB.db");
         } catch (SQLException e) {
             throw new IllegalArgumentException();
         }
@@ -94,24 +84,32 @@ public class dbAdapter {
      */
     public void insert (Animal animal) throws SQLException {
         // insert into Database.Tablename (i.e. Fragmenent.Player)
+        // add each attribute of animal
         preparedStatement = connect
                 .prepareStatement("insert into Animal values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        // add for each attribute for Animal once they have getters
-        // preparedStatement.setInt(1, animal.getId());
-        // preparedStatement.setString(2, animal.getName());
-        // preparedStatement.setString(3, animal.getSpecies().toString());
-        // preparedStatement.setString(4, animal.getBreed());
-        // preparedStatement.setDouble(5, animal.getWeight());
-        // preparedStatement.setDate(6, animal.getDOB());
-        // preparedStatement.setDate(7, animal.getIntakeDate());
-        // preparedStatement.setDate(8, animal.getExitDate());
-        // preparedStatement.setString(9, animal.getCode());
-        // preparedStatement.setString(10, animal.getNotes());
-
-        // might need to be handled differently, not decomposed. iterate through list to insert
-        // into different table
-        // preparedStatement.setString(11, animal.getRecords());
+        preparedStatement.setInt(1, animal.getId());
+        preparedStatement.setString(2, animal.getName());
+        preparedStatement.setString(3, animal.getSpecies().toString());
+        preparedStatement.setString(4, animal.getBreed());
+        preparedStatement.setDouble(5, animal.getWeight());
+        preparedStatement.setDate(6, (Date) animal.getDOB().getTime());
+        preparedStatement.setDate(7, (Date) animal.getIntakeDate().getTime());
+        preparedStatement.setDate(8, (Date) animal.getExitDate().getTime());
+        preparedStatement.setString(9, animal.getCode().toString());
         preparedStatement.executeUpdate();
+
+        // add each record of animal to record table
+        preparedStatement =
+                connect.prepareStatement("insert into Record values (?, ?)");
+        for (Record r : animal.getRecords()) {
+            preparedStatement.setInt(1, r.getId());
+            preparedStatement.setInt(2, r.getEmployeeID());
+            preparedStatement.setDate(3, (Date) r.getUpdateDate().getTime());
+            preparedStatement.setString(4, r.getType().toString());
+            preparedStatement.setString(5, r.getDetails());
+            //preparedStatement.setInt(6, animal.getId());
+            preparedStatement.executeUpdate();
+        }
     }
 
     /**
@@ -124,15 +122,14 @@ public class dbAdapter {
      */
     public void insert (Person person) throws SQLException {
         // insert into Database.Tablename (i.e. Fragmenent.Player)
+        // add for each attribute for Person
         preparedStatement = connect
                 .prepareStatement("insert into Person values (?, ?, ?, ?, ?)");
-
-        // add for each attribute for Person once they have getters
-        // preparedStatement.setInt(1, person.getId());
-        // preparedStatement.setString(2, person.getName());
-        // preparedStatement.setString(3, person.getPhone());
-        // preparedStatement.setString(4, person.getAddress());
-        // preparedStatement.setString(5, person.getType().toString());
+        preparedStatement.setInt(1, person.getId());
+        preparedStatement.setString(2, person.getName());
+        preparedStatement.setString(3, person.getPhone());
+        preparedStatement.setString(4, person.getAddress());
+        preparedStatement.setString(5, person.getType().toString());
         preparedStatement.executeUpdate();
     }
 
@@ -145,20 +142,22 @@ public class dbAdapter {
      */
     public void insert (Location location) throws SQLException {
         // insert into Database.Tablename (i.e. Fragmenent.Player)
+        // add for each attribute for Location
         preparedStatement = connect
                 .prepareStatement("insert into Location values (?, ?, ?, ?, ?)");
-
-        // add for each attribute for Location once they have getters
-        // preparedStatement.setString(1, location.getType().toString());
-        // preparedStatement.setInt(2, location.getId());
-        // preparedStatement.setString(3, location.getName());
-        // preparedStatement.setString(4, location.getAddress());
-        // preparedStatement.setInt(5, location.getMaxCapacity());
+        preparedStatement.setString(1, location.getType().toString());
+        preparedStatement.setInt(2, location.getId());
+        preparedStatement.setString(3, location.getName());
+        preparedStatement.setString(4, location.getAddress());
+        preparedStatement.setInt(5, location.getMaxCapacity());
+        preparedStatement.executeUpdate();
 
         // next are lists and will have to be iterated through
-        // preparedStatement.setString(6, location.getSpecies());
-        // preparedStatement.setString(7, location.getAnimals());
-        preparedStatement.executeUpdate();
+        //preparedStatement = connect.prepareStatement("insert into **** values (?, ?)");
+        // for every species in location's species
+        // insert new species into table
+        // for every animal in location's inventory
+        // insert animal into table
     }
 
     /**
@@ -202,7 +201,7 @@ public class dbAdapter {
     /**
      * Updates the specified field for the provided animal in the database.
      *
-     * @param animal the specified animal to be updated
+     * @param animal the animal to be updated
      * @param field the field being updated
      * @param update the update to the field
      * @throws SQLException throws when internal method fails.
