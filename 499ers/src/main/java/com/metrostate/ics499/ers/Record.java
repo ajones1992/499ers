@@ -9,6 +9,8 @@ public class Record {
     private Calendar updateDate;
     private Types.RecordType type;
     private String details;
+    private boolean archived;
+    private boolean isUrgent;
 
     public Record(int employeeID, Calendar updateDate, Types.RecordType type, String details) {
         this.id = idCounter++;
@@ -50,8 +52,24 @@ public class Record {
         return details;
     }
 
-    public void setDetails(String details) {
-        this.details = details;
+    public void setDetails(String newDetails) {
+        this.details = newDetails;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
+    }
+
+    public boolean isArchived() {
+        return this.archived;
+    }
+
+    public boolean isUrgent() {
+        return isUrgent;
+    }
+
+    public void setUrgent(boolean urgent) {
+        isUrgent = urgent;
     }
 
 }

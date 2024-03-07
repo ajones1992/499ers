@@ -11,7 +11,8 @@ public class Types {
         Dead,
         Runaway,
         Adopt,
-        inTransit
+        inTransit,
+        MedicalHold,
     }
 
     public enum LocType {
