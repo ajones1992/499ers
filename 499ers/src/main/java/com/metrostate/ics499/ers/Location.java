@@ -42,8 +42,17 @@ public class Location {
         return maxCapacity <= animals.size();
     }
 
+    public void addSpecies(Types.SpeciesAvailable addition){
+        species.add(addition);
+    }
+
+    public void removeSpecies(Types.SpeciesAvailable takeaway){
+        species.remove(takeaway);
+    }
+
     // GETTERS AND SETTERS ############################################################################################
     // ################################################################################################################
+
     public int getId(){
         return id;
     }
@@ -81,14 +90,6 @@ public class Location {
 
     public void setSpecies(List<Types.SpeciesAvailable> species) {
         this.species = species;
-    }
-
-    public void addSpecies(Types.SpeciesAvailable addition){
-        species.add(addition);
-    }
-
-    public void removeSpecies(Types.SpeciesAvailable takeaway){
-        species.remove(takeaway);
     }
 
     public List<Animal> getAnimals(){

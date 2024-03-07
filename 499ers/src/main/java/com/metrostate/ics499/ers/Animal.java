@@ -30,13 +30,6 @@ public class Animal {
         this.records = new ArrayList<>();
     }
 
-    public void createRecord(Record record) {
-        if (record != null) {
-            this.records.add(record);
-            // Additional logic can be added here if needed, such as logging or notifications
-        }
-    }
-
     public void addRecord(Record record) {
         if (record != null) {
             this.records.add(record);
