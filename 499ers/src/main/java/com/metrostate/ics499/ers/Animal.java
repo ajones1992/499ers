@@ -65,7 +65,7 @@ public class Animal {
         this.records = new ArrayList<>();
     }
 
-    public void createRecord(Record record) {
+    public void addRecord(Record record) {
         if (record != null) {
             this.records.add(record);
             // Additional logic can be added here if needed, such as logging or notifications
@@ -232,9 +232,10 @@ public class Animal {
                 .collect(Collectors.toList());
     }
 
+
     /**
      * Marks the animal as adopted and updates relevant information.
-     */
+
     public void markAsAdopted() {
         this.code = Types.ExitCode.Adopt;
         updateAnimalStatusInDb();
@@ -242,7 +243,7 @@ public class Animal {
 
     /**
      * Marks the animal as dead and updates relevant information.
-     */
+
     public void markAsDeceased() {
         this.code = Types.ExitCode.Dead;
         updateAnimalStatusInDb();
@@ -250,7 +251,7 @@ public class Animal {
 
     /**
      * Marks the animal as a runaway.
-     */
+
     public void markAsRunaway() {
         this.code = Types.ExitCode.Runaway;
         updateAnimalStatusInDb();
@@ -258,7 +259,7 @@ public class Animal {
 
     /**
      * Marks the animal as in transit.
-     */
+
     public void markAsInTransit() {
         this.code = Types.ExitCode.inTransit;
         updateAnimalStatusInDb();
@@ -267,7 +268,7 @@ public class Animal {
     /**
      * Updates the animal's status in the database.
      * This method assumes the existence of a dbAdapter method that can handle the update.
-     */
+
     private void updateAnimalStatusInDb() {
         try {
             // Assuming a method in dbAdapter exists for updating an animal's code.
@@ -305,6 +306,8 @@ public class Animal {
         }
     }
 
+    */
+
     public int getId() {
         return id;
     }
@@ -320,7 +323,7 @@ public class Animal {
     // Setter for 'name' with database update
     public void setName(String name) {
         this.name = name;
-        updateDatabase(); // Synchronize changes with the database
+        //updateDatabase(); // Synchronize changes with the database
     }
 
     public Types.SpeciesAvailable getSpecies() {
@@ -352,7 +355,7 @@ public class Animal {
             throw new IllegalArgumentException("Weight must be positive.");
         }
         this.weight = weight;
-        updateDatabase();
+        //updateDatabase();
     }
 
 
@@ -425,12 +428,6 @@ public class Animal {
 
     public void setRecords(List<Record> records) {
         this.records = records;
-    }
-
-    public void addRecord(Record record) {
-        if (record != null) {
-            this.records.add(record);
-        }
     }
 
     public void removeRecord(Record record) {
