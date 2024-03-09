@@ -135,4 +135,14 @@ public class Animal {
         this.records = records;
     }
 
+    public String toString(){
+        return "Animal{" +
+                "animal_ID='" + id + '\'' +
+                ", animal_Type='" + species + '\'' +
+                ", animal_Name='" + name + '\'' +
+                ", animal_weight=" + weight +
+                ", intake_date=" + intakeDate +
+                '}';
+    }
+
 }

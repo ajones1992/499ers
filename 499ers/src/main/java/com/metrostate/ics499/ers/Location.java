@@ -14,6 +14,7 @@ public class Location {
     private List<Types.SpeciesAvailable> species;
     private List<Animal> animals;
     private int maxCapacity;
+    private boolean receiving;
 
     public Location(Types.LocType type, String name, String address, int maxCapacity, List<Types.SpeciesAvailable> species) {
         this.id = idCounter++;
@@ -21,6 +22,7 @@ public class Location {
         this.name = name;
         this.address = address;
         this.maxCapacity = maxCapacity;
+        receiving = true;
         this.species = species;
         animals = new ArrayList<>(); // Do we just want to add animals separately? What if we have a list of animals known to that shelter?
     }
@@ -84,6 +86,14 @@ public class Location {
         this.maxCapacity = maxCapacity;
     }
 
+    public boolean isReceiving(){
+        return receiving;
+    }
+
+    public void setReceiving(boolean bool){
+        receiving = bool;
+    }
+
     public List<Types.SpeciesAvailable> getSpecies(){
         return species;
     }
@@ -94,6 +104,20 @@ public class Location {
 
     public List<Animal> getAnimals(){
         return animals;
+    }
+
+    public String showAnimals(){
+        String str = "Shelter: " + id + "\n";
+
+        for (Animal ani: animals) {
+            str += ani.toString();
+            str += "\n";
+        }
+        return str;
+    }
+
+    public String toString(){
+        return "" + id;
     }
 
 }

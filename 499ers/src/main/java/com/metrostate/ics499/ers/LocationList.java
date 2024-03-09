@@ -1,6 +1,7 @@
 package com.metrostate.ics499.ers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * List of all available locations (Shelters or Foster homes) in the system. Also
@@ -9,6 +10,34 @@ import java.util.ArrayList;
 public class LocationList {
 
     private ArrayList<Location> locations;
+
+    public boolean containsShelter(int id){
+        for (Location loc: locations) {
+            if(id == loc.getId()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Location getLocation(int id){
+        for (Location loc: locations) {
+            if(id == loc.getId()){
+                return loc;
+            }
+        }
+        return null;
+    }
+
+    public List<Location> getAllLocations(){
+        return locations;
+    }
+
+    public void showLocations(){
+        for (Location loc: locations) {
+            System.out.println(loc.getId() + ": " + loc.getName() + "/n");
+        }
+    }
 
     /**
      * Adds a Shelter or Foster location ot the list of available locations.
