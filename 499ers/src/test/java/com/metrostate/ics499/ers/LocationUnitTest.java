@@ -27,4 +27,13 @@ public class LocationUnitTest {
         assertTrue(testLoc.getType() == Types.LocType.FosterHome);
 
     }
+
+    @Test
+    void testIDCounter(){
+        List<Types.SpeciesAvailable> species = new ArrayList<>();
+        Location testLoc = new Location(Types.LocType.FosterHome,"", "", 0,species);
+
+        assertTrue(testLoc.getType() == Types.LocType.FosterHome);
+
+    }
 }

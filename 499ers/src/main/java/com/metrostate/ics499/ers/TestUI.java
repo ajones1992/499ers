@@ -17,11 +17,13 @@ public class TestUI {
         Scanner scan = new Scanner(System.in);
         do {
             System.out.println("Please choose from the following options:\n" +
+                    "1: Add additional location\n" +
                     "2: Add additional incoming animal\n" +
                     "3: Enable receiving animals\n" +
                     "4: Disable receiving animals\n" +
-                    "5: See animals in a shelter\n" +
-                    "6: See animals in ALL shelters\n");
+                    "5: See animals in a location\n" +
+                    "6: See animals in ALL locations\n" +
+                    "7: Show all locations\n");
             int userOption = scan.nextInt();
             scan.nextLine();
             userMenu(userOption);
@@ -37,6 +39,19 @@ public class TestUI {
         Scanner scan = new Scanner(System.in);
 
         switch (userOption) {
+            case 1:
+                System.out.println("Please enter an location type: ");
+                Types.LocType locType = Types.LocType.valueOf(scan.nextLine());
+                System.out.println("Please enter an location name: ");
+                String locName = scan.nextLine();
+                System.out.println("Please enter an address: ");
+                String locAddress = scan.nextLine();
+                System.out.println("Please enter the location's max capacity: ");
+                int locCap = scan.nextInt();
+                List<Types.SpeciesAvailable> locSpecies = new ArrayList<>();
+
+                locationList.addLocation(new Location(locType,locName,locAddress,locCap,locSpecies));
+                break;
             //validate shelter ID, if shelter exists create Animal object and add to existing Shelter object
             case 2:
                 locationList.showLocations();
@@ -84,6 +99,9 @@ public class TestUI {
             case 6:
                 showAllAnimals();
                 break;
+
+            case 7:
+                locationList.showLocations();
         }
     }
 
@@ -93,7 +111,7 @@ public class TestUI {
      * @return - boolean representing if new Animal objects can be added to shelter
      */
     public static boolean shelterSearch(int selected){
-        if (locationList.containsShelter(selected)) {
+        if (locationList.containsLocation(selected)) {
             if (locationList.getLocation(selected).isReceiving()) {
                 return true;
             } else {

@@ -6,7 +6,7 @@ import java.util.List;
 
 
 public class Location {
-    private static int idCounter = 0;
+    private static int idCounter = 1;
     private final int id;
     private final Types.LocType type;
     private String name;
@@ -117,7 +117,7 @@ public class Location {
     }
 
     public String toString(){
-        return "" + id;
+        return "" + id + ": " + name;
     }
 
 }
