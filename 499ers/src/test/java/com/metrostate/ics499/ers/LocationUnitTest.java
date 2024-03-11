@@ -1,5 +1,7 @@
 package com.metrostate.ics499.ers;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -7,33 +9,110 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class LocationUnitTest {
 
-    @Test
-    void testCreateShelter() {
-        List<Types.SpeciesAvailable> species = new ArrayList<>();
-        Location testLoc = new Location(Types.LocType.Shelter,"", "", 0,species);
+    String tName;
+    String tAddress;
+    int tCap;
+    List<Types.SpeciesAvailable> tSpec;
+    Location fosters;
+    Location humane;
 
-        assertTrue(testLoc.getType() == Types.LocType.Shelter);
+    @BeforeEach
+    void init() {
+        tName = "Foster's Home for Imaginary Friends";
+        tAddress = "2024 Today Ln, 55122, MN";
+        tCap = 1340;
+        tSpec = new ArrayList<>();
+        tSpec.add(Types.SpeciesAvailable.Cat);
+        fosters = new Location(Types.LocType.FosterHome,tName, tAddress, tCap, tSpec);
+
+        tName = "Humane Society of Testville";
+        tAddress = "369 Adopt Ln, 55101, MN";
+        tCap = 1;
+        tSpec = new ArrayList<>();
+        tSpec.add(Types.SpeciesAvailable.Bird);
+        tSpec.add(Types.SpeciesAvailable.Cat);
+        tSpec.add(Types.SpeciesAvailable.Dog);
+        tSpec.add(Types.SpeciesAvailable.Rabbit);
+        humane = new Location(Types.LocType.FosterHome,tName, tAddress, tCap, tSpec);
     }
 
     @Test
-    void testCreateFosterHome(){
-        List<Types.SpeciesAvailable> species = new ArrayList<>();
-        Location testLoc = new Location(Types.LocType.FosterHome,"", "", 0,species);
-
-        assertTrue(testLoc.getType() == Types.LocType.FosterHome);
-
-    }
-
-    @Test
+    @DisplayName("Testing idCounter")
     void testIDCounter(){
-        List<Types.SpeciesAvailable> species = new ArrayList<>();
-        Location testLoc = new Location(Types.LocType.FosterHome,"", "", 0,species);
-
-        assertTrue(testLoc.getType() == Types.LocType.FosterHome);
-
+        // First entry should have id of 1
+        assertEquals(1, fosters.getId());
+        // Second entry should have id of 2
+        assertEquals(2, humane.getId());
     }
+
+    @Test
+    @DisplayName("Testing atCapacity")
+    void testAtCapacity() {
+        // atCapacity should return false if the location is not full
+        assertFalse(humane.atCapacity());
+        // atCapacity should return true if the location is full
+        humane.setMaxCapacity(0);
+        assertTrue(humane.atCapacity());
+    }
+
+    @Test
+    @DisplayName("Testing addSpecies")
+    void testAddSpecies(){
+        // Adding a species not currently in the list should return true
+        assertTrue(fosters.addSpecies(Types.SpeciesAvailable.Rabbit));
+        // Adding a species currently in the list should return false
+        assertFalse(humane.addSpecies(Types.SpeciesAvailable.Rabbit));
+    }
+
+    @Test
+    @DisplayName("Testing removeSpecies")
+    void testRemoveSpecies(){
+        // Removing a species currently in the list should return true
+        assertTrue(humane.removeSpecies(Types.SpeciesAvailable.Cat));
+        // Removing a species not currently in the list should return false
+        assertFalse(fosters.removeSpecies(Types.SpeciesAvailable.Rabbit));
+    }
+
+    @Test
+    @DisplayName("Testing addAnimal")
+    void testAddAnimal() {
+        Calendar dob = Calendar.getInstance();
+        dob.set(1963, Calendar.FEBRUARY, 14);
+        Calendar intakeDate = Calendar.getInstance();
+        Animal clifford = new Animal("Clifford the Big Red Dog", Types.SpeciesAvailable.Dog, "Red Lab",
+                456.63, dob, intakeDate, "Testing a unit :)");
+
+        // Adding a valid animal should return true; confirm addition
+        assertTrue(humane.addAnimal(clifford));
+        assertTrue(humane.getAnimals().contains(clifford));
+        // Adding an invalid animal should return false; confirm no addition
+        assertFalse(fosters.addAnimal(clifford));
+        assertFalse(fosters.getAnimals().contains(clifford));
+        // Adding an animal to a location at capacity should return false
+        assertFalse(humane.addAnimal(clifford));
+    }
+
+    @Test
+    @DisplayName("Testing removeAnimal")
+    void testRemoveAnimal() {
+        Calendar dob = Calendar.getInstance();
+        dob.set(1963, Calendar.FEBRUARY, 14);
+        Calendar intakeDate = Calendar.getInstance();
+        Animal clifford = new Animal("Clifford the Big Red Dog", Types.SpeciesAvailable.Dog, "Red Lab",
+                456.63, dob, intakeDate, "Testing a unit :)");
+
+        // Removing an existing animal should return true; confirm removal
+        humane.addAnimal(clifford);
+        assertTrue(humane.removeAnimal(clifford));
+        assertFalse(humane.getAnimals().contains(clifford));
+        // Removing a non-existing animal should return false
+        assertFalse(fosters.removeAnimal(clifford));
+    }
+
+
 }

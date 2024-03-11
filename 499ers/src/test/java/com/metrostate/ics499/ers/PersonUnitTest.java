@@ -10,7 +10,7 @@ import java.util.Calendar;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest
+
 class PersonUnitTest {
 
     Person test1;
@@ -27,13 +27,13 @@ class PersonUnitTest {
     @DisplayName("Testing idCounter")
     void testCounter() {
 
-        // First entry should have id of 0
-        assertEquals(0, test1.getId());
+        // First entry should have id of 1
+        assertEquals(1, test1.getId());
 
-        // Second entry should have id of 1
-        assertEquals(1, test2.getId());
+        // Second entry should have id of 2
+        assertEquals(2, test2.getId());
 
-        // Third entry should have id of 2
-        assertEquals(2, test3.getId());
+        // Third entry should have id of 3
+        assertEquals(3, test3.getId());
     }
 }

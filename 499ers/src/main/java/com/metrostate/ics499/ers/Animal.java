@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class Animal {
-    private static int idCounter = 0;
+    private static int idCounter = 1;
     private int id;
     private String name;
     private Types.SpeciesAvailable species;
@@ -41,6 +41,7 @@ public class Animal {
     }
 
     public void updateRecord(Record updatedRecord) {
+        // Revisit this method later
 
     }
 

@@ -3,7 +3,7 @@ package com.metrostate.ics499.ers;
 import java.util.Calendar;
 
 public class Record {
-    private static int idCounter = 0;
+    private static int idCounter = 1;
     private int id;
     private int employeeID;
     private Calendar updateDate;

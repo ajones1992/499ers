@@ -27,29 +27,43 @@ public class Location {
         animals = new ArrayList<>(); // Do we just want to add animals separately? What if we have a list of animals known to that shelter?
     }
 
-    public void setAnimals(List<Animal> animals){
-        this.animals.clear();
-        this.animals.addAll(animals);
+    public boolean addAnimal(@org.jetbrains.annotations.NotNull Animal addition){
+        if (species.contains(addition.getSpecies()) && !atCapacity()) {
+            return animals.add(addition);
+        } else {
+            return false;
+        }
+
     }
 
-    public void addAnimal(Animal addition){
-        animals.add(addition);
-    }
-
-    public void removeAnimal(Animal takeaway){
-        animals.remove(takeaway);
+    public boolean removeAnimal(Animal takeaway){
+        return animals.remove(takeaway);
     }
 
     public boolean atCapacity(){
         return maxCapacity <= animals.size();
     }
 
-    public void addSpecies(Types.SpeciesAvailable addition){
-        species.add(addition);
+    public boolean addSpecies(Types.SpeciesAvailable addition){
+        if (!species.contains(addition)) {
+            return species.add(addition);
+        } else {
+            return false;
+        }
     }
 
-    public void removeSpecies(Types.SpeciesAvailable takeaway){
-        species.remove(takeaway);
+    public boolean removeSpecies(Types.SpeciesAvailable takeaway){
+        return species.remove(takeaway);
+    }
+
+    public String showAnimals(){
+        String str = "Shelter: " + id + "\n";
+
+        for (Animal ani: animals) {
+            str += ani.toString();
+            str += "\n";
+        }
+        return str;
     }
 
     // GETTERS AND SETTERS ############################################################################################
@@ -106,14 +120,9 @@ public class Location {
         return animals;
     }
 
-    public String showAnimals(){
-        String str = "Shelter: " + id + "\n";
-
-        for (Animal ani: animals) {
-            str += ani.toString();
-            str += "\n";
-        }
-        return str;
+    public void setAnimals(List<Animal> animals){
+        this.animals.clear();
+        this.animals.addAll(animals);
     }
 
     public String toString(){

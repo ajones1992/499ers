@@ -1,7 +1,7 @@
 package com.metrostate.ics499.ers;
 
 public class Person {
-    private static int idCounter = 0;
+    private static int idCounter = 1;
     private int id;
     private String name;
     private String phone;

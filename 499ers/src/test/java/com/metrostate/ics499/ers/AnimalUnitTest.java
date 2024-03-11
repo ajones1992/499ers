@@ -6,10 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Calendar;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+
 class AnimalUnitTest {
 
     Calendar dob;
@@ -45,14 +44,14 @@ class AnimalUnitTest {
     @Test
     @DisplayName("Testing idCounter")
     void testCounter() {
-        // First entry should have id of 0
-        assertEquals(0, clifford.getId());
-        // Second entry should have id of 1
-        assertEquals(1, garfield.getId());
-        // Third entry should have id of 2
-        assertEquals(2, iago.getId());
-        // Fourth entry should have id of 3
-        assertEquals(3, peterCottontail.getId());
+        // First entry should have id of 1
+        assertEquals(1, clifford.getId());
+        // Second entry should have id of 2
+        assertEquals(2, garfield.getId());
+        // Third entry should have id of 3
+        assertEquals(3, iago.getId());
+        // Fourth entry should have id of 4
+        assertEquals(4, peterCottontail.getId());
     }
 
     @Test
@@ -65,6 +64,19 @@ class AnimalUnitTest {
         clifford.addRecord(cliffordTestRecord);
 
         assertTrue(clifford.getRecords().contains(cliffordTestRecord));
+    }
+
+    @Test
+    @DisplayName("Testing addRecord")
+    void testRemoveRecord() {
+        Person bogey = new Person(Types.designation.ShelterStaff);
+        Calendar recordDate = Calendar.getInstance();
+        Record cliffordTestRecord = new Record(bogey.getId(), recordDate, Types.RecordType.Medical,
+                "Testing a new record :)");
+        clifford.addRecord(cliffordTestRecord);
+        clifford.removeRecord(cliffordTestRecord);
+
+        assertFalse(clifford.getRecords().contains(cliffordTestRecord));
     }
 
 }
