@@ -2,7 +2,7 @@ package com.metrostate.ics499.ers;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.EnumSet;
 
 
 public class Location {

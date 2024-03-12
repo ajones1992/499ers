@@ -40,17 +40,11 @@ public class TestUI {
 
         switch (userOption) {
             case 1:
-                System.out.println("Please enter an location type: ");
-                Types.LocType locType = Types.LocType.valueOf(scan.nextLine());
-                System.out.println("Please enter an location name: ");
-                String locName = scan.nextLine();
-                System.out.println("Please enter an address: ");
-                String locAddress = scan.nextLine();
-                System.out.println("Please enter the location's max capacity: ");
-                int locCap = scan.nextInt();
-                List<Types.SpeciesAvailable> locSpecies = new ArrayList<>();
-
-                locationList.addLocation(new Location(locType,locName,locAddress,locCap,locSpecies));
+                Location loc = createNewLocation();
+                if(loc != null) {
+                    locationList.addLocation(loc);
+                    System.out.println("New location has been added \n");
+                }
                 break;
             //validate shelter ID, if shelter exists create Animal object and add to existing Shelter object
             case 2:
@@ -145,10 +139,10 @@ public class TestUI {
     public static Animal createNewAnimal() {
         Calendar c = Calendar.getInstance();
         Scanner scan = new Scanner(System.in);
-        System.out.println("Please enter the animal species: ");
-        String strType = scan.nextLine();
-        Types.SpeciesAvailable species = Types.SpeciesAvailable.valueOf(strType);
         try {
+            System.out.println("Please enter the animal species: ");
+            String strType = scan.nextLine();
+            Types.SpeciesAvailable species = Types.SpeciesAvailable.valueOf(strType);
             System.out.println("Please enter the animal name: ");
             String name = scan.nextLine();
             System.out.println("Please enter the animal breed: ");
@@ -159,6 +153,33 @@ public class TestUI {
             return new Animal(name, species, breed, weight, c, c, "");
         }catch (Exception e){
             System.out.println("Animal could not be created\n");
+            return null;
+        }
+    }
+
+    /**
+     * Method responsible for collecting user input to create new Animal object
+     * @return (Animal) - user defined animal object
+     */
+    public static Location createNewLocation() {
+        Scanner scan = new Scanner(System.in);
+        try {
+            System.out.println("Please enter an location type: ");
+            Types.LocType locType = Types.LocType.valueOf(scan.nextLine());
+            System.out.println("Please enter an location name: ");
+            String locName = scan.nextLine();
+            System.out.println("Please enter an address: ");
+            String locAddress = scan.nextLine();
+            System.out.println("Please enter the location's max capacity: ");
+            int locCap = scan.nextInt();
+            scan.nextLine();
+            List<Types.SpeciesAvailable> locSpecies = new ArrayList<Types.SpeciesAvailable>();
+            System.out.println("Please enter the main animal type handled at this location: ");
+            String str = scan.nextLine();
+            locSpecies.add(Types.SpeciesAvailable.valueOf(str));
+            return new Location(locType,locName,locAddress,locCap,locSpecies);
+        }catch (Exception e){
+            System.out.println("Location could not be created\n");
             return null;
         }
     }

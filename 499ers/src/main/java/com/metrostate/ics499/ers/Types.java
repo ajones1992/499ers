@@ -26,7 +26,7 @@ public class Types {
         BIRD
     }
 
-    enum RecordType{
+    public enum RecordType{
         MEDICAL,
         BEHAVIORAL,
         OTHER
