@@ -46,11 +46,12 @@ public class TestUI {
                     System.out.println("New location has been added \n");
                 }
                 break;
-            //validate shelter ID, if shelter exists create Animal object and add to existing Shelter object
+            //validate shelter ID, if location exists create animal and add to existing location
             case 2:
                 locationList.showLocations();
                 System.out.println("Please select a shelter: ");
                 selected = scan.nextInt();
+                scan.nextLine();
                 if(shelterSearch(selected)) {
                     Animal newAnimal = createNewAnimal();
                     if(newAnimal != null) {
@@ -59,37 +60,40 @@ public class TestUI {
                 }
                 break;
 
-            //Check for existing shelter, if exists update shelter to accept incoming animals
+            //Check for existing location, if exists update location to accept incoming animals
             case 3:
                 locationList.showLocations();
                 System.out.println("Please select a shelter: ");
                 selected = scan.nextInt();
+                scan.nextLine();
                 if(shelterSearch(selected)) {
                     changeReceiving(selected, true);
                 }
                 break;
 
-            //Check for existing shelter, if exists update shelter to deny incoming animals
+            //Check for existing location, if exists update location to deny incoming animals
             case 4:
                 locationList.showLocations();
                 System.out.println("Please select a shelter: ");
                 selected = scan.nextInt();
+                scan.nextLine();
                 if(shelterSearch(selected)) {
                     changeReceiving(selected, false);
                 }
                 break;
 
-            //validate that shelter exists, print all objects contained in shelter object
+            //validate that location exists, print all animals contained in the location
             case 5:
                 locationList.showLocations();
                 System.out.println("Please select a shelter: ");
                 selected = scan.nextInt();
+                scan.nextLine();
                 if(shelterSearch(selected)){
                     System.out.println(locationList.getLocation(selected).showAnimals());
                 }
                 break;
 
-            //call method to display all Animal objects to console by shelter
+            //call method to display all animals to console by location
             case 6:
                 showAllAnimals();
                 break;
@@ -191,10 +195,7 @@ public class TestUI {
      */
     public static void addUserCreatedAnimal(Animal newAnimal, int selected){
         try{
-            Location tempLocation = locationList.getLocation(selected);
-            List<Animal> tempList = tempLocation.getAnimals();
-            tempList.add(newAnimal);
-            tempLocation.setAnimals(tempList);
+            locationList.getLocation(selected).addAnimal(newAnimal);
             System.out.println("New Animal has been added.\n");
         } catch (Exception e) {
             System.out.println("Animal could not be added.\n");
