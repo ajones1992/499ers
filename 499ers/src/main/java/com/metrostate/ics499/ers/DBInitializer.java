@@ -40,7 +40,7 @@ public class DBInitializer implements CommandLineRunner {
         //Read records:
         List<Animal> animals = jdbcTemplate.query("SELECT * FROM animal",
                 (resultSet, rowNum) -> new Animal(resultSet.getString("name"),
-                        Types.SpeciesAvailable.Dog, "Great Dane", 80.08,
+                        Types.SpeciesAvailable.DOG, "Great Dane", 80.08,
                         Calendar.getInstance(), Calendar.getInstance(),
                         "no Notes"));
 

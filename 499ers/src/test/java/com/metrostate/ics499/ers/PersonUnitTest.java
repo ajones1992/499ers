@@ -1,11 +1,8 @@
 package com.metrostate.ics499.ers;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import java.util.Calendar;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -18,9 +15,9 @@ class PersonUnitTest {
     Person test3;
     @BeforeEach
     void init() {
-        test1 = new Person(Types.designation.Adoptee);
-        test2 = new Person(Types.designation.FosterStaff);
-        test3 = new Person(Types.designation.ShelterStaff);
+        test1 = new Person(Types.Designation.ADOPTEE);
+        test2 = new Person(Types.Designation.FOSTER_STAFF);
+        test3 = new Person(Types.Designation.SHELTER_STAFF);
     }
 
     @Test

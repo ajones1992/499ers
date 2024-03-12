@@ -3,7 +3,7 @@ package com.metrostate.ics499.ers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+
 import java.util.Calendar;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,22 +23,22 @@ class AnimalUnitTest {
         dob = Calendar.getInstance();
         dob.set(1963, Calendar.FEBRUARY, 14);
         intakeDate = Calendar.getInstance();
-        clifford = new Animal("Clifford the Big Red Dog", Types.SpeciesAvailable.Dog, "Red Lab",
+        clifford = new Animal("Clifford the Big Red Dog", Types.SpeciesAvailable.DOG, "Red Lab",
                 456.63, dob, intakeDate, "Testing a unit :)");
 
         dob.set(1978, Calendar.JUNE, 19);
         intakeDate = Calendar.getInstance();
-        garfield = new Animal("Garfield", Types.SpeciesAvailable.Cat, "Orange",
+        garfield = new Animal("Garfield", Types.SpeciesAvailable.CAT, "Orange",
                 12.1, dob, intakeDate, "Testing a unit :)");
 
         dob.set(1992, Calendar.NOVEMBER, 11);
         intakeDate = Calendar.getInstance();
-        iago = new Animal("Iago", Types.SpeciesAvailable.Bird, "Parrot",
+        iago = new Animal("Iago", Types.SpeciesAvailable.BIRD, "Parrot",
                 1.03, dob, intakeDate, "Testing a unit :)");
 
         dob.set(1971, Calendar.APRIL, 4);
         intakeDate = Calendar.getInstance();
-        peterCottontail = new Animal("Peter Cottontail", Types.SpeciesAvailable.Rabbit, "Hare",
+        peterCottontail = new Animal("Peter Cottontail", Types.SpeciesAvailable.RABBIT, "Hare",
                 3.11, dob, intakeDate, "Testing a unit :)");
     }
     @Test
@@ -57,9 +57,9 @@ class AnimalUnitTest {
     @Test
     @DisplayName("Testing addRecord")
     void testAddRecord() {
-        Person bogey = new Person(Types.designation.ShelterStaff);
+        Person bogey = new Person(Types.Designation.SHELTER_STAFF);
         Calendar recordDate = Calendar.getInstance();
-        Record cliffordTestRecord = new Record(bogey.getId(), recordDate, Types.RecordType.Medical,
+        Record cliffordTestRecord = new Record(bogey.getId(), recordDate, Types.RecordType.MEDICAL,
                 "Testing a new record :)");
         clifford.addRecord(cliffordTestRecord);
 
@@ -69,9 +69,9 @@ class AnimalUnitTest {
     @Test
     @DisplayName("Testing addRecord")
     void testRemoveRecord() {
-        Person bogey = new Person(Types.designation.ShelterStaff);
+        Person bogey = new Person(Types.Designation.SHELTER_STAFF);
         Calendar recordDate = Calendar.getInstance();
-        Record cliffordTestRecord = new Record(bogey.getId(), recordDate, Types.RecordType.Medical,
+        Record cliffordTestRecord = new Record(bogey.getId(), recordDate, Types.RecordType.MEDICAL,
                 "Testing a new record :)");
         clifford.addRecord(cliffordTestRecord);
         clifford.removeRecord(cliffordTestRecord);

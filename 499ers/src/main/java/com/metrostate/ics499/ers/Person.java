@@ -6,9 +6,9 @@ public class Person {
     private String name;
     private String phone;
     private String address;
-    private Types.designation type;
+    private Types.Designation type;
 
-    public Person(Types.designation type){
+    public Person(Types.Designation type){
         this.id = idCounter++;
         this.type = type;
     }
@@ -44,11 +44,11 @@ public class Person {
         this.address = address;
     }
 
-    public Types.designation getType() {
+    public Types.Designation getType() {
         return type;
     }
 
-    public void setType(Types.designation type) {
+    public void setType(Types.Designation type) {
         this.type = type;
     }
 }

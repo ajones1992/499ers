@@ -3,7 +3,7 @@ package com.metrostate.ics499.ers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+
 import java.util.Calendar;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,10 +22,10 @@ class RecordUnitTest {
     void init() {
         recordDate = Calendar.getInstance();
         recordDate.set(1963, Calendar.FEBRUARY, 14);
-        bogey = new Person(Types.designation.Adoptee);
-        test1 = new Record(bogey.getId(), recordDate, Types.RecordType.Medical, "Testing Records ID 1");
-        test2 = new Record(bogey.getId(), recordDate, Types.RecordType.Behavioral, "Testing Records ID 2");
-        test3 = new Record(bogey.getId(), recordDate, Types.RecordType.Other, "Testing Records ID 3");
+        bogey = new Person(Types.Designation.ADOPTEE);
+        test1 = new Record(bogey.getId(), recordDate, Types.RecordType.MEDICAL, "Testing Records ID 1");
+        test2 = new Record(bogey.getId(), recordDate, Types.RecordType.BEHAVIORAL, "Testing Records ID 2");
+        test3 = new Record(bogey.getId(), recordDate, Types.RecordType.OTHER, "Testing Records ID 3");
 
     }
 

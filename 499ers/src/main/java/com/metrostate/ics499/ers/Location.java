@@ -57,7 +57,7 @@ public class Location {
     }
 
     public String showAnimals(){
-        String str = "Shelter: " + id + "\n";
+        String str = "Location: " + id + "\n";
 
         for (Animal ani: animals) {
             str += ani.toString();
@@ -126,7 +126,7 @@ public class Location {
     }
 
     public String toString(){
-        return "" + id + ": " + name;
+        return id + ": " + name;
     }
 
 }

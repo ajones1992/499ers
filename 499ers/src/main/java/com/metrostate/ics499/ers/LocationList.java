@@ -77,7 +77,7 @@ public class LocationList {
         if (mapOfLocations.containsValue(origin) && mapOfLocations.containsValue(destination)
                 && origin.getAnimals().contains(animal)
                 && destination.getSpecies().contains(animal.getSpecies())) {
-            animal.setCode(Types.ExitCode.inTransit);
+            animal.setCode(Types.ExitCode.IN_TRANSIT);
             origin.removeAnimal(animal);
             destination.addAnimal(animal);
             return true;
