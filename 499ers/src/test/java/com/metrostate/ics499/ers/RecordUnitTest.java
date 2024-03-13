@@ -1,15 +1,13 @@
 package com.metrostate.ics499.ers;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.Calendar;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class RecordUnitTest {
 
     Calendar recordDate;
@@ -30,6 +28,7 @@ class RecordUnitTest {
     }
 
     @Test
+    @Order(1)
     @DisplayName("Testing idCounter")
     void testCounter() {
         // First entry should have id of 1

@@ -1,13 +1,11 @@
 package com.metrostate.ics499.ers;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class PersonUnitTest {
 
     Person test1;
@@ -21,6 +19,7 @@ class PersonUnitTest {
     }
 
     @Test
+    @Order(1)
     @DisplayName("Testing idCounter")
     void testCounter() {
 

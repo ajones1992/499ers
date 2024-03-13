@@ -1,8 +1,6 @@
 package com.metrostate.ics499.ers;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -10,7 +8,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class LocationUnitTest {
 
     String tName;
@@ -41,6 +39,7 @@ public class LocationUnitTest {
     }
 
     @Test
+    @Order(1)
     @DisplayName("Testing idCounter")
     void testIDCounter(){
         // First entry should have id of 1
@@ -50,6 +49,7 @@ public class LocationUnitTest {
     }
 
     @Test
+    @Order(2)
     @DisplayName("Testing atCapacity")
     void testAtCapacity() {
         // atCapacity should return false if the location is not full
@@ -60,6 +60,7 @@ public class LocationUnitTest {
     }
 
     @Test
+    @Order(3)
     @DisplayName("Testing addSpecies")
     void testAddSpecies(){
         // Adding a species not currently in the list should return true
@@ -69,6 +70,7 @@ public class LocationUnitTest {
     }
 
     @Test
+    @Order(4)
     @DisplayName("Testing removeSpecies")
     void testRemoveSpecies(){
         // Removing a species currently in the list should return true
@@ -78,6 +80,7 @@ public class LocationUnitTest {
     }
 
     @Test
+    @Order(5)
     @DisplayName("Testing addAnimal")
     void testAddAnimal() {
         Calendar dob = Calendar.getInstance();
@@ -97,6 +100,7 @@ public class LocationUnitTest {
     }
 
     @Test
+    @Order(6)
     @DisplayName("Testing removeAnimal")
     void testRemoveAnimal() {
         Calendar dob = Calendar.getInstance();

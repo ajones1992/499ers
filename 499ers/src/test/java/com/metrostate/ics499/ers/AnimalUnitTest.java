@@ -1,14 +1,12 @@
 package com.metrostate.ics499.ers;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.Calendar;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AnimalUnitTest {
 
     Calendar dob;
@@ -42,6 +40,7 @@ class AnimalUnitTest {
                 3.11, dob, intakeDate, "Testing a unit :)");
     }
     @Test
+    @Order(1)
     @DisplayName("Testing idCounter")
     void testCounter() {
         // First entry should have id of 1
