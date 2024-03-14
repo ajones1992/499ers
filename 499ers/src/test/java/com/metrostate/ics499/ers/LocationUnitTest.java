@@ -35,7 +35,7 @@ public class LocationUnitTest {
         tSpec.add(Types.SpeciesAvailable.CAT);
         tSpec.add(Types.SpeciesAvailable.DOG);
         tSpec.add(Types.SpeciesAvailable.RABBIT);
-        humane = new Location(Types.LocType.FOSTER_HOME,tName, tAddress, tCap, tSpec);
+        humane = new Location(Types.LocType.SHELTER,tName, tAddress, tCap, tSpec);
     }
 
     @Test

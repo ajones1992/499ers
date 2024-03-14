@@ -66,7 +66,7 @@ class AnimalUnitTest {
     }
 
     @Test
-    @DisplayName("Testing addRecord")
+    @DisplayName("Testing removeRecord")
     void testRemoveRecord() {
         Person bogey = new Person(Types.Designation.SHELTER_STAFF);
         Calendar recordDate = Calendar.getInstance();
