@@ -6,10 +6,10 @@ import java.sql.*;
  * dbAdapter acts as an adapter from the Java/Interface side of the project to the
  * SQL database.
  */
-public class dbAdapter {
+public class DBAdapter {
 
     // singleton
-    private static dbAdapter database;
+    private static DBAdapter database;
 
     //instance variables
     private Connection connect = null;
@@ -21,7 +21,7 @@ public class dbAdapter {
      * privately constructs and initializes the dbAdapter
      *
      */
-    private dbAdapter() {
+    private DBAdapter() {
             connect();
     }
 
@@ -30,9 +30,9 @@ public class dbAdapter {
      *
      * @return The instance of the dbAdapter
      */
-    public static dbAdapter getInstance() {
+    public static DBAdapter getInstance() {
         if (database == null) {
-            database = new dbAdapter();
+            database = new DBAdapter();
         }
         return database;
     }
