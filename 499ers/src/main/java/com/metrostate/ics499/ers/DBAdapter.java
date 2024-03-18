@@ -92,9 +92,9 @@ public class DBAdapter {
         preparedStatement.setString(3, animal.getSpecies().toString());
         preparedStatement.setString(4, animal.getBreed());
         preparedStatement.setDouble(5, animal.getWeight());
-        preparedStatement.setDate(6, (Date) animal.getDOB().getTime());
-        preparedStatement.setDate(7, (Date) animal.getIntakeDate().getTime());
-        preparedStatement.setDate(8, (Date) animal.getExitDate().getTime());
+        preparedStatement.setDate(6, Date.valueOf(animal.getDOB()));
+        preparedStatement.setDate(7, Date.valueOf(animal.getIntakeDate()));
+        preparedStatement.setDate(8, Date.valueOf(animal.getExitDate()));
         preparedStatement.setString(9, animal.getCode().toString());
         preparedStatement.executeUpdate();
 
@@ -104,7 +104,7 @@ public class DBAdapter {
         for (Record r : animal.getRecords()) {
             preparedStatement.setInt(1, r.getId());
             preparedStatement.setInt(2, r.getEmployeeID());
-            preparedStatement.setDate(3, (Date) r.getUpdateDate().getTime());
+            preparedStatement.setDate(3, Date.valueOf(r.getUpdateDate()));
             preparedStatement.setString(4, r.getType().toString());
             preparedStatement.setString(5, r.getDetails());
             //preparedStatement.setInt(6, animal.getId());

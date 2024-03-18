@@ -1,7 +1,7 @@
 package com.metrostate.ics499.ers;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class Animal {
@@ -11,14 +11,14 @@ public class Animal {
     private Types.SpeciesAvailable species;
     private String breed;
     private double weight;
-    private Calendar DOB;
-    private Calendar intakeDate;
-    private Calendar exitDate;
+    private LocalDate DOB;
+    private LocalDate intakeDate;
+    private LocalDate exitDate;
     private Types.ExitCode code;
     private String notes;
     private List<Record> records;
 
-    public Animal(String name, Types.SpeciesAvailable species, String breed, double weight, Calendar dob, Calendar intakeDate, String notes) {
+    public Animal(String name, Types.SpeciesAvailable species, String breed, double weight, LocalDate dob, LocalDate intakeDate, String notes) {
         this.id = idCounter++;
         this.name = name;
         this.species = species;
@@ -88,27 +88,27 @@ public class Animal {
         this.weight = weight;
     }
 
-    public Calendar getDOB() {
+    public LocalDate getDOB() {
         return DOB;
     }
 
-    public void setDOB(Calendar DOB) {
+    public void setDOB(LocalDate DOB) {
         this.DOB = DOB;
     }
 
-    public Calendar getIntakeDate() {
+    public LocalDate getIntakeDate() {
         return intakeDate;
     }
 
-    public void setIntakeDate(Calendar intakeDate) {
+    public void setIntakeDate(LocalDate intakeDate) {
         this.intakeDate = intakeDate;
     }
 
-    public Calendar getExitDate() {
+    public LocalDate getExitDate() {
         return exitDate;
     }
 
-    public void setExitDate(Calendar exitDate) {
+    public void setExitDate(LocalDate exitDate) {
         this.exitDate = exitDate;
     }
 

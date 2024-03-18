@@ -2,7 +2,7 @@ package com.metrostate.ics499.ers;
 
 import org.junit.jupiter.api.*;
 
-import java.util.Calendar;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class RecordUnitTest {
 
-    Calendar recordDate;
+    LocalDate recordDate;
     Person bogey;
     Record test1;
     Record test2;
@@ -18,8 +18,7 @@ class RecordUnitTest {
 
     @BeforeEach
     void init() {
-        recordDate = Calendar.getInstance();
-        recordDate.set(1963, Calendar.FEBRUARY, 14);
+        recordDate = LocalDate.of(1963, 2, 14);
         bogey = new Person(Types.Designation.ADOPTEE);
         test1 = new Record(bogey.getId(), recordDate, Types.RecordType.MEDICAL, "Testing Records ID 1");
         test2 = new Record(bogey.getId(), recordDate, Types.RecordType.BEHAVIORAL, "Testing Records ID 2");

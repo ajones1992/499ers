@@ -2,8 +2,8 @@ package com.metrostate.ics499.ers;
 
 import org.junit.jupiter.api.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -83,9 +83,8 @@ public class LocationUnitTest {
     @Order(5)
     @DisplayName("Testing addAnimal")
     void testAddAnimal() {
-        Calendar dob = Calendar.getInstance();
-        dob.set(1963, Calendar.FEBRUARY, 14);
-        Calendar intakeDate = Calendar.getInstance();
+        LocalDate dob = LocalDate.of(1963, 2, 14);
+        LocalDate intakeDate = LocalDate.now();
         Animal clifford = new Animal("Clifford the Big Red Dog", Types.SpeciesAvailable.DOG, "Red Lab",
                 456.63, dob, intakeDate, "Testing a unit :)");
 
@@ -103,9 +102,8 @@ public class LocationUnitTest {
     @Order(6)
     @DisplayName("Testing removeAnimal")
     void testRemoveAnimal() {
-        Calendar dob = Calendar.getInstance();
-        dob.set(1963, Calendar.FEBRUARY, 14);
-        Calendar intakeDate = Calendar.getInstance();
+        LocalDate dob = LocalDate.of(1963, 2, 14);
+        LocalDate intakeDate = LocalDate.now();
         Animal clifford = new Animal("Clifford the Big Red Dog", Types.SpeciesAvailable.DOG, "Red Lab",
                 456.63, dob, intakeDate, "Testing a unit :)");
 
