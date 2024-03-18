@@ -35,7 +35,7 @@ public class DBInitializer implements CommandLineRunner {
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS animal(name VARCHAR(100))");
 
         //Insert a record:
-        jdbcTemplate.execute("INSERT INTO animal VALUES ('Stella')");
+        jdbcTemplate.execute("INSERT INTO animal VALUES ('Stella'); INSERT INTO animal VALUES ('Sphynx');");
 
         //Read records:
         List<Animal> animals = jdbcTemplate.query("SELECT * FROM animal",
