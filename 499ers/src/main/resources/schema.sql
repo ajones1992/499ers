@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS Animal(
   Received_Date DATE NOT NULL,
   Exit_Date DATE,
   Exit_Code VARCHAR(16),
-  Adopt_Cost INT, -- needs to be added to Entity
+  Adopt_Cost INT,
   Location_ID INT,
   Adoptee_ID INT,
   foreign key (Location_ID) References Location(Location_ID),
