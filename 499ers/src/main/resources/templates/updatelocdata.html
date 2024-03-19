@@ -5,10 +5,28 @@
     <title>ShelterApp: Select Location</title>
 </head>
 <body>
-    <h1>Please select a location: </h1>
-    <label for="name">Location:</label>
-    <input type="text" id="name" />
+<h1>Please enter the updated information: </h1>
+<p>Select the type of person: </p>
+<label for="name">Enter the location name:</label>
+<input type="text" id="name" /> <br>
 
-    <a href="showlocanimals.html">Show Animals</a> <br/>
+<label for="address">Enter the address:</label>
+<input type="text" id="address" /> <br>
+
+<label for="capacity">Enter the location's capacity:</label>
+<input type="number" id="capacity" /> <br>
+
+<p>Select the animal types handled at this location: </p>
+<input type="checkbox" id="dog" name="dog" value="DOG">
+<label for="dog">Dog</label><br>
+<input type="checkbox" id="cat" name="cat" value="CAT">
+<label for="cat">Cat</label><br>
+<input type="checkbox" id="bird" name="bird" value="BIRD">
+<label for="bird">Bird</label><br>
+<input type="checkbox" id="rabbit" name="rabbit" value="RABBIT">
+<label for="rabbit">Rabbit</label><br>
+
+<a href="updatedatasuccess.html">Success</a> <br/>
+<a href="updatedatafailure.html">Fail</a> <br/>
 </body>
 </html>
