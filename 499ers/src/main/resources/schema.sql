@@ -11,8 +11,7 @@ CREATE TABLE IF NOT EXISTS Location(
   Location_Name VARCHAR(64) NOT NULL,
   Location_Type VARCHAR(16) NOT NULL,
   Address VARCHAR(100) NOT NULL,
-  Capacity INT NOT NULL,
-  Animal_Specialty DATE NOT NULL
+  Capacity INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Animal(

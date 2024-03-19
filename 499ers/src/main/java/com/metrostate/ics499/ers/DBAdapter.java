@@ -1,6 +1,11 @@
 package com.metrostate.ics499.ers;
 
+
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * dbAdapter acts as an adapter from the Java/Interface side of the project to the
@@ -9,7 +14,8 @@ import java.sql.*;
 public class DBAdapter {
 
     // singleton
-    private static DBAdapter database;
+    private static DBAdapter databaseAccess;
+    private JdbcTemplate jdbcTemplate;
 
     //instance variables
     private Connection connect = null;
@@ -26,15 +32,30 @@ public class DBAdapter {
     }
 
     /**
+     * privately constructs and initializes the dbAdapter
+     *
+     */
+    private DBAdapter(JdbcTemplate template) {
+        jdbcTemplate = template;
+    }
+
+    public static DBAdapter getInstance(JdbcTemplate template) {
+        if (databaseAccess == null) {
+            databaseAccess = new DBAdapter(template);
+        }
+        return databaseAccess;
+    }
+
+    /**
      * Gets the instance of the dbAdapter.
      *
      * @return The instance of the dbAdapter
      */
     public static DBAdapter getInstance() {
-        if (database == null) {
-            database = new DBAdapter();
+        if (databaseAccess == null) {
+            databaseAccess = new DBAdapter();
         }
-        return database;
+        return databaseAccess;
     }
 
     /**
@@ -65,123 +86,63 @@ public class DBAdapter {
 
     /**
      * Uses an insert statement in the form of a string to update the
-     * database with a new entry. (Note: This will be overloaded to include
-     * arguments for an animal, Person, or Location)
+     * database with a new entry. Returns true if the operation was
+     * successful. (Note: This will be overloaded to include arguments
+     * for an animal, Person, or Location)
      *
      * @param insertStatement the insert statement in sql
+     * @return true if operation successful; false otherwise
      * @throws SQLException throws when the SQL statement is malformed
      */
-    public void insert(String insertStatement) throws SQLException {
-        statement = connect.createStatement();
-        statement.executeUpdate(insertStatement);
+    public boolean insert(String insertStatement) throws SQLException {
+        jdbcTemplate.update(insertStatement);
+        return true;
+    }
+
+    public boolean insert (Animal animal) throws SQLException {
+        return false;
+    }
+
+    public boolean insert (Person person) throws SQLException {
+        return false;
     }
 
     /**
-     * Inserts the specified animal into the Animal table within the database.
-     *
-     * @param animal animal to be inserted
-     * @throws SQLException throws when the SQL statement is malformed
-     */
-    public void insert (Animal animal) throws SQLException {
-        // insert into Database.Tablename (i.e. Fragmenent.Player)
-        // add each attribute of animal
-        preparedStatement = connect
-                .prepareStatement("insert into Animal values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        preparedStatement.setInt(1, animal.getId());
-        preparedStatement.setString(2, animal.getName());
-        preparedStatement.setString(3, animal.getSpecies().toString());
-        preparedStatement.setString(4, animal.getBreed());
-        preparedStatement.setDouble(5, animal.getWeight());
-        preparedStatement.setDate(6, Date.valueOf(animal.getDOB()));
-        preparedStatement.setDate(7, Date.valueOf(animal.getIntakeDate()));
-        preparedStatement.setDate(8, Date.valueOf(animal.getExitDate()));
-        preparedStatement.setString(9, animal.getCode().toString());
-        preparedStatement.executeUpdate();
-
-        // add each record of animal to record table
-        preparedStatement =
-                connect.prepareStatement("insert into Record values (?, ?)");
-        for (Record r : animal.getRecords()) {
-            preparedStatement.setInt(1, r.getId());
-            preparedStatement.setInt(2, r.getEmployeeID());
-            preparedStatement.setDate(3, Date.valueOf(r.getUpdateDate()));
-            preparedStatement.setString(4, r.getType().toString());
-            preparedStatement.setString(5, r.getDetails());
-            //preparedStatement.setInt(6, animal.getId());
-            preparedStatement.executeUpdate();
-        }
-    }
-
-    /**
-     * Inserts the specified person into the person table within the database.
-     * May need to be separated into specific instance of Employees, Adoptees,
-     * and fosters.
-     *
-     * @param person person to be inserted
-     * @throws SQLException throws when the SQL statement is malformed
-     */
-    public void insert (Person person) throws SQLException {
-        // insert into Database.Tablename (i.e. Fragmenent.Player)
-        // add for each attribute for Person
-        preparedStatement = connect
-                .prepareStatement("insert into Person values (?, ?, ?, ?, ?)");
-        preparedStatement.setInt(1, person.getId());
-        preparedStatement.setString(2, person.getName());
-        preparedStatement.setString(3, person.getPhone());
-        preparedStatement.setString(4, person.getAddress());
-        preparedStatement.setString(5, person.getType().toString());
-        preparedStatement.executeUpdate();
-    }
-
-    /**
-     * Inserts the specified Location into the person table within the database.
-     * May need to be separated into specific instances of Shelters and Fosters
+     * Inserts the specified Location into the Location table within the database.
+     * Returns true if the operation was successful.
      *
      * @param location location to be inserted
-     * @throws SQLException throws when the SQL statement is malformed
+     * @return true if operation successful; false otherwise
      */
-    public void insert (Location location) throws SQLException {
-        // insert into Database.Tablename (i.e. Fragmenent.Player)
-        // add for each attribute for Location
-        preparedStatement = connect
-                .prepareStatement("insert into Location values (?, ?, ?, ?, ?)");
-        preparedStatement.setString(1, location.getType().toString());
-        preparedStatement.setInt(2, location.getId());
-        preparedStatement.setString(3, location.getName());
-        preparedStatement.setString(4, location.getAddress());
-        preparedStatement.setInt(5, location.getMaxCapacity());
-        preparedStatement.executeUpdate();
-
-        // next are lists and will have to be iterated through
-        //preparedStatement = connect.prepareStatement("insert into **** values (?, ?)");
-        // for every species in location's species
-        // insert new species into table
-        // for every animal in location's inventory
-        // insert animal into table
+    public boolean insert(Location location) {
+        int id = location.getId();
+        String type = location.getType().toString();
+        String name = location.getName();
+        String address = location.getAddress();
+        int max = location.getMaxCapacity();
+        String sqlStatement = String.format("INSERT INTO Location " +
+                        "VALUES (%d, '%s', '%s', '%s', %d);", id, name, type, address, max);
+        jdbcTemplate.execute(sqlStatement);
+        return true;
     }
 
     /**
      * Uses a delete statement in the form of a string to delete a
-     * specific or set of entries in the database. (Note: This will be
-     * overloaded to include arguments for an animal, Person, or Location)
+     * specific or set of entries in the database. Returns true if
+     * the operation was successful. (Note: This will be overloaded
+     * to include arguments for an animal, Person, or Location)
      *
      * @param DeleteStatement the delete statement in sql
+     * @return true if operation successful; false otherwise
      * @throws SQLException throws when the SQL statement is malformed
      */
-    public void delete(String DeleteStatement) throws SQLException {
-        statement = connect.createStatement();
-        statement.executeUpdate(DeleteStatement);
+    public boolean delete(String DeleteStatement) throws SQLException {
+        jdbcTemplate.execute(DeleteStatement);
+        return true;
     }
 
-    /**
-     * Deletes the specified animal from the Animal table in the database
-     *
-     * @param animal the animal to be deleted from the database
-     * @throws SQLException throws when internal methods fail
-     */
-    public void delete(Animal animal) throws SQLException {
-        statement = connect.createStatement();
-        //statement.executeUpdate(String.format("Delete from Animal where id= %d ;", animal.getId()));
+    public boolean delete(Animal animal) throws SQLException {
+        return false;
     }
 
     /**
@@ -190,27 +151,39 @@ public class DBAdapter {
      * overloaded to include arguments for an animal, Person, or Location)
      *
      * @param updateStatement the update statement in sql format
+     * @return true if operation successful; false otherwise
      * @throws SQLException throws when internal methods fail
      */
-    public void update(String updateStatement) throws SQLException {
-        statement = connect.createStatement();
-        statement.executeUpdate(updateStatement);
+    public boolean update(String updateStatement) throws SQLException {
+        jdbcTemplate.execute(updateStatement);
+        return true;
     }
 
-
     /**
-     * Updates the specified field for the provided animal in the database.
+     * Updates a Location in the database to match the updated Location.
      *
-     * @param animal the animal to be updated
-     * @param field the field being updated
-     * @param update the update to the field
-     * @throws SQLException throws when internal method fails.
+     * @param oldLoc The old Location with no modified fields
+     * @param updatedLoc The updated Location with modified fields
+     * @return true if the operation was successful
      */
-    public void update(Animal animal, String field, String update) throws SQLException {
-        statement = connect.createStatement();
-        // statement.executeUpdate(
-        // String.format("Update Animal set %s = %s where id = %d;",
-        // field, update, animal.getId()));
+    public boolean update(Location oldLoc, Location updatedLoc) {
+        StringBuffer updateStatement = new StringBuffer("UPDATE Location SET ");
+        if (!(oldLoc.getName().equals(updatedLoc.getName()))) {
+            updateStatement.append(String.format("Location_Name = '%s',", updatedLoc.getName()));
+        }
+        if (!(oldLoc.getType().toString().equals(updatedLoc.getType().toString()))) {
+            updateStatement.append(String.format("Location_Type = '%s',", updatedLoc.getType().toString()));
+        }
+        if (!(oldLoc.getAddress().equals(updatedLoc.getAddress()))) {
+            updateStatement.append(String.format("Address = '%s',", updatedLoc.getAddress()));
+        }
+        if (oldLoc.getMaxCapacity() != updatedLoc.getMaxCapacity()) {
+            updateStatement.append(String.format("Capacity = '%d',", updatedLoc.getMaxCapacity()));
+        }
+        updateStatement.deleteCharAt(updateStatement.length() - 1);
+        updateStatement.append(String.format("WHERE Location_ID = %d;", oldLoc.getId()));
+        jdbcTemplate.execute(updateStatement.toString());
+        return true;
     }
 
     /**
@@ -238,6 +211,49 @@ public class DBAdapter {
             result.append("/n");
         }
         return result.toString();
+    }
+
+    // Location query
+    public List<Location> queryLocation(String searchKey, String query) throws IllegalArgumentException {
+        StringBuffer queryStatement = new StringBuffer("SELECT * FROM Location WHERE ");
+        queryStatement.append(addLocationSearchKey(searchKey, query));
+        return jdbcTemplate.query(queryStatement.toString(), (resultSet, rowNum) -> extractLocation(resultSet));
+    }
+
+    // Helps validate the searchKey field
+    private StringBuffer addLocationSearchKey(String searchKey, String query)
+            throws IllegalArgumentException {
+        StringBuffer statement = new StringBuffer();
+        if (searchKey.equalsIgnoreCase("Location_ID")) {
+            statement.append(String.format("Location_ID = %d;", Integer.parseInt(query)));
+        } else if (searchKey.equalsIgnoreCase("Location_Name")) {
+            statement.append(String.format("Location_Name = '%s';", query));
+        } else if (searchKey.equalsIgnoreCase("Location_Type")) {
+            statement.append(String.format("Location_Type = '%s';", query));
+        } else if (searchKey.equalsIgnoreCase("Address")) {
+            statement.append(String.format("Address = '%s';", query));
+        } else if (searchKey.equalsIgnoreCase("Capacity")) {
+            statement.append(String.format("Capacity = %d", Integer.parseInt(query)));
+        } else {
+            throw new IllegalArgumentException("Invalid searchKey for Location");
+        }
+        return statement;
+    }
+
+    //Extracts location from a result set
+    private Location extractLocation(ResultSet rs) throws SQLException {
+        int id = rs.getInt("Location_ID");
+        Types.LocType type = extractLocationType(rs.getString("Location_Type"));
+        String name = rs.getString("Location_Name");
+        String address = rs.getString("Address");
+        int capacity = rs.getInt("Capacity");
+        return new Location(id, type, name, address, capacity, new ArrayList<Types.SpeciesAvailable>());
+    }
+
+    // Extracts a location enumerated type from a string.
+    private Types.LocType extractLocationType(String type) {
+        return type.equalsIgnoreCase("SHELTER")?
+                Types.LocType.SHELTER : Types.LocType.FOSTER_HOME;
     }
 
 }
