@@ -14,6 +14,7 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -182,7 +183,7 @@ public class DBInitializer implements CommandLineRunner {
         Types.SpeciesAvailable species = extractAnimalType(rs.getString("Animal_Type"));
         String breed = rs.getString("Breed");
         double weight = rs.getDouble("Weight");
-        return new Animal(name, species, breed, weight, Calendar.getInstance(), Calendar.getInstance(), "No notes");
+        return new Animal(name, species, breed, weight, LocalDate.now(), LocalDate.now(), "No notes");
     }
 
 
