@@ -16,6 +16,19 @@ public class Location {
     private int maxCapacity;
     private boolean receiving;
 
+    // Constructor for reconstructing a Location from the database
+    public Location(int id, Types.LocType type, String name, String address, int maxCapacity, List<Types.SpeciesAvailable> species) {
+        this.id = id;
+        this.type = type;
+        this.name = name;
+        this.address = address;
+        this.maxCapacity = maxCapacity;
+        receiving = true;
+        this.species = species;
+        animals = new ArrayList<>(); // Do we just want to add animals separately? What if we have a list of animals known to that shelter?
+    }
+
+    // Constructor for creating a new entry into the database
     public Location(Types.LocType type, String name, String address, int maxCapacity, List<Types.SpeciesAvailable> species) {
         this.id = idCounter++;
         this.type = type;

@@ -4,16 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
@@ -25,8 +26,11 @@ public class DBInitializer implements CommandLineRunner {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public static void main(String[] args) {
+    private DBAdapter dbAccess;
+
+    public static void main(String[] args) throws SQLException {
         start(args);
+        System.out.println("Outside startup");
     }
 
     public static void start(String[] args) {
@@ -39,33 +43,38 @@ public class DBInitializer implements CommandLineRunner {
         jdbcTemplate.execute("DROP TABLE Location");
         jdbcTemplate.execute("DROP TABLE Record");
         jdbcTemplate.execute("DROP TABLE Species_Available");
+        System.out.println("Tables dropped.");
     }
 
     @Override
     public void run(String... args) throws Exception {
+
         //Create the database table:
         initDatabase();
-
-        //Insert a record:
         fillDatabase();
 
-        //Read records:
-        List<Animal> animals = getAnimals();
-
-        //Print read records:
-        for (Animal a : animals) {
-            System.out.println(a);
+        //tests
+        try {
+            dbAccess = DBAdapter.getInstance(jdbcTemplate);
+            testInsert();
+            displayAnimals();
+            testInsertLocation();
+            testQueryLocation();
+            testUpdateLocation();
+            displayLocations();
+        } catch (Exception e) {
+            // drop tables
+            reset();
+            throw e;
         }
-        System.out.println("endProgram!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         reset();
     }
+
+
 
     public void initDatabase() throws FileNotFoundException {
         try {
             URL resource = this.getClass().getClassLoader().getResource("schema.sql");
-            System.out.println();
-            System.out.println(resource);
-            System.out.println();
             File schemaFile = Paths.get(resource.toURI()).toFile();
             Scanner reader = new Scanner(schemaFile);
             while (reader.hasNextLine()) {
@@ -90,9 +99,6 @@ public class DBInitializer implements CommandLineRunner {
     public void fillDatabase() throws FileNotFoundException {
         try {
             URL resource = this.getClass().getClassLoader().getResource("insert.sql");
-            System.out.println();
-            System.out.println(resource);
-            System.out.println();
             File schemaFile = Paths.get(resource.toURI()).toFile();
             Scanner reader = new Scanner(schemaFile);
             while (reader.hasNextLine()) {
@@ -100,6 +106,69 @@ public class DBInitializer implements CommandLineRunner {
             }
         } catch (URISyntaxException | FileNotFoundException e) {
             throw new FileNotFoundException("Missing Resource File: insert.sql");
+        } catch (UncategorizedSQLException e) {
+            System.out.println("Database already filled");
+        }
+    }
+
+    // methods that are for testing and may be removed ------------------------------------------------
+
+    // test insert
+    private void testInsert() {
+        System.out.println("Test Insert");
+        try {
+            String statement = "INSERT INTO Animal (Animal_ID, Animal_Name, Animal_Type, Breed, Weight, Received_Date, Exit_Date, Exit_Code, Adopt_Cost, Location_ID, Adoptee_ID) VALUES\n" +
+                    "(106, 'George', 'Dog', 'Great Dane', 100.5, '2024-03-01', '2024-03-15', 'Adopted', 150, 1, 1);";
+            dbAccess.insert(statement);
+            displayLocations();
+        } catch (SQLException e) {
+            System.out.println("Insert Failed");
+        }
+    }
+
+    // test Query with Location
+    private void testQueryLocation() {
+        System.out.println("Test Query Location");
+        System.out.println("Query for Foster Home #1");
+        ArrayList<Location> results = new ArrayList<Location>(
+                dbAccess.queryLocation("Location_Name", "Foster Home #1"));
+        System.out.println("Results: ");
+        for (Location loc : results) {
+            System.out.println(loc);
+        }
+    }
+
+    // test insert on Location
+    private void testInsertLocation() {
+        System.out.println("Test Insert Location");
+        Location myLoc = new Location(4, Types.LocType.SHELTER, "MyShelter", "500 Address St",
+                30, new ArrayList<Types.SpeciesAvailable>());
+        dbAccess.insert(myLoc);
+    }
+
+    private void testUpdateLocation() {
+        System.out.println("Test Update Location");
+        System.out.println("Update for Foster Home #1");
+        ArrayList<Location> results = new ArrayList<Location>(
+                dbAccess.queryLocation("Location_Name", "Foster Home #1"));
+        if (!results.isEmpty()) {
+            Location original = results.get(0);
+            System.out.printf("Original: %d, %s, %s, %s, %d\n", original.getId(), original.getName(),
+                    original.getType(), original.getAddress(), original.getMaxCapacity());
+            Location modified = new Location(original.getId(), Types.LocType.SHELTER, "FH #1",
+                    original.getAddress(), original.getMaxCapacity() + 5,
+                    new ArrayList<Types.SpeciesAvailable>());
+            System.out.printf("Changes: %d, %s, %s, %s, %d\n", modified.getId(), modified.getName(),
+                    modified.getType(), modified.getAddress(), modified.getMaxCapacity());
+            System.out.println("Execute update.");
+            dbAccess.update(original, modified);
+        }
+        results = new ArrayList<Location>(
+                dbAccess.queryLocation("Location_ID", "2"));
+        if (!results.isEmpty()) {
+            Location original = results.get(0);
+            System.out.printf("Modified Original: %d, %s, %s, %s, %d\n", original.getId(), original.getName(),
+                    original.getType(), original.getAddress(), original.getMaxCapacity());
         }
     }
 
@@ -126,6 +195,49 @@ public class DBInitializer implements CommandLineRunner {
             return Types.SpeciesAvailable.RABBIT;
         } else {
             return Types.SpeciesAvailable.BIRD;
+        }
+    }
+
+    private void displayAnimals() {
+        //Read records:
+        List<Animal> animals = getAnimals();
+
+        //Print read records:
+        for (Animal a : animals) {
+            System.out.println(a);
+        }
+    }
+
+    private void displayLocations() {
+        //Read records:
+        List<Location> locations = getLocations();
+
+        //Print read records:
+        for (Location l : locations) {
+            System.out.println(l);
+        }
+    }
+
+    public List<Location> getLocations() {
+        String queryStatement = "SELECT * FROM Location";
+        return jdbcTemplate.query(queryStatement, (resultSet, rowNum) -> extractLocation(resultSet));
+    }
+
+    private Location extractLocation(ResultSet rs) throws SQLException {
+        int id = rs.getInt("Location_ID");
+        Types.LocType type = extractLocationType(rs.getString("Location_Type"));
+        String name = rs.getString("Location_Name");
+        String address = rs.getString("Address");
+        int capacity = rs.getInt("Capacity");
+        return new Location(id, type, name, address, capacity, new ArrayList<Types.SpeciesAvailable>());
+    }
+
+
+    private Types.LocType extractLocationType(String type) {
+        if (type.equalsIgnoreCase("SHELTER")) {
+            return Types.LocType.SHELTER;
+        } else {
+            return Types.LocType.FOSTER_HOME;
         }
     }
 }

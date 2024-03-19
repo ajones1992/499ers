@@ -6,10 +6,10 @@ INSERT INTO Person (Person_ID, Person_Name, Phone, Address, Designation) VALUES
 (5, 'Charles Johnson', '712-322-7899', '345 Birch St', 'ShelterStaff');
 
 
-INSERT INTO Location (Location_ID, Location_Name, Location_Type, Address, Capacity, Animal_Specialty) VALUES
-(1, 'Main Shelter', 'Shelter', '101 Shelter Rd', 100, '2023-01-01'),
-(2, 'Foster Home #1', 'FosterHome', '202 Foster Lane', 5, '2023-01-01'),
-(3, 'Foster Home #2', 'FosterHome', '303 Foster Ave', 4, '2023-01-01');
+INSERT INTO Location (Location_ID, Location_Name, Location_Type, Address, Capacity) VALUES
+(1, 'Main Shelter', 'Shelter', '101 Shelter Rd', 100),
+(2, 'Foster Home #1', 'FosterHome', '202 Foster Lane', 5),
+(3, 'Foster Home #2', 'FosterHome', '303 Foster Ave', 4);
 
 
 INSERT INTO Animal (Animal_ID, Animal_Name, Animal_Type, Breed, Weight, Received_Date, Exit_Date, Exit_Code, Adopt_Cost, Location_ID, Adoptee_ID) VALUES
