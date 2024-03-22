@@ -53,8 +53,9 @@ class AnimalUnitTest {
     @DisplayName("Testing addRecord")
     void testAddRecord() {
         Person bogey = new Person(Types.Designation.SHELTER_STAFF);
+        Animal furball = new Animal("Cat", Types.SpeciesAvailable.CAT, "calico", 9.6, dob, intakeDate, "new born kitten");
         LocalDate recordDate = LocalDate.now();
-        Record cliffordTestRecord = new Record(bogey.getId(), recordDate, Types.RecordType.MEDICAL,
+        Record cliffordTestRecord = new Record(bogey.getId(), furball.getId(), recordDate, Types.RecordType.MEDICAL,
                 "Testing a new record :)");
         clifford.addRecord(cliffordTestRecord);
 
@@ -65,8 +66,9 @@ class AnimalUnitTest {
     @DisplayName("Testing removeRecord")
     void testRemoveRecord() {
         Person bogey = new Person(Types.Designation.SHELTER_STAFF);
+        Animal furball = new Animal("Cat", Types.SpeciesAvailable.CAT, "calico", 9.6, dob, intakeDate, "new born kitten");
         LocalDate recordDate = LocalDate.now();
-        Record cliffordTestRecord = new Record(bogey.getId(), recordDate, Types.RecordType.MEDICAL,
+        Record cliffordTestRecord = new Record(bogey.getId(), furball.getId(), recordDate, Types.RecordType.MEDICAL,
                 "Testing a new record :)");
         clifford.addRecord(cliffordTestRecord);
         clifford.removeRecord(cliffordTestRecord);
