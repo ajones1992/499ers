@@ -18,16 +18,12 @@ CREATE TABLE IF NOT EXISTS Animal(
   Animal_ID INT PRIMARY KEY,
   Animal_Name VARCHAR(64) NOT NULL,
   Animal_Type VARCHAR(16) NOT NULL,
-  Breed VARCHAR(64) NOT NULL,
   Weight DOUBLE NOT NULL,
   Received_Date DATE NOT NULL,
   Exit_Date DATE,
   Exit_Code VARCHAR(16),
-  Adopt_Cost INT,
   Location_ID INT,
-  Adoptee_ID INT,
-  foreign key (Location_ID) References Location(Location_ID),
-  foreign key (Adoptee_ID) References Person(Person_ID)
+  foreign key (Location_ID) References Location(Location_ID)
 );
 
 CREATE TABLE IF NOT EXISTS Record(

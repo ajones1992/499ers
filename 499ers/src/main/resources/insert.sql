@@ -12,12 +12,12 @@ INSERT INTO Location (Location_ID, Location_Name, Location_Type, Address, Capaci
 (3, 'Foster Home #2', 'FosterHome', '303 Foster Ave', 4);
 
 
-INSERT INTO Animal (Animal_ID, Animal_Name, Animal_Type, Breed, Weight, Received_Date, Exit_Date, Exit_Code, Adopt_Cost, Location_ID, Adoptee_ID) VALUES
-(101, 'Max', 'Dog', 'Labrador', 70.5, '2024-03-01', '2024-03-15', 'Adopted', 150, 1, 1),
-(102, 'Bella', 'Cat', 'Persian', 10.2, '2024-03-05', NULL, NULL, 100, 1, NULL),
-(103, 'Charlie', 'Dog', 'Beagle', 24.7, '2024-03-07', NULL, NULL, 125, 2, NULL),
-(104, 'Luna', 'Cat', 'Sphynx', 8.6, '2024-03-10', NULL, 'Transferred', 200, 2, 4),
-(105, 'Lucy', 'Dog', 'Golden Retriever', 65.0, '2024-03-11', NULL, NULL, 160, 3, NULL);
+INSERT INTO Animal (Animal_ID, Animal_Name, Animal_Type, Weight, Received_Date, Exit_Date, Exit_Code, Location_ID) VALUES
+(101, 'Max', 'Dog', 70.5, '2024-03-01', '2024-03-15', 'Adopted', 1),
+(102, 'Bella', 'Cat', 10.2, '2024-03-05', NULL, NULL, 1),
+(103, 'Charlie', 'Dog', 24.7, '2024-03-07', NULL, NULL, 2),
+(104, 'Luna', 'Cat', 8.6, '2024-03-10', NULL, 'Transferred', 2),
+(105, 'Lucy', 'Dog', 65.0, '2024-03-11', NULL, NULL, 3);
 
 
 INSERT INTO Record (Record_ID, Animal_ID, Employee_ID, Update_Date, Record_Type, Details) VALUES
