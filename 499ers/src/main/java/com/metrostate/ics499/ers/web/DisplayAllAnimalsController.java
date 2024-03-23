@@ -19,9 +19,8 @@ public class DisplayAllAnimalsController {
     static {
         String[] names = {"Mikleo","Echo","Jack","Solaire","Mia","Sophia"};
         for(int i=0; i < names.length; i++) {
-            animals.add(new Animal(names[i], Types.SpeciesAvailable.CAT, "Tom",
-                    20 - i, LocalDate.of(2015 + i, 4 + i, 16 + i), LocalDate.now(),
-                    "Note "));
+            animals.add(new Animal(names[i], Types.SpeciesAvailable.CAT,
+                    20 - i, LocalDate.of(2015 + i, 4 + i, 16 + i), LocalDate.now()));
         }
     }
 

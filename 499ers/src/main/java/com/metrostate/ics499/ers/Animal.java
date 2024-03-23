@@ -9,26 +9,20 @@ public class Animal {
     private int id;
     private String name;
     private Types.SpeciesAvailable species;
-    private String breed;
     private double weight;
     private LocalDate DOB;
     private LocalDate intakeDate;
     private LocalDate exitDate;
     private Types.ExitCode code;
-    private String notes;
     private List<Record> records;
-    // Assuming Location class has an ID field of type int
-    private int locationID; // Add this to match ERD
 
-    public Animal(String name, Types.SpeciesAvailable species, String breed, double weight, LocalDate dob, LocalDate intakeDate, String notes) {
+    public Animal(String name, Types.SpeciesAvailable species, double weight, LocalDate dob, LocalDate intakeDate) {
         this.id = idCounter++;
         this.name = name;
         this.species = species;
-        this.breed = breed;
         this.weight = weight;
         this.DOB = dob;
         this.intakeDate = intakeDate;
-        this.notes = notes;
         this.records = new ArrayList<>();
     }
 
@@ -65,9 +59,6 @@ public class Animal {
         if (species != null) {
             this.species = species;
         }
-        if (breed != null && !breed.trim().isEmpty()) {
-            this.breed = breed;
-        }
         if (weight > 0) {
             this.weight = weight;
         }
@@ -83,9 +74,6 @@ public class Animal {
         if (code != null) {
             this.code = code;
         }
-        if (notes != null && !notes.trim().isEmpty()) {
-            this.notes = notes;
-        }
     }
 
     public void synchronizeWithDatabase(DBAdapter dbAdapter) {
@@ -99,11 +87,6 @@ public class Animal {
     public void handleAdoption(LocalDate adoptionDate, Types.ExitCode exitCode) {
         this.exitDate = adoptionDate;
         this.code = exitCode; // Assuming Types.ExitCode.ADOPT represents a successful adoption
-    }
-
-    // Method to retrieve the current location of this animal
-    public Location getCurrentLocation(DBAdapter dbAdapter) {
-        return dbAdapter.getLocationById(this.locationID);
     }
 
     public int getId() {
@@ -128,14 +111,6 @@ public class Animal {
 
     public void setSpecies(Types.SpeciesAvailable species) {
         this.species = species;
-    }
-
-    public String getBreed() {
-        return breed;
-    }
-
-    public void setBreed(String breed) {
-        this.breed = breed;
     }
 
     public double getWeight() {
@@ -178,29 +153,12 @@ public class Animal {
         this.code = code;
     }
 
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
     public List<Record> getRecords() {
         return records;
     }
 
     public void setRecords(List<Record> records) {
         this.records = records;
-    }
-
-    // New getter and setter for locationID
-    public int getLocationID() {
-        return locationID;
-    }
-
-    public void setLocationID(int locationID) {
-        this.locationID = locationID;
     }
 
     public String toString(){
