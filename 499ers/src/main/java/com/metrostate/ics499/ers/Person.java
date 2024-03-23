@@ -1,17 +1,20 @@
 package com.metrostate.ics499.ers;
 
 public class Person {
-    private static int idCounter = 0;
+    private static int idCounter = 1;
     private int id;
     private String name;
     private String phone;
     private String address;
-    private Types.designation type;
+    private Types.Designation type;
 
-    public Person(Types.designation type){
+    public Person(Types.Designation type){
         this.id = idCounter++;
         this.type = type;
     }
+
+    // GETTERS AND SETTERS ############################################################################################
+    // ################################################################################################################
 
     public int getId() {
         return id;
@@ -41,11 +44,11 @@ public class Person {
         this.address = address;
     }
 
-    public Types.designation getType() {
+    public Types.Designation getType() {
         return type;
     }
 
-    public void setType(Types.designation type) {
+    public void setType(Types.Designation type) {
         this.type = type;
     }
 }

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ShelterApp: Add Location</title>
+</head>
+<body>
+<h1>Please enter the information for a new animal: </h1>
+<label for="loc">Choose a location:</label>
+
+<select name="loc" id="loc">
+    <option value="loc1">Puppy Lovers</option>
+    <option value="loc2">Cat's Meow</option>
+    <option value="loc3">Love Birds</option>
+    <option value="loc4">Hopping Bunnies</option>
+</select>
+
+<p>Select the animal's type: </p>
+<input type="radio" id="dog" name="animal_type" value="DOG">
+<label for="dog">Dog</label><br>
+<input type="radio" id="cat" name="animal_type" value="CAT">
+<label for="cat">Cat</label><br>
+<input type="radio" id="bird" name="animal_type" value="BIRD">
+<label for="bird">Bird</label><br>
+<input type="radio" id="rabbit" name="animal_type" value="RABBIT">
+<label for="rabbit">Rabbit</label> <br>
+
+<label for="name">Enter the animal's name:</label>
+<input type="text" id="name" /> <br>
+
+<label for="breed">Enter the animal's breed:</label>
+<input type="text" id="breed" /> <br>
+
+<label for="weight">Enter the animal's weight:</label>
+<input type="number" id="weight" /> <br>
+
+<label for="dob">Date of Birth:</label>
+<input type="date" id="dob" name="dob"> <br>
+
+<label for="datereceived">Date Received:</label>
+<input type="date" id="datereceived" name="datereceived"> <br>
+
+<label for="cost">Enter the animal's cost (enter 0 if unknown):</label>
+<input type="number" id="cost" /> <br>
+
+<a href="/dataaddedsuccess">Success</a> <br>
+<a href="/dataaddedfailure">Fail</a> <br>
+</body>
+</html>

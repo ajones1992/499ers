@@ -1,33 +1,65 @@
 package com.metrostate.ics499.ers;
 
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * List of all available locations (Shelters or Foster homes) in the system. Also
  * responsible for transferring animals between shelters.
  */
 public class LocationList {
+    private final Map<Integer, Location> mapOfLocations = new HashMap<>();
 
-    private ArrayList<Location> locations;
+    public boolean containsLocation(int id){
+        return mapOfLocations.containsKey((Integer)id);
+    }
+
+    public Location getLocation(int id){
+        return mapOfLocations.get((Integer)id);
+    }
+
+    public List<Location> getAllLocations(){
+        return new ArrayList<>(mapOfLocations.values());
+    }
+
+    public void showLocations(){
+        for (Location loc: mapOfLocations.values()) {
+            System.out.println(loc.getId() + ": " + loc.getName() + "\n");
+        }
+    }
+
+    /**
+     * Generates a list of all Animals in all Locations
+     *
+     * @return List<Animal> in all Locations
+     */
+    public List<Animal> getAllAnimals(){
+        List<Animal> animals = new ArrayList<>();
+        List<Location> shelters = new ArrayList<>(mapOfLocations.values());
+
+        for (Location shelter : shelters) {
+            animals.addAll(shelter.getAnimals());
+        }
+
+        return animals;
+    }
 
     /**
      * Adds a Shelter or Foster location ot the list of available locations.
      *
      * @param location location to be added
-     * @return true if successfully added; false otherwise.
      */
-    public boolean addLocation(Location location) {
-        return locations.add(location);
+    public void addLocation(Location location) {
+        mapOfLocations.putIfAbsent((Integer)location.getId(), location);
     }
 
     /**
      * removes a Shelter or Foster location ot the list of available locations.
      *
-     * @param location location to be removed
+     * @param id of location to be removed
      * @return true if successfully removed; false otherwise.
      */
-    public boolean removeLocation(Location location) {
-        return locations.remove(location);
+    public Location removeLocation(int id) {
+        return mapOfLocations.remove((Integer)id);
     }
 
     /**
@@ -42,13 +74,13 @@ public class LocationList {
      * @return true if the animal was successfully transferred; false otherwise
      */
     public boolean transferAnimal(Animal animal, Location origin, Location destination) {
-        if (locations.contains(origin) && locations.contains(destination)
+        if (mapOfLocations.containsValue(origin) && mapOfLocations.containsValue(destination)
                 && origin.getAnimals().contains(animal)
                 && destination.getSpecies().contains(animal.getSpecies())) {
-            animal.setCode(Types.ExitCode.inTransit);
+            animal.setCode(Types.ExitCode.IN_TRANSIT);
             origin.removeAnimal(animal);
             destination.addAnimal(animal);
-            return true; //TODO update database for both locations
+            return true;
         } else {
             return false;
         }

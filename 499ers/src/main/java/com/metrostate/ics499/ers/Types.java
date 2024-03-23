@@ -1,35 +1,34 @@
 package com.metrostate.ics499.ers;
 
 public class Types {
-    public enum designation{
-        Adoptee,
-        ShelterStaff,
-        FosterStaff
+    public enum Designation {
+        ADOPTEE,
+        SHELTER_STAFF,
+        FOSTER_STAFF
     }
 
     public enum ExitCode{
-        Dead,
-        Runaway,
-        Adopt,
-        inTransit,
-        MedicalHold,
+        DEAD,
+        RUNAWAY,
+        ADOPT,
+        IN_TRANSIT
     }
 
     public enum LocType {
-        Shelter,
-        FosterHome
+        SHELTER,
+        FOSTER_HOME
     }
 
     public enum SpeciesAvailable {
-        Cat,
-        Dog,
-        Rabbit,
-        Bird
+        CAT,
+        DOG,
+        RABBIT,
+        BIRD
     }
 
-    enum RecordType{
-        Medical,
-        Behavioral,
-        Other
+    public enum RecordType{
+        MEDICAL,
+        BEHAVIORAL,
+        OTHER
     }
 }

@@ -2,11 +2,11 @@ package com.metrostate.ics499.ers;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.EnumSet;
 
 
 public class Location {
-    private static int idCounter = 0;
+    private static int idCounter = 1;
     private final int id;
     private final Types.LocType type;
     private String name;
@@ -14,16 +14,73 @@ public class Location {
     private List<Types.SpeciesAvailable> species;
     private List<Animal> animals;
     private int maxCapacity;
+    private boolean receiving;
 
+    // Constructor for reconstructing a Location from the database
+    public Location(int id, Types.LocType type, String name, String address, int maxCapacity, List<Types.SpeciesAvailable> species) {
+        this.id = id;
+        this.type = type;
+        this.name = name;
+        this.address = address;
+        this.maxCapacity = maxCapacity;
+        receiving = true;
+        this.species = species;
+        animals = new ArrayList<>(); // Do we just want to add animals separately? What if we have a list of animals known to that shelter?
+    }
+
+    // Constructor for creating a new entry into the database
     public Location(Types.LocType type, String name, String address, int maxCapacity, List<Types.SpeciesAvailable> species) {
         this.id = idCounter++;
         this.type = type;
         this.name = name;
         this.address = address;
         this.maxCapacity = maxCapacity;
+        receiving = true;
         this.species = species;
         animals = new ArrayList<>(); // Do we just want to add animals separately? What if we have a list of animals known to that shelter?
     }
+
+    public boolean addAnimal(@org.jetbrains.annotations.NotNull Animal addition){
+        if (species.contains(addition.getSpecies()) && !atCapacity()) {
+            return animals.add(addition);
+        } else {
+            return false;
+        }
+
+    }
+
+    public boolean removeAnimal(Animal takeaway){
+        return animals.remove(takeaway);
+    }
+
+    public boolean atCapacity(){
+        return maxCapacity <= animals.size();
+    }
+
+    public boolean addSpecies(Types.SpeciesAvailable addition){
+        if (!species.contains(addition)) {
+            return species.add(addition);
+        } else {
+            return false;
+        }
+    }
+
+    public boolean removeSpecies(Types.SpeciesAvailable takeaway){
+        return species.remove(takeaway);
+    }
+
+    public String showAnimals(){
+        String str = "Location: " + id + "\n";
+
+        for (Animal ani: animals) {
+            str += ani.toString();
+            str += "\n";
+        }
+        return str;
+    }
+
+    // GETTERS AND SETTERS ############################################################################################
+    // ################################################################################################################
 
     public int getId(){
         return id;
@@ -56,20 +113,20 @@ public class Location {
         this.maxCapacity = maxCapacity;
     }
 
+    public boolean isReceiving(){
+        return receiving;
+    }
+
+    public void setReceiving(boolean bool){
+        receiving = bool;
+    }
+
     public List<Types.SpeciesAvailable> getSpecies(){
         return species;
     }
 
     public void setSpecies(List<Types.SpeciesAvailable> species) {
         this.species = species;
-    }
-
-    public void addSpecies(Types.SpeciesAvailable addition){
-        species.add(addition);
-    }
-
-    public void removeSpecies(Types.SpeciesAvailable takeaway){
-        species.remove(takeaway);
     }
 
     public List<Animal> getAnimals(){
@@ -81,15 +138,8 @@ public class Location {
         this.animals.addAll(animals);
     }
 
-    public void addAnimal(Animal addition){
-        animals.add(addition);
+    public String toString(){
+        return id + ": " + name;
     }
 
-    public void removeAnimal(Animal takeaway){
-        animals.remove(takeaway);
-    }
-
-    public boolean atCapacity(){
-        return maxCapacity <= animals.size();
-    }
 }
