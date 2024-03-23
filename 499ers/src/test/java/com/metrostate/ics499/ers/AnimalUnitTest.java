@@ -20,20 +20,20 @@ class AnimalUnitTest {
     void init() {
         dob = LocalDate.of(1963, 2, 14);
         intakeDate = LocalDate.now();
-        clifford = new Animal("Clifford the Big Red Dog", Types.SpeciesAvailable.DOG, "Red Lab",
-                456.63, dob, intakeDate, "Testing a unit :)");
+        clifford = new Animal("Clifford the Big Red Dog", Types.SpeciesAvailable.DOG,
+                456.63, dob, intakeDate);
 
         dob.of(1978, 6, 19);
-        garfield = new Animal("Garfield", Types.SpeciesAvailable.CAT, "Orange",
-                12.1, dob, intakeDate, "Testing a unit :)");
+        garfield = new Animal("Garfield", Types.SpeciesAvailable.CAT,
+                12.1, dob, intakeDate);
 
         dob.of(1992, 11, 11);
-        iago = new Animal("Iago", Types.SpeciesAvailable.BIRD, "Parrot",
-                1.03, dob, intakeDate, "Testing a unit :)");
+        iago = new Animal("Iago", Types.SpeciesAvailable.BIRD,
+                1.03, dob, intakeDate);
 
         dob.of(1971, 4, 4);
-        peterCottontail = new Animal("Peter Cottontail", Types.SpeciesAvailable.RABBIT, "Hare",
-                3.11, dob, intakeDate, "Testing a unit :)");
+        peterCottontail = new Animal("Peter Cottontail", Types.SpeciesAvailable.RABBIT,
+                3.11, dob, intakeDate);
     }
     @Test
     @Order(1)

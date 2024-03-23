@@ -183,7 +183,7 @@ public class DBInitializer implements CommandLineRunner {
         Types.SpeciesAvailable species = extractAnimalType(rs.getString("Animal_Type"));
         String breed = rs.getString("Breed");
         double weight = rs.getDouble("Weight");
-        return new Animal(name, species, breed, weight, LocalDate.now(), LocalDate.now(), "No notes");
+        return new Animal(name, species, weight, LocalDate.now(), LocalDate.now());
     }
 
 

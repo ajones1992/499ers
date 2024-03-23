@@ -154,7 +154,7 @@ public class TestUI {
             System.out.println("Please enter the animal weight: ");
             double weight = scan.nextDouble();
             scan.nextLine();
-            return new Animal(name, species, breed, weight, c, c, "");
+            return new Animal(name, species, weight, c, c);
         }catch (Exception e){
             System.out.println("Animal could not be created\n");
             return null;

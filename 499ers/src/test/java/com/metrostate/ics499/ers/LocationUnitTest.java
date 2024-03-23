@@ -85,8 +85,8 @@ public class LocationUnitTest {
     void testAddAnimal() {
         LocalDate dob = LocalDate.of(1963, 2, 14);
         LocalDate intakeDate = LocalDate.now();
-        Animal clifford = new Animal("Clifford the Big Red Dog", Types.SpeciesAvailable.DOG, "Red Lab",
-                456.63, dob, intakeDate, "Testing a unit :)");
+        Animal clifford = new Animal("Clifford the Big Red Dog", Types.SpeciesAvailable.DOG,
+                456.63, dob, intakeDate);
 
         // Adding a valid animal should return true; confirm addition
         assertTrue(humane.addAnimal(clifford));
@@ -104,8 +104,8 @@ public class LocationUnitTest {
     void testRemoveAnimal() {
         LocalDate dob = LocalDate.of(1963, 2, 14);
         LocalDate intakeDate = LocalDate.now();
-        Animal clifford = new Animal("Clifford the Big Red Dog", Types.SpeciesAvailable.DOG, "Red Lab",
-                456.63, dob, intakeDate, "Testing a unit :)");
+        Animal clifford = new Animal("Clifford the Big Red Dog", Types.SpeciesAvailable.DOG,
+                456.63, dob, intakeDate);
 
         // Removing an existing animal should return true; confirm removal
         humane.addAnimal(clifford);
