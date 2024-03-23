@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-public class AnimalTransferController {
+public class DestLocTransferController {
 
-    @RequestMapping(value = "/selectanimaltransfer", method = RequestMethod.GET)
-    public String selectAniTransfer() {
-        return "selectanimaltransfer";
+    @RequestMapping(value = "/destloctransfer", method = RequestMethod.GET)
+    public String selectDestLoc() {
+        return "destloctransfer";
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class TransferFromLocController {
 
     @RequestMapping(value = "/selectloctransfer", method = RequestMethod.GET)
-    public String selectloctransfer() {
+    public String selectTransferLoc() {
         return "selectloctransfer";
     }
 }
