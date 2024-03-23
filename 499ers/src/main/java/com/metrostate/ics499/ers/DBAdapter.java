@@ -256,4 +256,74 @@ public class DBAdapter {
                 Types.LocType.SHELTER : Types.LocType.FOSTER_HOME;
     }
 
+    // Method to update an animal in the database
+    public boolean updateAnimalEntry(Animal animal) throws SQLException {
+        // Formulate the update statement using the animal's properties
+        String updateStatement = String.format(
+                "UPDATE Animal SET Name = ?, Species = ?, Breed = ?, Weight = ?, DOB = ?, IntakeDate = ?, ExitDate = ?, ExitCode = ?, Notes = ? WHERE Animal_ID = ?;",
+                animal.getName(), animal.getSpecies().toString(), animal.getBreed(), animal.getWeight(),
+                animal.getDOB(), animal.getIntakeDate(), animal.getExitDate(), animal.getCode().toString(), animal.getNotes(), animal.getId());
+
+        // Execute the update statement in the database using jdbcTemplate
+        jdbcTemplate.update(updateStatement);
+        return true;
+    }
+
+    public boolean updateAnimal(Animal animal) {
+        String sql = "UPDATE Animals SET name = ?, species = ?, breed = ?, weight = ?, DOB = ?, intakeDate = ?, exitDate = ?, code = ?, notes = ? WHERE id = ?";
+        int result = jdbcTemplate.update(sql,
+                animal.getName(),
+                animal.getSpecies().toString(),
+                animal.getBreed(),
+                animal.getWeight(),
+                animal.getDOB(),
+                animal.getIntakeDate(),
+                animal.getExitDate(),
+                animal.getCode().toString(),
+                animal.getNotes(),
+                animal.getId());
+
+        return result > 0;
+    }
+
+    public boolean updateAnimalAdoptionStatus(Animal animal) {
+        String sql = "UPDATE Animals SET exitDate = ?, code = ? WHERE id = ?";
+        int result = jdbcTemplate.update(sql,
+                animal.getExitDate(),
+                animal.getCode().toString(),
+                animal.getId());
+
+        // Assuming you have a way to link the animal to an adopter, you might also update that relationship here
+
+        return result > 0;
+    }
+
+    public Location getLocationById(int locationId) {
+        String sql = "SELECT * FROM Location WHERE id = ?";
+        Location location = jdbcTemplate.queryForObject(sql, new Object[]{locationId}, (rs, rowNum) ->
+                new Location(
+                        rs.getInt("id"),
+                        Types.LocType.valueOf(rs.getString("type")),
+                        rs.getString("name"),
+                        rs.getString("address"),
+                        rs.getInt("maxCapacity"),
+                        new ArrayList<>() // Initially, provide an empty list for species
+                        // You'll populate this list in the next step
+                ));
+
+        // Assuming you have a method to fetch species for a given locationId
+        List<Types.SpeciesAvailable> species = fetchSpeciesForLocation(locationId);
+        location.setSpecies(species); // Update the location object with the fetched species list
+
+        return location;
+    }
+
+    // Placeholder for the method to fetch species - you'll need to implement this based on your database schema
+    private List<Types.SpeciesAvailable> fetchSpeciesForLocation(int locationId) {
+        // Implement the query to fetch species for the location
+        // For example, query a junction table that links locations to species, if that's how your data is structured
+        return new ArrayList<>(); // Return the actual list of species
+    }
+
+
 }

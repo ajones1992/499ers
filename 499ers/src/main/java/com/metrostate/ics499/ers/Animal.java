@@ -17,6 +17,8 @@ public class Animal {
     private Types.ExitCode code;
     private String notes;
     private List<Record> records;
+    // Assuming Location class has an ID field of type int
+    private int locationID; // Add this to match ERD
 
     public Animal(String name, Types.SpeciesAvailable species, String breed, double weight, LocalDate dob, LocalDate intakeDate, String notes) {
         this.id = idCounter++;
@@ -41,12 +43,68 @@ public class Animal {
     }
 
     public void updateRecord(Record updatedRecord) {
-        // Revisit this method later
+        if (updatedRecord == null) {
+            throw new IllegalArgumentException("Record to update cannot be null");
+        }
 
+        for (int i = 0; i < this.records.size(); i++) {
+            // Check if this record has the same ID as the updatedRecord
+            if (this.records.get(i).getId() == updatedRecord.getId()) {
+                // If found, replace it with the updatedRecord
+                this.records.set(i, updatedRecord);
+                break; // Stop the loop after updating
+            }
+        }
     }
 
-    // GETTERS AND SETTERS ############################################################################################
-    // ################################################################################################################
+    // Add this method to match the class diagram
+    public void updateAnimalEntry() {
+        if (name != null && !name.trim().isEmpty()) {
+            this.name = name;
+        }
+        if (species != null) {
+            this.species = species;
+        }
+        if (breed != null && !breed.trim().isEmpty()) {
+            this.breed = breed;
+        }
+        if (weight > 0) {
+            this.weight = weight;
+        }
+        if (DOB != null) {
+            this.DOB = DOB;
+        }
+        if (intakeDate != null) {
+            this.intakeDate = intakeDate;
+        }
+        if (exitDate != null) {
+            this.exitDate = exitDate;
+        }
+        if (code != null) {
+            this.code = code;
+        }
+        if (notes != null && !notes.trim().isEmpty()) {
+            this.notes = notes;
+        }
+    }
+
+    public void synchronizeWithDatabase(DBAdapter dbAdapter) {
+        boolean success = dbAdapter.updateAnimal(this);
+        if (!success) {
+            // Handle failure (throw an exception, log an error, etc.)
+            System.err.println("Failed to update animal in database.");
+        }
+    }
+
+    public void handleAdoption(LocalDate adoptionDate, Types.ExitCode exitCode) {
+        this.exitDate = adoptionDate;
+        this.code = exitCode; // Assuming Types.ExitCode.ADOPT represents a successful adoption
+    }
+
+    // Method to retrieve the current location of this animal
+    public Location getCurrentLocation(DBAdapter dbAdapter) {
+        return dbAdapter.getLocationById(this.locationID);
+    }
 
     public int getId() {
         return id;
@@ -136,6 +194,15 @@ public class Animal {
         this.records = records;
     }
 
+    // New getter and setter for locationID
+    public int getLocationID() {
+        return locationID;
+    }
+
+    public void setLocationID(int locationID) {
+        this.locationID = locationID;
+    }
+
     public String toString(){
         return "Animal{" +
                 "animal_ID='" + id + '\'' +
@@ -145,5 +212,6 @@ public class Animal {
                 ", intake_date=" + intakeDate +
                 '}';
     }
-
 }
+
+
