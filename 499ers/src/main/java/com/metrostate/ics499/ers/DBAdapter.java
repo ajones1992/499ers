@@ -260,9 +260,9 @@ public class DBAdapter {
     public boolean updateAnimalEntry(Animal animal) throws SQLException {
         // Formulate the update statement using the animal's properties
         String updateStatement = String.format(
-                "UPDATE Animal SET Name = ?, Species = ?, Breed = ?, Weight = ?, DOB = ?, IntakeDate = ?, ExitDate = ?, ExitCode = ?, Notes = ? WHERE Animal_ID = ?;",
-                animal.getName(), animal.getSpecies().toString(), animal.getBreed(), animal.getWeight(),
-                animal.getDOB(), animal.getIntakeDate(), animal.getExitDate(), animal.getCode().toString(), animal.getNotes(), animal.getId());
+                "UPDATE Animal SET Name = ?, Species = ?, Weight = ?, DOB = ?, IntakeDate = ?, ExitDate = ?, ExitCode = ? WHERE Animal_ID = ?;",
+                animal.getName(), animal.getSpecies().toString(), animal.getWeight(),
+                animal.getDOB(), animal.getIntakeDate(), animal.getExitDate(), animal.getCode().toString(), animal.getId());
 
         // Execute the update statement in the database using jdbcTemplate
         jdbcTemplate.update(updateStatement);
@@ -270,17 +270,15 @@ public class DBAdapter {
     }
 
     public boolean updateAnimal(Animal animal) {
-        String sql = "UPDATE Animals SET name = ?, species = ?, breed = ?, weight = ?, DOB = ?, intakeDate = ?, exitDate = ?, code = ?, notes = ? WHERE id = ?";
+        String sql = "UPDATE Animals SET name = ?, species = ?, weight = ?, DOB = ?, intakeDate = ?, exitDate = ?, code = ? WHERE id = ?";
         int result = jdbcTemplate.update(sql,
                 animal.getName(),
                 animal.getSpecies().toString(),
-                animal.getBreed(),
                 animal.getWeight(),
                 animal.getDOB(),
                 animal.getIntakeDate(),
                 animal.getExitDate(),
                 animal.getCode().toString(),
-                animal.getNotes(),
                 animal.getId());
 
         return result > 0;
