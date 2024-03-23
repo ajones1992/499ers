@@ -29,12 +29,10 @@ CREATE TABLE IF NOT EXISTS Animal(
 CREATE TABLE IF NOT EXISTS Record(
   Record_ID INT PRIMARY KEY,
   Animal_ID INT NOT NULL,
-  Employee_ID INT NOT NULL,
   Update_Date DATE NOT NULL,
   Record_Type VARCHAR(16) NOT NULL,
   Details VARCHAR(100),
-  foreign key (Animal_ID) References Animal(Animal_ID),
-  foreign key (Employee_ID) References Person(Person_ID)
+  foreign key (Animal_ID) References Animal(Animal_ID)
 );
 
 CREATE TABLE IF NOT EXISTS Species_Available(
