@@ -19,11 +19,9 @@ class RecordUnitTest {
     @BeforeEach
     void init() {
         recordDate = LocalDate.of(1963, 2, 14);
-        bogey = new Person(Types.Designation.ADOPTEE);
-        Animal furball = new Animal("Cat", Types.SpeciesAvailable.CAT, "calico", 9.6, LocalDate.of(2023, 11, 6), LocalDate.of(2023, 11, 6), "new born kitten");
-        test1 = new Record(bogey.getId(), furball.getId(), recordDate, Types.RecordType.MEDICAL, "Testing Records ID 1");
-        test2 = new Record(bogey.getId(), furball.getId(),recordDate, Types.RecordType.BEHAVIORAL, "Testing Records ID 2");
-        test3 = new Record(bogey.getId(), furball.getId(),recordDate, Types.RecordType.OTHER, "Testing Records ID 3");
+        test1 = new Record(recordDate, Types.RecordType.MEDICAL, "Testing Records ID 1");
+        test2 = new Record(recordDate, Types.RecordType.BEHAVIORAL, "Testing Records ID 2");
+        test3 = new Record(recordDate, Types.RecordType.OTHER, "Testing Records ID 3");
 
     }
 
