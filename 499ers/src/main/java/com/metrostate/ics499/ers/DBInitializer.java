@@ -118,8 +118,8 @@ public class DBInitializer implements CommandLineRunner {
     private void testInsert() {
         System.out.println("Test Insert");
         try {
-            String statement = "INSERT INTO Animal (Animal_ID, Animal_Name, Animal_Type, Breed, Weight, Received_Date, Exit_Date, Exit_Code, Adopt_Cost, Location_ID, Adoptee_ID) VALUES\n" +
-                    "(106, 'George', 'Dog', 'Great Dane', 100.5, '2024-03-01', '2024-03-15', 'Adopted', 150, 1, 1);";
+            String statement = "INSERT INTO Animal (Animal_ID, Animal_Name, Animal_Type, Weight, Received_Date, Exit_Date, Exit_Code, Location_ID) VALUES\n" +
+                    "(106, 'George', 'Dog', 100.5, '2024-03-01', '2024-03-15', 'Adopted', 1);";
             dbAccess.insert(statement);
             displayLocations();
         } catch (SQLException e) {
@@ -181,7 +181,6 @@ public class DBInitializer implements CommandLineRunner {
     private Animal extractAnimal(ResultSet rs) throws SQLException {
         String name = rs.getString("Animal_Name");
         Types.SpeciesAvailable species = extractAnimalType(rs.getString("Animal_Type"));
-        String breed = rs.getString("Breed");
         double weight = rs.getDouble("Weight");
         return new Animal(name, species, weight, LocalDate.now(), LocalDate.now());
     }
