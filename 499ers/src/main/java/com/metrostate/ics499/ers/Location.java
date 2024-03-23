@@ -2,7 +2,6 @@ package com.metrostate.ics499.ers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.EnumSet;
 
 
 public class Location {
@@ -14,7 +13,6 @@ public class Location {
     private List<Types.SpeciesAvailable> species;
     private List<Animal> animals;
     private int maxCapacity;
-    private boolean receiving;
 
     // Constructor for reconstructing a Location from the database
     public Location(int id, Types.LocType type, String name, String address, int maxCapacity, List<Types.SpeciesAvailable> species) {
@@ -23,9 +21,8 @@ public class Location {
         this.name = name;
         this.address = address;
         this.maxCapacity = maxCapacity;
-        receiving = true;
         this.species = species;
-        animals = new ArrayList<>(); // Do we just want to add animals separately? What if we have a list of animals known to that shelter?
+        animals = new ArrayList<>();
     }
 
     // Constructor for creating a new entry into the database
@@ -35,9 +32,8 @@ public class Location {
         this.name = name;
         this.address = address;
         this.maxCapacity = maxCapacity;
-        receiving = true;
         this.species = species;
-        animals = new ArrayList<>(); // Do we just want to add animals separately? What if we have a list of animals known to that shelter?
+        animals = new ArrayList<>();
     }
 
     public boolean addAnimal(@org.jetbrains.annotations.NotNull Animal addition){
@@ -111,14 +107,6 @@ public class Location {
 
     public void setMaxCapacity(int maxCapacity) {
         this.maxCapacity = maxCapacity;
-    }
-
-    public boolean isReceiving(){
-        return receiving;
-    }
-
-    public void setReceiving(boolean bool){
-        receiving = bool;
     }
 
     public List<Types.SpeciesAvailable> getSpecies(){

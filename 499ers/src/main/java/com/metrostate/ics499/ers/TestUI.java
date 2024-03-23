@@ -110,7 +110,7 @@ public class TestUI {
      */
     public static boolean shelterSearch(int selected){
         if (locationList.containsLocation(selected)) {
-            if (locationList.getLocation(selected).isReceiving()) {
+            if (!locationList.getLocation(selected).atCapacity()) {
                 return true;
             } else {
                 System.out.println("This shelter is not receiving animals\n");
