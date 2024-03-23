@@ -4,8 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.annotation.Order;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.jdbc.core.JdbcTemplate;
+
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,10 +19,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
 
+@Order(1)
 @SpringBootApplication
 public class DBInitializer implements CommandLineRunner {
 
@@ -30,11 +33,6 @@ public class DBInitializer implements CommandLineRunner {
     private DBAdapter dbAccess;
 
     public static void main(String[] args) throws SQLException {
-        start(args);
-        System.out.println("Outside startup");
-    }
-
-    public static void start(String[] args) {
         SpringApplication.run(DBInitializer.class, args);
     }
 
@@ -49,26 +47,27 @@ public class DBInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        try {
+            reset();
+        } catch (DataAccessException e) {
+            // do not reset
+        }
 
         //Create the database table:
         initDatabase();
         fillDatabase();
 
         //tests
-        try {
-            dbAccess = DBAdapter.getInstance(jdbcTemplate);
-            testInsert();
-            displayAnimals();
-            testInsertLocation();
-            testQueryLocation();
-            testUpdateLocation();
-            displayLocations();
-        } catch (Exception e) {
-            // drop tables
-            reset();
-            throw e;
-        }
-        reset();
+        dbAccess = DBAdapter.getInstance(jdbcTemplate);
+        testAnimalInsert();
+        displayAnimals();
+        testQueryAnimal();
+        displayLocations();
+        testInsertLocation();
+        testQueryLocation();
+        testUpdateLocation();
+        displayLocations();
+
     }
 
 
@@ -114,16 +113,23 @@ public class DBInitializer implements CommandLineRunner {
 
     // methods that are for testing and may be removed ------------------------------------------------
 
-    // test insert
-    private void testInsert() {
-        System.out.println("Test Insert");
-        try {
-            String statement = "INSERT INTO Animal (Animal_ID, Animal_Name, Animal_Type, Weight, Received_Date, Exit_Date, Exit_Code, Location_ID) VALUES\n" +
-                    "(106, 'George', 'Dog', 100.5, '2024-03-01', '2024-03-15', 'Adopted', 1);";
-            dbAccess.insert(statement);
-            displayLocations();
-        } catch (SQLException e) {
-            System.out.println("Insert Failed");
+    // test animal insert
+    private void testAnimalInsert() {
+        System.out.println("Test Animal Insert");
+        Animal myAnimal = new Animal("George", Types.SpeciesAvailable.DOG, 100.5, LocalDate.now(), LocalDate.now());
+        Location myLoc = dbAccess.queryLocation("Location_ID", "1").get(0);
+        dbAccess.insert(myAnimal, myLoc);
+    }
+
+    // test animal Query
+    private void testQueryAnimal() {
+        System.out.println("Test Query Animal");
+        System.out.println("Query for animal with id 102");
+        ArrayList<Animal> results = new ArrayList<Animal>(
+                dbAccess.queryAnimal("Animal_ID", "102"));
+        System.out.println("Results: ");
+        for (Animal animal : results) {
+            System.out.println(animal);
         }
     }
 
@@ -179,10 +185,11 @@ public class DBInitializer implements CommandLineRunner {
     }
 
     private Animal extractAnimal(ResultSet rs) throws SQLException {
+        int id = rs.getInt("Animal_ID");
         String name = rs.getString("Animal_Name");
-        Types.SpeciesAvailable species = extractAnimalType(rs.getString("Animal_Type"));
+        Types.SpeciesAvailable species = Types.SpeciesAvailable.valueOf(rs.getString("Animal_Type"));
         double weight = rs.getDouble("Weight");
-        return new Animal(name, species, weight, LocalDate.now(), LocalDate.now());
+        return new Animal(id, name, species, weight, LocalDate.now(), LocalDate.now());
     }
 
 
@@ -225,7 +232,7 @@ public class DBInitializer implements CommandLineRunner {
 
     private Location extractLocation(ResultSet rs) throws SQLException {
         int id = rs.getInt("Location_ID");
-        Types.LocType type = extractLocationType(rs.getString("Location_Type"));
+        Types.LocType type = Types.LocType.valueOf(rs.getString("Location_Type"));
         String name = rs.getString("Location_Name");
         String address = rs.getString("Address");
         int capacity = rs.getInt("Capacity");

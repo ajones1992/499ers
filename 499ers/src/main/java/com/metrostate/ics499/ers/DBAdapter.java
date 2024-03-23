@@ -1,9 +1,11 @@
 package com.metrostate.ics499.ers;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,8 +37,10 @@ public class DBAdapter {
      * privately constructs and initializes the dbAdapter
      *
      */
-    private DBAdapter(JdbcTemplate template) {
+    @Autowired
+    public DBAdapter(JdbcTemplate template) {
         jdbcTemplate = template;
+        databaseAccess = this;
     }
 
     public static DBAdapter getInstance(JdbcTemplate template) {
@@ -99,8 +103,29 @@ public class DBAdapter {
         return true;
     }
 
-    public boolean insert (Animal animal) throws SQLException {
-        return false;
+    /**
+     * Inserts the specified Animal into the Animal table within the database.
+     * Sets its foreign key based on the Location also provided. Returns true
+     * if the operation was successful.
+     *
+     * @param animal animal to be inserted into the database
+     * @param location location to which the animal will be linked
+     * @return true if operation successful; false otherwise
+     */
+    public boolean insert (Animal animal, Location location) {
+        int id = animal.getId();
+        String name = animal.getName();
+        String type = animal.getSpecies() == null? null : animal.getSpecies().toString();
+        double weight = animal.getWeight();
+        LocalDate dob = animal.getDOB();
+        LocalDate intake = animal.getIntakeDate();
+        LocalDate exit = animal.getExitDate();
+        String code = animal.getCode() == null? null : animal.getCode().toString();
+        int locId = location.getId();
+        String sqlStatement = String.format("INSERT INTO Animal " +
+                "VALUES (%d, '%s', '%s', %f, '%s', '%s', '%s', '%s', %d);", id, name, type, weight, dob, intake, exit, code, locId);
+        jdbcTemplate.execute(sqlStatement);
+        return true;
     }
 
     public boolean insert (Person person) throws SQLException {
@@ -213,19 +238,35 @@ public class DBAdapter {
         return result.toString();
     }
 
-    // Location query
-    public List<Location> queryLocation(String searchKey, String query) throws IllegalArgumentException {
+    /**
+     * Returns a list of locations from the database based on the provided
+     * search key and search term.
+     *
+     * @param searchKey the field being searched
+     * @param query the search of the searchKey field
+     * @return a list of locations that meet the defined query
+     */
+    public List<Location> queryLocation(String searchKey, String query) {
         StringBuffer queryStatement = new StringBuffer("SELECT * FROM Location WHERE ");
         queryStatement.append(addLocationSearchKey(searchKey, query));
         return jdbcTemplate.query(queryStatement.toString(), (resultSet, rowNum) -> extractLocation(resultSet));
     }
 
-    // Helps validate the searchKey field
+    /**
+     * Verifies and adds the search key field of a location query. Returns a
+     * StringBuffer with a SQL query segment with the searchKey field and
+     * query.
+     *
+     * @param searchKey a field of location
+     * @param query the query of the searchKey field
+     * @return a StringBuffer with the SQL query segment for the
+     * @throws IllegalArgumentException if the searchKey is not a field of Location
+     */
     private StringBuffer addLocationSearchKey(String searchKey, String query)
             throws IllegalArgumentException {
         StringBuffer statement = new StringBuffer();
         if (searchKey.equalsIgnoreCase("Location_ID")) {
-            statement.append(String.format("Location_ID = %d;", Integer.parseInt(query)));
+            statement.append(String.format("Location_ID = '%d';", Integer.parseInt(query)));
         } else if (searchKey.equalsIgnoreCase("Location_Name")) {
             statement.append(String.format("Location_Name = '%s';", query));
         } else if (searchKey.equalsIgnoreCase("Location_Type")) {
@@ -233,7 +274,7 @@ public class DBAdapter {
         } else if (searchKey.equalsIgnoreCase("Address")) {
             statement.append(String.format("Address = '%s';", query));
         } else if (searchKey.equalsIgnoreCase("Capacity")) {
-            statement.append(String.format("Capacity = %d", Integer.parseInt(query)));
+            statement.append(String.format("Capacity = '%d';", Integer.parseInt(query)));
         } else {
             throw new IllegalArgumentException("Invalid searchKey for Location");
         }
@@ -241,19 +282,99 @@ public class DBAdapter {
     }
 
     //Extracts location from a result set
+
+    /**
+     * Returns a Location extracted from a ResultSet.
+     *
+     * @param rs result set row from an SQL statement
+     * @return Location in the result set
+     * @throws SQLException throws when internal methods fail
+     */
     private Location extractLocation(ResultSet rs) throws SQLException {
+        Types.LocType type = null;
+        try {
+            type = Types.LocType.valueOf(rs.getString("Location_Type"));
+        } catch (IllegalArgumentException e) {
+            // Leave type as null
+        }
         int id = rs.getInt("Location_ID");
-        Types.LocType type = extractLocationType(rs.getString("Location_Type"));
         String name = rs.getString("Location_Name");
         String address = rs.getString("Address");
         int capacity = rs.getInt("Capacity");
         return new Location(id, type, name, address, capacity, new ArrayList<Types.SpeciesAvailable>());
     }
 
-    // Extracts a location enumerated type from a string.
-    private Types.LocType extractLocationType(String type) {
-        return type.equalsIgnoreCase("SHELTER")?
-                Types.LocType.SHELTER : Types.LocType.FOSTER_HOME;
+    /**
+     * Returns a list of Animals from the database based on the provided
+     * search key and search term.
+     *
+     * @param searchKey the field being searched
+     * @param query the search of the searchKey field
+     * @return a list of locations that meet the defined query
+     */
+    public List<Animal> queryAnimal(String searchKey, String query) {
+        StringBuffer queryStatement = new StringBuffer("SELECT * FROM Animal WHERE ");
+        queryStatement.append(addAnimalSearchKey(searchKey, query));
+        return jdbcTemplate.query(queryStatement.toString(), (resultSet, rowNum) -> extractAnimal(resultSet));
+    }
+
+    /**
+     * Verifies and adds the search key field of an animal query. Returns a
+     * StringBuffer with a SQL query segment with the searchKey field and
+     * query.
+     *
+     * @param searchKey a field of animal
+     * @param query the query of the searchKey field
+     * @return a StringBuffer with the SQL query segment for the
+     * @throws IllegalArgumentException if the searchKey is not a field of Location
+     */
+    private StringBuffer addAnimalSearchKey(String searchKey, String query)
+            throws IllegalArgumentException {
+        StringBuffer statement = new StringBuffer();
+        if (searchKey.equalsIgnoreCase("Animal_ID")) {
+            statement.append(String.format("Animal_ID = '%d';", Integer.parseInt(query)));
+        } else if (searchKey.equalsIgnoreCase("Animal_Name")) {
+            statement.append(String.format("Animal_Name = '%s';", query));
+        } else if (searchKey.equalsIgnoreCase("Animal_Type")) {
+            statement.append(String.format("Animal_Type = '%s';", query));
+        } else if (searchKey.equalsIgnoreCase("Weight")) {
+            statement.append(String.format("Weight = '%f';", Double.parseDouble(query)));
+        } else if (searchKey.equalsIgnoreCase("DOB")) {
+            statement.append(String.format("DOB = '%s';", query));
+        } else if (searchKey.equalsIgnoreCase("Received_Date"))  {
+            statement.append(String.format("Received_Date = '%s';", query));
+        } else if (searchKey.equalsIgnoreCase("Exit_Date"))  {
+            statement.append(String.format("Exit_Date = '%s';", query));
+        } else if (searchKey.equalsIgnoreCase("Exit_Code"))  {
+            statement.append(String.format("Exit_Code = '%s';", query));
+        } else if (searchKey.equalsIgnoreCase("Location_ID"))  {
+            statement.append(String.format("Location_ID = '%d';", Integer.parseInt(query)));
+        } else {
+            throw new IllegalArgumentException("Invalid searchKey for Animal");
+        }
+        return statement;
+    }
+
+    /**
+     * Returns an Animal extracted from a ResultSet.
+     *
+     * @param rs result set row from an SQL statement
+     * @return Animal in the result set
+     * @throws SQLException throws when internal methods fail
+     */
+    private Animal extractAnimal(ResultSet rs) throws SQLException {
+        Types.SpeciesAvailable species = null;
+        try {
+            species = Types.SpeciesAvailable.valueOf(rs.getString("Animal_Type"));
+        } catch (IllegalArgumentException e) {
+            // Leave species as null
+        }
+        int id = rs.getInt("Animal_ID");
+        String name = rs.getString("Animal_Name");
+        double weight = rs.getDouble("Weight");
+        LocalDate dob = LocalDate.parse(rs.getString("DOB"));
+        LocalDate intake = LocalDate.parse(rs.getString("Received_Date"));
+        return new Animal(id, name, species, weight, dob, intake);
     }
 
     // Method to update an animal in the database

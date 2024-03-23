@@ -26,6 +26,16 @@ public class Animal {
         this.records = new ArrayList<>();
     }
 
+    public Animal(int id, String name, Types.SpeciesAvailable species, double weight, LocalDate dob, LocalDate intakeDate) {
+        this.id = id;
+        this.name = name;
+        this.species = species;
+        this.weight = weight;
+        this.DOB = dob;
+        this.intakeDate = intakeDate;
+        this.records = new ArrayList<>();
+    }
+
     public void addRecord(Record record) {
         if (record != null) {
             this.records.add(record);

@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS Animal(
   Animal_Name VARCHAR(64) NOT NULL,
   Animal_Type VARCHAR(16) NOT NULL,
   Weight DOUBLE NOT NULL,
+  DOB Date NOT NULL,
   Received_Date DATE NOT NULL,
   Exit_Date DATE,
   Exit_Code VARCHAR(16),
