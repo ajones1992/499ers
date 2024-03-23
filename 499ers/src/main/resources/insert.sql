@@ -20,12 +20,12 @@ INSERT INTO Animal (Animal_ID, Animal_Name, Animal_Type, Weight, Received_Date, 
 (105, 'Lucy', 'Dog', 65.0, '2024-03-11', NULL, NULL, 3);
 
 
-INSERT INTO Record (Record_ID, Animal_ID, Employee_ID, Update_Date, Record_Type, Details) VALUES
-(1, 101, 2, '2024-03-15', 'Checkup', 'Healthy, ready for adoption'),
-(2, 102, 5, '2024-03-06', 'Status', 'Under observation, diet'),
-(3, 103, 2, '2024-03-08', 'Status', 'Training needed, nervous'),
-(4, 104, 5, '2024-03-11', 'Checkup', 'Medication required, stable'),
-(5, 105, 2, '2024-03-12', 'Status', 'Energetic, needs space');
+INSERT INTO Record (Record_ID, Animal_ID, Update_Date, Record_Type, Details) VALUES
+(1, 101, '2024-03-15', 'Checkup', 'Healthy, ready for adoption'),
+(2, 102, '2024-03-06', 'Status', 'Under observation, diet'),
+(3, 103, '2024-03-08', 'Status', 'Training needed, nervous'),
+(4, 104, '2024-03-11', 'Checkup', 'Medication required, stable'),
+(5, 105, '2024-03-12', 'Status', 'Energetic, needs space');
 
 
 INSERT INTO Species_Available (Location_ID, Species_Type) VALUES
