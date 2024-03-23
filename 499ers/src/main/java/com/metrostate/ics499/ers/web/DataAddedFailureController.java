@@ -5,15 +5,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping("/newentry")
-public class EntryCreatorController {
+@RequestMapping("/dataaddedfailure")
+public class DataAddedFailureController {
 
-    public EntryCreatorController() {
+    public DataAddedFailureController() {
 
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String getEntry() {
-        return "newentry";
+    public String getFailure() {
+        return "dataaddedfailure";
     }
 }
