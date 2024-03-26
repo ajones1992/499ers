@@ -8,6 +8,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 
 import java.io.File;
@@ -59,7 +60,7 @@ public class DBInitializer implements CommandLineRunner {
 
         //tests
         dbAccess = DBAdapter.getInstance(jdbcTemplate);
-        testAnimalInsert();
+        testInsertAnimal();
         displayAnimals();
         testQueryAnimal();
         displayLocations();
@@ -67,10 +68,11 @@ public class DBInitializer implements CommandLineRunner {
         testQueryLocation();
         testUpdateLocation();
         displayLocations();
+        testInsertSpecies();
+        displaySpeciesAvailable();
+        testQuerySpecies();
 
     }
-
-
 
     public void initDatabase() throws FileNotFoundException {
         try {
@@ -114,7 +116,7 @@ public class DBInitializer implements CommandLineRunner {
     // methods that are for testing and may be removed ------------------------------------------------
 
     // test animal insert
-    private void testAnimalInsert() {
+    private void testInsertAnimal() {
         System.out.println("Test Animal Insert");
         Animal myAnimal = new Animal("George", Types.SpeciesAvailable.DOG, 100.5, LocalDate.now(), LocalDate.now());
         Location myLoc = dbAccess.queryLocation("Location_ID", "1").get(0);
@@ -179,35 +181,9 @@ public class DBInitializer implements CommandLineRunner {
         }
     }
 
-    public List<Animal> getAnimals() {
-        String queryStatement = "SELECT * FROM animal";
-        return jdbcTemplate.query(queryStatement, (resultSet, rowNum) -> extractAnimal(resultSet));
-    }
-
-    private Animal extractAnimal(ResultSet rs) throws SQLException {
-        int id = rs.getInt("Animal_ID");
-        String name = rs.getString("Animal_Name");
-        Types.SpeciesAvailable species = Types.SpeciesAvailable.valueOf(rs.getString("Animal_Type"));
-        double weight = rs.getDouble("Weight");
-        return new Animal(id, name, species, weight, LocalDate.now(), LocalDate.now());
-    }
-
-
-    private Types.SpeciesAvailable extractAnimalType(String type) {
-        if (type.equalsIgnoreCase("CAT")) {
-            return Types.SpeciesAvailable.CAT;
-        } else if (type.equalsIgnoreCase("DOG")) {
-            return Types.SpeciesAvailable.DOG;
-        } else if (type.equalsIgnoreCase("RABBIT")) {
-            return Types.SpeciesAvailable.RABBIT;
-        } else {
-            return Types.SpeciesAvailable.BIRD;
-        }
-    }
-
     private void displayAnimals() {
         //Read records:
-        List<Animal> animals = getAnimals();
+        List<Animal> animals = dbAccess.getAllAnimals();
 
         //Print read records:
         for (Animal a : animals) {
@@ -217,7 +193,7 @@ public class DBInitializer implements CommandLineRunner {
 
     private void displayLocations() {
         //Read records:
-        List<Location> locations = getLocations();
+        List<Location> locations = dbAccess.getAllLocations();
 
         //Print read records:
         for (Location l : locations) {
@@ -225,26 +201,33 @@ public class DBInitializer implements CommandLineRunner {
         }
     }
 
-    public List<Location> getLocations() {
-        String queryStatement = "SELECT * FROM Location";
-        return jdbcTemplate.query(queryStatement, (resultSet, rowNum) -> extractLocation(resultSet));
-    }
-
-    private Location extractLocation(ResultSet rs) throws SQLException {
-        int id = rs.getInt("Location_ID");
-        Types.LocType type = Types.LocType.valueOf(rs.getString("Location_Type"));
-        String name = rs.getString("Location_Name");
-        String address = rs.getString("Address");
-        int capacity = rs.getInt("Capacity");
-        return new Location(id, type, name, address, capacity, new ArrayList<Types.SpeciesAvailable>());
-    }
-
-
-    private Types.LocType extractLocationType(String type) {
-        if (type.equalsIgnoreCase("SHELTER")) {
-            return Types.LocType.SHELTER;
-        } else {
-            return Types.LocType.FOSTER_HOME;
+    private void displaySpeciesAvailable() {
+        String queryStatement = "SELECT * FROM Species_Available;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(queryStatement);
+        results.first();
+        System.out.println("LocID | Species");
+        while (!results.isAfterLast()) {
+            System.out.printf("(%d, %s)\n", results.getInt("Location_ID"),
+                    results.getString("Species_Type"));
+            results.next();
         }
+    }
+
+    private void testInsertSpecies() {
+        System.out.println("Test SpeciesAvailable Insert");
+        Location myLoc = dbAccess.queryLocation("Location_ID", "1").get(0);
+        dbAccess.insert(Types.SpeciesAvailable.RABBIT, myLoc);
+    }
+
+    private void testQuerySpecies(){
+        System.out.println("Test SpeciesAvailable Query");
+
+        Location myLoc = dbAccess.queryLocation("Location_ID", "1").get(0);
+        System.out.printf("Query for all species at %s\n", myLoc.getName());
+        List<Types.SpeciesAvailable> species = dbAccess.querySpeciesAvailable(myLoc);
+        for (Types.SpeciesAvailable s: species) {
+            System.out.println(s.toString());
+        }
+
     }
 }

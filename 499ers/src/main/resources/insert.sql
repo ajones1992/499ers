@@ -29,8 +29,8 @@ INSERT INTO Record (Record_ID, Animal_ID, Update_Date, Record_Type, Details) VAL
 
 
 INSERT INTO Species_Available (Location_ID, Species_Type) VALUES
-(1, 'Dog'),
-(1, 'Cat'),
-(2, 'Cat'),
-(2, 'Dog'),
-(3, 'Dog');
+(1, 'DOG'),
+(1, 'CAT'),
+(2, 'CAT'),
+(2, 'DOG'),
+(3, 'DOG');

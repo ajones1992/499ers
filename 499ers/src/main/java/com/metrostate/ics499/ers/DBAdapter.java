@@ -110,7 +110,7 @@ public class DBAdapter {
      *
      * @param animal animal to be inserted into the database
      * @param location location to which the animal will be linked
-     * @return true if operation successful; false otherwise
+     * @return true if operation successful
      */
     public boolean insert (Animal animal, Location location) {
         int id = animal.getId();
@@ -128,8 +128,20 @@ public class DBAdapter {
         return true;
     }
 
-    public boolean insert (Person person) throws SQLException {
-        return false;
+    /**
+     * Inserts the specified species into the species available table, linking
+     * the location to the species in the database. Returns true if the
+     * operation was successful.
+     *
+     * @param species species to be linked to location
+     * @param location location with the specified species available
+     * @return true if operation successful
+     */
+    public boolean insert (Types.SpeciesAvailable species, Location location) {
+        String sqlStatement = String.format("INSERT INTO Species_Available " +
+                "VALUES (%d, '%s')", location.getId(), species.toString());
+        jdbcTemplate.execute(sqlStatement);
+        return true;
     }
 
     /**
@@ -137,7 +149,7 @@ public class DBAdapter {
      * Returns true if the operation was successful.
      *
      * @param location location to be inserted
-     * @return true if operation successful; false otherwise
+     * @return true if operation successful
      */
     public boolean insert(Location location) {
         int id = location.getId();
@@ -291,17 +303,29 @@ public class DBAdapter {
      * @throws SQLException throws when internal methods fail
      */
     private Location extractLocation(ResultSet rs) throws SQLException {
-        Types.LocType type = null;
-        try {
-            type = Types.LocType.valueOf(rs.getString("Location_Type"));
-        } catch (IllegalArgumentException e) {
-            // Leave type as null
-        }
         int id = rs.getInt("Location_ID");
+        Types.LocType type = Types.LocType.valueOf(rs.getString("Location_Type"));
         String name = rs.getString("Location_Name");
         String address = rs.getString("Address");
         int capacity = rs.getInt("Capacity");
         return new Location(id, type, name, address, capacity, new ArrayList<Types.SpeciesAvailable>());
+    }
+
+    /**
+     * Returns a list of all locations in the Location table.
+     *
+     * @return list of all locations
+     */
+    public List<Location> getAllLocations() {
+        String queryStatement = "SELECT * FROM Location";
+        return jdbcTemplate.query(queryStatement, (resultSet, rowNum) -> extractLocation(resultSet));
+    }
+
+    public List<Types.SpeciesAvailable> querySpeciesAvailable(Location location) {
+        String queryStatement = String.format("SELECT * FROM Species_Available " +
+                "WHERE Location_ID = %d", location.getId());
+        return jdbcTemplate.query(queryStatement, (resultSet, rowNum) ->
+                Types.SpeciesAvailable.valueOf(resultSet.getString("Species_Type")));
     }
 
     /**
@@ -363,18 +387,23 @@ public class DBAdapter {
      * @throws SQLException throws when internal methods fail
      */
     private Animal extractAnimal(ResultSet rs) throws SQLException {
-        Types.SpeciesAvailable species = null;
-        try {
-            species = Types.SpeciesAvailable.valueOf(rs.getString("Animal_Type"));
-        } catch (IllegalArgumentException e) {
-            // Leave species as null
-        }
         int id = rs.getInt("Animal_ID");
         String name = rs.getString("Animal_Name");
+        Types.SpeciesAvailable species = Types.SpeciesAvailable.valueOf(rs.getString("Animal_Type"));
         double weight = rs.getDouble("Weight");
         LocalDate dob = LocalDate.parse(rs.getString("DOB"));
         LocalDate intake = LocalDate.parse(rs.getString("Received_Date"));
         return new Animal(id, name, species, weight, dob, intake);
+    }
+
+    /**
+     * Returns a list of all animals in the Animal Table.
+     *
+     * @return a list of all animals
+     */
+    public List<Animal> getAllAnimals() {
+        String queryStatement = "SELECT * FROM animal";
+        return jdbcTemplate.query(queryStatement, (resultSet, rowNum) -> extractAnimal(resultSet));
     }
 
     // Method to update an animal in the database
