@@ -180,7 +180,7 @@ public class Animal {
                 ", intake_date=" + intakeDate +
                 ", exit_date=" + exitDate +
                 ", code=" + code +
-                '}';
+                " }\n";
     }
 }
 
