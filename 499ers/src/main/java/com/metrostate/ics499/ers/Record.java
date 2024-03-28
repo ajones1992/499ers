@@ -16,6 +16,13 @@ public class Record {
         this.details = details;
     }
 
+    public Record(int id, LocalDate updateDate, Types.RecordType type, String details) {
+        this.id = id;
+        this.updateDate = updateDate;
+        this.type = type;
+        this.details = details;
+    }
+
     // GETTERS AND SETTERS ############################################################################################
     // ################################################################################################################
 
@@ -45,6 +52,11 @@ public class Record {
 
     public void setDetails(String newDetails) {
         this.details = newDetails;
+    }
+
+    public String toString() {
+        return String.format("Record [id = %d, updateDate = %s, type = %s, details = %s]",
+                this.id, this.updateDate.toString(), this.type.toString(), this.details);
     }
 
 }

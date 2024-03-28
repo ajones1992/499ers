@@ -8,6 +8,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * dbAdapter acts as an adapter from the Java/Interface side of the project to the
@@ -17,21 +18,7 @@ public class DBAdapter {
 
     // singleton
     private static DBAdapter databaseAccess;
-    private JdbcTemplate jdbcTemplate;
-
-    //instance variables
-    private Connection connect = null;
-    private Statement statement = null;
-    private PreparedStatement preparedStatement = null;
-    private ResultSet resultSet = null;
-
-    /**
-     * privately constructs and initializes the dbAdapter
-     *
-     */
-    private DBAdapter() {
-            connect();
-    }
+    private final JdbcTemplate jdbcTemplate;
 
     /**
      * privately constructs and initializes the dbAdapter
@@ -50,57 +37,8 @@ public class DBAdapter {
         return databaseAccess;
     }
 
-    /**
-     * Gets the instance of the dbAdapter.
-     *
-     * @return The instance of the dbAdapter
-     */
     public static DBAdapter getInstance() {
-        if (databaseAccess == null) {
-            databaseAccess = new DBAdapter();
-        }
         return databaseAccess;
-    }
-
-    /**
-     * initializes and connects to the database with the specified host url
-     *
-     * @throws IllegalArgumentException when connection fails due to bad arguments
-     */
-    private void connect()
-            throws IllegalArgumentException {
-        try {
-            connect = DriverManager.getConnection("jdbc:sqlite:shelterRDB.db");
-        } catch (SQLException e) {
-            throw new IllegalArgumentException();
-        }
-
-    }
-
-    /**
-     * Closes the Connection to the database
-     *
-     * @throws SQLException throws when any close method executes and fails
-     */
-    public void close() throws SQLException {
-        if (resultSet != null)  resultSet.close();
-        if (statement != null)  statement.close();
-        if (connect != null)    connect.close();
-    }
-
-    /**
-     * Uses an insert statement in the form of a string to update the
-     * database with a new entry. Returns true if the operation was
-     * successful. (Note: This will be overloaded to include arguments
-     * for an animal, Person, or Location)
-     *
-     * @param insertStatement the insert statement in sql
-     * @return true if operation successful; false otherwise
-     * @throws SQLException throws when the SQL statement is malformed
-     */
-    public boolean insert(String insertStatement) throws SQLException {
-        jdbcTemplate.update(insertStatement);
-        return true;
     }
 
     /**
@@ -123,7 +61,8 @@ public class DBAdapter {
         String code = animal.getCode() == null? null : animal.getCode().toString();
         int locId = location.getId();
         String sqlStatement = String.format("INSERT INTO Animal " +
-                "VALUES (%d, '%s', '%s', %f, '%s', '%s', '%s', '%s', %d);", id, name, type, weight, dob, intake, exit, code, locId);
+                "VALUES (%d, '%s', '%s', %f, '%s', '%s', '%s', '%s', %d);",
+                id, name, type, weight, dob, intake, exit, code, locId);
         jdbcTemplate.execute(sqlStatement);
         return true;
     }
@@ -159,6 +98,27 @@ public class DBAdapter {
         int max = location.getMaxCapacity();
         String sqlStatement = String.format("INSERT INTO Location " +
                         "VALUES (%d, '%s', '%s', '%s', %d);", id, name, type, address, max);
+        jdbcTemplate.execute(sqlStatement);
+        return true;
+    }
+
+    /**
+     * Inserts the specified record into the Record table, tied to the provided
+     * animal.
+     *
+     * @param newRecord record to be inserted
+     * @param animal the animal to which the record is attached
+     * @return true if operation successful
+     */
+    public boolean insert(Record newRecord, Animal animal) {
+        int recID = newRecord.getId();
+        int animalID = animal.getId();
+        LocalDate updateDate = newRecord.getUpdateDate();
+        Types.RecordType type = newRecord.getType();
+        String details = newRecord.getDetails();
+        String sqlStatement = String.format("INSERT INTO Record " +
+                "VALUES (%d, %d, '%s', '%s', '%s');", recID, animalID,
+                updateDate.toString(), type.toString(), details);
         jdbcTemplate.execute(sqlStatement);
         return true;
     }
@@ -224,33 +184,6 @@ public class DBAdapter {
     }
 
     /**
-     * Uses a select statement in the form of a string to query the
-     * database and return the results as a string. (Note: This needs
-     * to be adjusted based on how information is queried)
-     *
-     * @param selectStatement the select statement in sql
-     * @return A string of the results listed by row and column
-     * @throws SQLException throws when internal methods fail
-     */
-    public String Query(String selectStatement) throws SQLException {
-        StringBuffer result = new StringBuffer();
-        statement = connect.createStatement();
-        resultSet = statement.executeQuery(selectStatement);
-        int columnCount = resultSet.getMetaData().getColumnCount();
-        for(int i = 0; i < columnCount; i++) {
-            result.append("Column ").append(i).append("\t");
-        }
-        result.append("\n\n");
-        while (resultSet.next()) {
-            for (int i = 0; i < columnCount; i++) {
-                result.append(resultSet.getObject(i));
-            }
-            result.append("/n");
-        }
-        return result.toString();
-    }
-
-    /**
      * Returns a list of locations from the database based on the provided
      * search key and search term.
      *
@@ -293,8 +226,6 @@ public class DBAdapter {
         return statement;
     }
 
-    //Extracts location from a result set
-
     /**
      * Returns a Location extracted from a ResultSet.
      *
@@ -308,8 +239,15 @@ public class DBAdapter {
         String name = rs.getString("Location_Name");
         String address = rs.getString("Address");
         int capacity = rs.getInt("Capacity");
-        return new Location(id, type, name, address, capacity, new ArrayList<Types.SpeciesAvailable>());
+        Location location = new Location(id, type, name, address,
+                capacity);
+        List<Types.SpeciesAvailable> species = this.querySpeciesAvailable(location);
+        location.setSpecies(species);
+        List<Animal> animals = this.queryAnimal("Location_Id", Integer.toString(location.getId()));
+        location.setAnimals(animals);
+        return location;
     }
+
 
     /**
      * Returns a list of all locations in the Location table.
@@ -321,12 +259,35 @@ public class DBAdapter {
         return jdbcTemplate.query(queryStatement, (resultSet, rowNum) -> extractLocation(resultSet));
     }
 
+    /**
+     * Returns a list of all the available species at a given location
+     *
+     * @param location location being check for available species.
+     * @return list of available species at location
+     */
     public List<Types.SpeciesAvailable> querySpeciesAvailable(Location location) {
         String queryStatement = String.format("SELECT * FROM Species_Available " +
                 "WHERE Location_ID = %d", location.getId());
         return jdbcTemplate.query(queryStatement, (resultSet, rowNum) ->
                 Types.SpeciesAvailable.valueOf(resultSet.getString("Species_Type")));
     }
+
+    public List<Record> queryRecords(Animal animal) {
+        String queryStatement = String.format("SELECT * FROM Record " +
+                "WHERE Animal_ID = %d;", animal.getId());
+        return jdbcTemplate.query(queryStatement, (resultSet, rowNum) ->
+                extractRecord(resultSet));
+    }
+
+    private Record extractRecord(ResultSet rs) throws SQLException {
+        int recID = rs.getInt("Record_ID");
+        LocalDate updateDate = LocalDate.parse(rs.getString("Update_Date"));
+        Types.RecordType type = Types.RecordType.valueOf(rs.getString("Record_Type"));
+        String details = rs.getString("Details");
+        return new Record(recID, updateDate, type, details);
+    }
+
+
 
     /**
      * Returns a list of Animals from the database based on the provided
@@ -393,7 +354,18 @@ public class DBAdapter {
         double weight = rs.getDouble("Weight");
         LocalDate dob = LocalDate.parse(rs.getString("DOB"));
         LocalDate intake = LocalDate.parse(rs.getString("Received_Date"));
-        return new Animal(id, name, species, weight, dob, intake);
+        Animal animal = new Animal(id, name, species, weight, dob, intake);
+        String eDate = rs.getString("Exit_Date");
+        LocalDate exitDate = eDate != null && !eDate.equalsIgnoreCase("null")?
+                LocalDate.parse(eDate): null;
+        animal.setExitDate(exitDate);
+        String eCode = rs.getString("Exit_Code");
+        Types.ExitCode exitCode = eCode != null && !eCode.equalsIgnoreCase("null")?
+                Types.ExitCode.valueOf(eCode): null;
+        animal.setCode(exitCode);
+        List<Record> records = queryRecords(animal);
+        animal.setRecords(records);
+        return animal;
     }
 
     /**
@@ -454,9 +426,7 @@ public class DBAdapter {
                         Types.LocType.valueOf(rs.getString("type")),
                         rs.getString("name"),
                         rs.getString("address"),
-                        rs.getInt("maxCapacity"),
-                        new ArrayList<>() // Initially, provide an empty list for species
-                        // You'll populate this list in the next step
+                        rs.getInt("maxCapacity")
                 ));
 
         // Assuming you have a method to fetch species for a given locationId

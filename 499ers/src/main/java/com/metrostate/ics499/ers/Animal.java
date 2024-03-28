@@ -178,6 +178,8 @@ public class Animal {
                 ", animal_Name='" + name + '\'' +
                 ", animal_weight=" + weight +
                 ", intake_date=" + intakeDate +
+                ", exit_date=" + exitDate +
+                ", code=" + code +
                 '}';
     }
 }

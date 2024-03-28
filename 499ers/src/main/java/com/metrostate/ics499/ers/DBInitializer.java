@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 @Order(1)
@@ -71,6 +72,9 @@ public class DBInitializer implements CommandLineRunner {
         testInsertSpecies();
         displaySpeciesAvailable();
         testQuerySpecies();
+        testInsertRecord();
+        displayRecords();
+        testQueryRecord();
 
     }
 
@@ -151,7 +155,7 @@ public class DBInitializer implements CommandLineRunner {
     private void testInsertLocation() {
         System.out.println("Test Insert Location");
         Location myLoc = new Location(4, Types.LocType.SHELTER, "MyShelter", "500 Address St",
-                30, new ArrayList<Types.SpeciesAvailable>());
+                30);
         dbAccess.insert(myLoc);
     }
 
@@ -165,8 +169,7 @@ public class DBInitializer implements CommandLineRunner {
             System.out.printf("Original: %d, %s, %s, %s, %d\n", original.getId(), original.getName(),
                     original.getType(), original.getAddress(), original.getMaxCapacity());
             Location modified = new Location(original.getId(), Types.LocType.SHELTER, "FH #1",
-                    original.getAddress(), original.getMaxCapacity() + 5,
-                    new ArrayList<Types.SpeciesAvailable>());
+                    original.getAddress(), original.getMaxCapacity() + 5);
             System.out.printf("Changes: %d, %s, %s, %s, %d\n", modified.getId(), modified.getName(),
                     modified.getType(), modified.getAddress(), modified.getMaxCapacity());
             System.out.println("Execute update.");
@@ -178,6 +181,41 @@ public class DBInitializer implements CommandLineRunner {
             Location original = results.get(0);
             System.out.printf("Modified Original: %d, %s, %s, %s, %d\n", original.getId(), original.getName(),
                     original.getType(), original.getAddress(), original.getMaxCapacity());
+        }
+    }
+
+    private void testInsertSpecies() {
+        System.out.println("Test SpeciesAvailable Insert");
+        Location myLoc = dbAccess.queryLocation("Location_ID", "1").get(0);
+        dbAccess.insert(Types.SpeciesAvailable.RABBIT, myLoc);
+    }
+
+    private void testQuerySpecies(){
+        System.out.println("Test SpeciesAvailable Query");
+
+        Location myLoc = dbAccess.queryLocation("Location_ID", "1").get(0);
+        System.out.printf("Query for all species at %s\n", myLoc.getName());
+        List<Types.SpeciesAvailable> species = dbAccess.querySpeciesAvailable(myLoc);
+        for (Types.SpeciesAvailable s: species) {
+            System.out.println(s.toString());
+        }
+    }
+
+    private void testInsertRecord() {
+        System.out.println("Test insert Record");
+        Record myRecord = new Record(6, LocalDate.now(),
+                Types.RecordType.OTHER, "Inserted new Record");
+        Animal animal = dbAccess.queryAnimal("Animal_Name", "Max").get(0);
+        dbAccess.insert(myRecord, animal);
+    }
+
+    private void testQueryRecord() {
+        System.out.println("Test Record Query");
+        Animal animal = dbAccess.queryAnimal("Animal_Name", "Max").get(0);
+        System.out.printf("Query for all records for %s\n", animal.getName());
+        List<Record> records = dbAccess.queryRecords(animal);
+        for (Record r: records) {
+            System.out.println(r.toString());
         }
     }
 
@@ -213,21 +251,19 @@ public class DBInitializer implements CommandLineRunner {
         }
     }
 
-    private void testInsertSpecies() {
-        System.out.println("Test SpeciesAvailable Insert");
-        Location myLoc = dbAccess.queryLocation("Location_ID", "1").get(0);
-        dbAccess.insert(Types.SpeciesAvailable.RABBIT, myLoc);
-    }
-
-    private void testQuerySpecies(){
-        System.out.println("Test SpeciesAvailable Query");
-
-        Location myLoc = dbAccess.queryLocation("Location_ID", "1").get(0);
-        System.out.printf("Query for all species at %s\n", myLoc.getName());
-        List<Types.SpeciesAvailable> species = dbAccess.querySpeciesAvailable(myLoc);
-        for (Types.SpeciesAvailable s: species) {
-            System.out.println(s.toString());
+    private void displayRecords() {
+        String queryStatement = "SELECT * FROM Record;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(queryStatement);
+        results.first();
+        System.out.println("rID | aID | Update Date | Type | Details");
+        while (!results.isAfterLast()) {
+            System.out.printf("(%d, %d, %s, %s, %s)\n",
+                    results.getInt("Record_ID"),
+                    results.getInt("Animal_ID"),
+                    Objects.requireNonNull(results.getString("Update_Date")),
+                    results.getString("Record_Type"),
+                    results.getString("Details"));
+            results.next();
         }
-
     }
 }
