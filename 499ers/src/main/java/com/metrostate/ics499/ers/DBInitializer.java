@@ -32,19 +32,8 @@ public class DBInitializer implements CommandLineRunner {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private DBAdapter dbAccess;
-
     public static void main(String[] args) throws SQLException {
         SpringApplication.run(DBInitializer.class, args);
-    }
-
-    public void reset() {
-        jdbcTemplate.execute("DROP TABLE Animal");
-        jdbcTemplate.execute("DROP TABLE Person");
-        jdbcTemplate.execute("DROP TABLE Location");
-        jdbcTemplate.execute("DROP TABLE Record");
-        jdbcTemplate.execute("DROP TABLE Species_Available");
-        System.out.println("Tables dropped.");
     }
 
     @Override
@@ -60,8 +49,9 @@ public class DBInitializer implements CommandLineRunner {
         fillDatabase();
 
         //tests
-        dbAccess = DBAdapter.getInstance(jdbcTemplate);
+        DBAdapter.initDBAdapter(jdbcTemplate);
         testInsertAnimal();
+        testInsertAnimal2();
         displayAnimals();
         testQueryAnimal();
         displayLocations();
@@ -76,6 +66,15 @@ public class DBInitializer implements CommandLineRunner {
         displayRecords();
         testQueryRecord();
 
+    }
+
+    public void reset() {
+        jdbcTemplate.execute("DROP TABLE Animal");
+        jdbcTemplate.execute("DROP TABLE Person");
+        jdbcTemplate.execute("DROP TABLE Location");
+        jdbcTemplate.execute("DROP TABLE Record");
+        jdbcTemplate.execute("DROP TABLE Species_Available");
+        System.out.println("Tables dropped.");
     }
 
     public void initDatabase() throws FileNotFoundException {
@@ -123,8 +122,15 @@ public class DBInitializer implements CommandLineRunner {
     private void testInsertAnimal() {
         System.out.println("Test Animal Insert");
         Animal myAnimal = new Animal("George", Types.SpeciesAvailable.DOG, 100.5, LocalDate.now(), LocalDate.now());
-        Location myLoc = dbAccess.queryLocation("Location_ID", "1").get(0);
-        dbAccess.insert(myAnimal, myLoc);
+        Location myLoc = DBAdapter.queryLocation("Location_ID", "1").get(0);
+        DBAdapter.insert(myAnimal, myLoc);
+    }
+
+    private void testInsertAnimal2() {
+        System.out.println("Test Animal Insert");
+        Animal myAnimal = new Animal("George the 2nd", Types.SpeciesAvailable.DOG, 100.5, LocalDate.now(), LocalDate.now());
+        Location myLoc = DBAdapter.queryLocation("Location_ID", "1").get(0);
+        DBAdapter.insert(myAnimal, myLoc);
     }
 
     // test animal Query
@@ -132,7 +138,7 @@ public class DBInitializer implements CommandLineRunner {
         System.out.println("Test Query Animal");
         System.out.println("Query for animal with id 102");
         ArrayList<Animal> results = new ArrayList<Animal>(
-                dbAccess.queryAnimal("Animal_ID", "102"));
+                DBAdapter.queryAnimal("Animal_ID", "102"));
         System.out.println("Results: ");
         for (Animal animal : results) {
             System.out.println(animal);
@@ -144,7 +150,7 @@ public class DBInitializer implements CommandLineRunner {
         System.out.println("Test Query Location");
         System.out.println("Query for Foster Home #1");
         ArrayList<Location> results = new ArrayList<Location>(
-                dbAccess.queryLocation("Location_Name", "Foster Home #1"));
+                DBAdapter.queryLocation("Location_Name", "Foster Home #1"));
         System.out.println("Results: ");
         for (Location loc : results) {
             System.out.println(loc);
@@ -156,14 +162,14 @@ public class DBInitializer implements CommandLineRunner {
         System.out.println("Test Insert Location");
         Location myLoc = new Location(4, Types.LocType.SHELTER, "MyShelter", "500 Address St",
                 30);
-        dbAccess.insert(myLoc);
+        DBAdapter.insert(myLoc);
     }
 
     private void testUpdateLocation() {
         System.out.println("Test Update Location");
         System.out.println("Update for Foster Home #1");
         ArrayList<Location> results = new ArrayList<Location>(
-                dbAccess.queryLocation("Location_Name", "Foster Home #1"));
+                DBAdapter.queryLocation("Location_Name", "Foster Home #1"));
         if (!results.isEmpty()) {
             Location original = results.get(0);
             System.out.printf("Original: %d, %s, %s, %s, %d\n", original.getId(), original.getName(),
@@ -173,10 +179,10 @@ public class DBInitializer implements CommandLineRunner {
             System.out.printf("Changes: %d, %s, %s, %s, %d\n", modified.getId(), modified.getName(),
                     modified.getType(), modified.getAddress(), modified.getMaxCapacity());
             System.out.println("Execute update.");
-            dbAccess.update(original, modified);
+            DBAdapter.update(original, modified);
         }
         results = new ArrayList<Location>(
-                dbAccess.queryLocation("Location_ID", "2"));
+                DBAdapter.queryLocation("Location_ID", "2"));
         if (!results.isEmpty()) {
             Location original = results.get(0);
             System.out.printf("Modified Original: %d, %s, %s, %s, %d\n", original.getId(), original.getName(),
@@ -186,16 +192,16 @@ public class DBInitializer implements CommandLineRunner {
 
     private void testInsertSpecies() {
         System.out.println("Test SpeciesAvailable Insert");
-        Location myLoc = dbAccess.queryLocation("Location_ID", "1").get(0);
-        dbAccess.insert(Types.SpeciesAvailable.RABBIT, myLoc);
+        Location myLoc = DBAdapter.queryLocation("Location_ID", "1").get(0);
+        DBAdapter.insert(Types.SpeciesAvailable.RABBIT, myLoc);
     }
 
     private void testQuerySpecies(){
         System.out.println("Test SpeciesAvailable Query");
 
-        Location myLoc = dbAccess.queryLocation("Location_ID", "1").get(0);
+        Location myLoc = DBAdapter.queryLocation("Location_ID", "1").get(0);
         System.out.printf("Query for all species at %s\n", myLoc.getName());
-        List<Types.SpeciesAvailable> species = dbAccess.querySpeciesAvailable(myLoc);
+        List<Types.SpeciesAvailable> species = DBAdapter.querySpeciesAvailable(myLoc);
         for (Types.SpeciesAvailable s: species) {
             System.out.println(s.toString());
         }
@@ -205,15 +211,15 @@ public class DBInitializer implements CommandLineRunner {
         System.out.println("Test insert Record");
         Record myRecord = new Record(6, LocalDate.now(),
                 Types.RecordType.OTHER, "Inserted new Record");
-        Animal animal = dbAccess.queryAnimal("Animal_Name", "Max").get(0);
-        dbAccess.insert(myRecord, animal);
+        Animal animal = DBAdapter.queryAnimal("Animal_Name", "Max").get(0);
+        DBAdapter.insert(myRecord, animal);
     }
 
     private void testQueryRecord() {
         System.out.println("Test Record Query");
-        Animal animal = dbAccess.queryAnimal("Animal_Name", "Max").get(0);
+        Animal animal = DBAdapter.queryAnimal("Animal_Name", "Max").get(0);
         System.out.printf("Query for all records for %s\n", animal.getName());
-        List<Record> records = dbAccess.queryRecords(animal);
+        List<Record> records = DBAdapter.queryRecords(animal);
         for (Record r: records) {
             System.out.println(r.toString());
         }
@@ -221,7 +227,7 @@ public class DBInitializer implements CommandLineRunner {
 
     private void displayAnimals() {
         //Read records:
-        List<Animal> animals = dbAccess.getAllAnimals();
+        List<Animal> animals = DBAdapter.getAllAnimals();
 
         //Print read records:
         for (Animal a : animals) {
@@ -231,7 +237,7 @@ public class DBInitializer implements CommandLineRunner {
 
     private void displayLocations() {
         //Read records:
-        List<Location> locations = dbAccess.getAllLocations();
+        List<Location> locations = DBAdapter.getAllLocations();
 
         //Print read records:
         for (Location l : locations) {

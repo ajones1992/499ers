@@ -18,7 +18,11 @@ public class DBAdapter {
 
     // singleton
     private static DBAdapter databaseAccess;
-    private final JdbcTemplate jdbcTemplate;
+    private static JdbcTemplate template;
+
+    public static void initDBAdapter(JdbcTemplate temp) {
+        if (template == null) template = temp;
+    }
 
     /**
      * privately constructs and initializes the dbAdapter
@@ -26,7 +30,7 @@ public class DBAdapter {
      */
     @Autowired
     public DBAdapter(JdbcTemplate template) {
-        jdbcTemplate = template;
+        template = template;
         databaseAccess = this;
     }
 
@@ -50,7 +54,7 @@ public class DBAdapter {
      * @param location location to which the animal will be linked
      * @return true if operation successful
      */
-    public boolean insert (Animal animal, Location location) {
+    public static boolean insert(Animal animal, Location location) {
         int id = animal.getId();
         String name = animal.getName();
         String type = animal.getSpecies() == null? null : animal.getSpecies().toString();
@@ -61,9 +65,9 @@ public class DBAdapter {
         String code = animal.getCode() == null? null : animal.getCode().toString();
         int locId = location.getId();
         String sqlStatement = String.format("INSERT INTO Animal " +
-                "VALUES (%d, '%s', '%s', %f, '%s', '%s', '%s', '%s', %d);",
+                        "VALUES (%d, '%s', '%s', %f, '%s', '%s', '%s', '%s', %d);",
                 id, name, type, weight, dob, intake, exit, code, locId);
-        jdbcTemplate.execute(sqlStatement);
+        template.execute(sqlStatement);
         return true;
     }
 
@@ -76,10 +80,10 @@ public class DBAdapter {
      * @param location location with the specified species available
      * @return true if operation successful
      */
-    public boolean insert (Types.SpeciesAvailable species, Location location) {
+    public static boolean insert (Types.SpeciesAvailable species, Location location) {
         String sqlStatement = String.format("INSERT INTO Species_Available " +
                 "VALUES (%d, '%s')", location.getId(), species.toString());
-        jdbcTemplate.execute(sqlStatement);
+        template.execute(sqlStatement);
         return true;
     }
 
@@ -90,7 +94,7 @@ public class DBAdapter {
      * @param location location to be inserted
      * @return true if operation successful
      */
-    public boolean insert(Location location) {
+    public static boolean insert(Location location) {
         int id = location.getId();
         String type = location.getType().toString();
         String name = location.getName();
@@ -98,7 +102,7 @@ public class DBAdapter {
         int max = location.getMaxCapacity();
         String sqlStatement = String.format("INSERT INTO Location " +
                         "VALUES (%d, '%s', '%s', '%s', %d);", id, name, type, address, max);
-        jdbcTemplate.execute(sqlStatement);
+        template.execute(sqlStatement);
         return true;
     }
 
@@ -110,7 +114,7 @@ public class DBAdapter {
      * @param animal the animal to which the record is attached
      * @return true if operation successful
      */
-    public boolean insert(Record newRecord, Animal animal) {
+    public static boolean insert(Record newRecord, Animal animal) {
         int recID = newRecord.getId();
         int animalID = animal.getId();
         LocalDate updateDate = newRecord.getUpdateDate();
@@ -119,7 +123,7 @@ public class DBAdapter {
         String sqlStatement = String.format("INSERT INTO Record " +
                 "VALUES (%d, %d, '%s', '%s', '%s');", recID, animalID,
                 updateDate.toString(), type.toString(), details);
-        jdbcTemplate.execute(sqlStatement);
+        template.execute(sqlStatement);
         return true;
     }
 
@@ -133,12 +137,12 @@ public class DBAdapter {
      * @return true if operation successful; false otherwise
      * @throws SQLException throws when the SQL statement is malformed
      */
-    public boolean delete(String DeleteStatement) throws SQLException {
-        jdbcTemplate.execute(DeleteStatement);
+    public static boolean delete(String DeleteStatement) throws SQLException {
+        template.execute(DeleteStatement);
         return true;
     }
 
-    public boolean delete(Animal animal) throws SQLException {
+    public static boolean delete(Animal animal) throws SQLException {
         return false;
     }
 
@@ -151,8 +155,8 @@ public class DBAdapter {
      * @return true if operation successful; false otherwise
      * @throws SQLException throws when internal methods fail
      */
-    public boolean update(String updateStatement) throws SQLException {
-        jdbcTemplate.execute(updateStatement);
+    public static boolean update(String updateStatement) throws SQLException {
+        template.execute(updateStatement);
         return true;
     }
 
@@ -163,7 +167,7 @@ public class DBAdapter {
      * @param updatedLoc The updated Location with modified fields
      * @return true if the operation was successful
      */
-    public boolean update(Location oldLoc, Location updatedLoc) {
+    public static boolean update(Location oldLoc, Location updatedLoc) {
         StringBuffer updateStatement = new StringBuffer("UPDATE Location SET ");
         if (!(oldLoc.getName().equals(updatedLoc.getName()))) {
             updateStatement.append(String.format("Location_Name = '%s',", updatedLoc.getName()));
@@ -179,7 +183,7 @@ public class DBAdapter {
         }
         updateStatement.deleteCharAt(updateStatement.length() - 1);
         updateStatement.append(String.format("WHERE Location_ID = %d;", oldLoc.getId()));
-        jdbcTemplate.execute(updateStatement.toString());
+        template.execute(updateStatement.toString());
         return true;
     }
 
@@ -191,10 +195,10 @@ public class DBAdapter {
      * @param query the search of the searchKey field
      * @return a list of locations that meet the defined query
      */
-    public List<Location> queryLocation(String searchKey, String query) {
+    public static List<Location> queryLocation(String searchKey, String query) {
         StringBuffer queryStatement = new StringBuffer("SELECT * FROM Location WHERE ");
         queryStatement.append(addLocationSearchKey(searchKey, query));
-        return jdbcTemplate.query(queryStatement.toString(), (resultSet, rowNum) -> extractLocation(resultSet));
+        return template.query(queryStatement.toString(), (resultSet, rowNum) -> extractLocation(resultSet));
     }
 
     /**
@@ -207,7 +211,7 @@ public class DBAdapter {
      * @return a StringBuffer with the SQL query segment for the
      * @throws IllegalArgumentException if the searchKey is not a field of Location
      */
-    private StringBuffer addLocationSearchKey(String searchKey, String query)
+    private static StringBuffer addLocationSearchKey(String searchKey, String query)
             throws IllegalArgumentException {
         StringBuffer statement = new StringBuffer();
         if (searchKey.equalsIgnoreCase("Location_ID")) {
@@ -233,7 +237,7 @@ public class DBAdapter {
      * @return Location in the result set
      * @throws SQLException throws when internal methods fail
      */
-    private Location extractLocation(ResultSet rs) throws SQLException {
+    private static Location extractLocation(ResultSet rs) throws SQLException {
         int id = rs.getInt("Location_ID");
         Types.LocType type = Types.LocType.valueOf(rs.getString("Location_Type"));
         String name = rs.getString("Location_Name");
@@ -241,22 +245,21 @@ public class DBAdapter {
         int capacity = rs.getInt("Capacity");
         Location location = new Location(id, type, name, address,
                 capacity);
-        List<Types.SpeciesAvailable> species = this.querySpeciesAvailable(location);
+        List<Types.SpeciesAvailable> species = querySpeciesAvailable(location);
         location.setSpecies(species);
-        List<Animal> animals = this.queryAnimal("Location_Id", Integer.toString(location.getId()));
+        List<Animal> animals = queryAnimal("Location_Id", Integer.toString(location.getId()));
         location.setAnimals(animals);
         return location;
     }
-
 
     /**
      * Returns a list of all locations in the Location table.
      *
      * @return list of all locations
      */
-    public List<Location> getAllLocations() {
+    public static List<Location> getAllLocations() {
         String queryStatement = "SELECT * FROM Location";
-        return jdbcTemplate.query(queryStatement, (resultSet, rowNum) -> extractLocation(resultSet));
+        return template.query(queryStatement, (resultSet, rowNum) -> extractLocation(resultSet));
     }
 
     /**
@@ -265,29 +268,40 @@ public class DBAdapter {
      * @param location location being check for available species.
      * @return list of available species at location
      */
-    public List<Types.SpeciesAvailable> querySpeciesAvailable(Location location) {
+    public static List<Types.SpeciesAvailable> querySpeciesAvailable(Location location) {
         String queryStatement = String.format("SELECT * FROM Species_Available " +
                 "WHERE Location_ID = %d", location.getId());
-        return jdbcTemplate.query(queryStatement, (resultSet, rowNum) ->
+        return template.query(queryStatement, (resultSet, rowNum) ->
                 Types.SpeciesAvailable.valueOf(resultSet.getString("Species_Type")));
     }
 
-    public List<Record> queryRecords(Animal animal) {
+    /**
+     * Returns a list of records tied to a specific animal
+     *
+     * @param animal the animal to which the records belong
+     * @return a list of records
+     */
+    public static List<Record> queryRecords(Animal animal) {
         String queryStatement = String.format("SELECT * FROM Record " +
                 "WHERE Animal_ID = %d;", animal.getId());
-        return jdbcTemplate.query(queryStatement, (resultSet, rowNum) ->
+        return template.query(queryStatement, (resultSet, rowNum) ->
                 extractRecord(resultSet));
     }
 
-    private Record extractRecord(ResultSet rs) throws SQLException {
+    /**
+     * Returns a record extracted from a ResultSet.
+     *
+     * @param rs Result set containing a Record
+     * @return the record in the Result Set
+     * @throws SQLException throws when internal methods fail
+     */
+    private static Record extractRecord(ResultSet rs) throws SQLException {
         int recID = rs.getInt("Record_ID");
         LocalDate updateDate = LocalDate.parse(rs.getString("Update_Date"));
         Types.RecordType type = Types.RecordType.valueOf(rs.getString("Record_Type"));
         String details = rs.getString("Details");
         return new Record(recID, updateDate, type, details);
     }
-
-
 
     /**
      * Returns a list of Animals from the database based on the provided
@@ -297,10 +311,10 @@ public class DBAdapter {
      * @param query the search of the searchKey field
      * @return a list of locations that meet the defined query
      */
-    public List<Animal> queryAnimal(String searchKey, String query) {
+    public static List<Animal> queryAnimal(String searchKey, String query) {
         StringBuffer queryStatement = new StringBuffer("SELECT * FROM Animal WHERE ");
         queryStatement.append(addAnimalSearchKey(searchKey, query));
-        return jdbcTemplate.query(queryStatement.toString(), (resultSet, rowNum) -> extractAnimal(resultSet));
+        return template.query(queryStatement.toString(), (resultSet, rowNum) -> extractAnimal(resultSet));
     }
 
     /**
@@ -313,7 +327,7 @@ public class DBAdapter {
      * @return a StringBuffer with the SQL query segment for the
      * @throws IllegalArgumentException if the searchKey is not a field of Location
      */
-    private StringBuffer addAnimalSearchKey(String searchKey, String query)
+    private static StringBuffer addAnimalSearchKey(String searchKey, String query)
             throws IllegalArgumentException {
         StringBuffer statement = new StringBuffer();
         if (searchKey.equalsIgnoreCase("Animal_ID")) {
@@ -347,7 +361,7 @@ public class DBAdapter {
      * @return Animal in the result set
      * @throws SQLException throws when internal methods fail
      */
-    private Animal extractAnimal(ResultSet rs) throws SQLException {
+    private static Animal extractAnimal(ResultSet rs) throws SQLException {
         int id = rs.getInt("Animal_ID");
         String name = rs.getString("Animal_Name");
         Types.SpeciesAvailable species = Types.SpeciesAvailable.valueOf(rs.getString("Animal_Type"));
@@ -373,13 +387,13 @@ public class DBAdapter {
      *
      * @return a list of all animals
      */
-    public List<Animal> getAllAnimals() {
+    public static List<Animal> getAllAnimals() {
         String queryStatement = "SELECT * FROM animal";
-        return jdbcTemplate.query(queryStatement, (resultSet, rowNum) -> extractAnimal(resultSet));
+        return template.query(queryStatement, (resultSet, rowNum) -> extractAnimal(resultSet));
     }
 
     // Method to update an animal in the database
-    public boolean updateAnimalEntry(Animal animal) throws SQLException {
+    public static boolean updateAnimalEntry(Animal animal) throws SQLException {
         // Formulate the update statement using the animal's properties
         String updateStatement = String.format(
                 "UPDATE Animal SET Name = ?, Species = ?, Weight = ?, DOB = ?, IntakeDate = ?, ExitDate = ?, ExitCode = ? WHERE Animal_ID = ?;",
@@ -387,13 +401,13 @@ public class DBAdapter {
                 animal.getDOB(), animal.getIntakeDate(), animal.getExitDate(), animal.getCode().toString(), animal.getId());
 
         // Execute the update statement in the database using jdbcTemplate
-        jdbcTemplate.update(updateStatement);
+        template.update(updateStatement);
         return true;
     }
 
-    public boolean updateAnimal(Animal animal) {
+    public static boolean updateAnimal(Animal animal) {
         String sql = "UPDATE Animals SET name = ?, species = ?, weight = ?, DOB = ?, intakeDate = ?, exitDate = ?, code = ? WHERE id = ?";
-        int result = jdbcTemplate.update(sql,
+        int result = template.update(sql,
                 animal.getName(),
                 animal.getSpecies().toString(),
                 animal.getWeight(),
@@ -406,9 +420,9 @@ public class DBAdapter {
         return result > 0;
     }
 
-    public boolean updateAnimalAdoptionStatus(Animal animal) {
+    public static boolean updateAnimalAdoptionStatus(Animal animal) {
         String sql = "UPDATE Animals SET exitDate = ?, code = ? WHERE id = ?";
-        int result = jdbcTemplate.update(sql,
+        int result = template.update(sql,
                 animal.getExitDate(),
                 animal.getCode().toString(),
                 animal.getId());
@@ -418,9 +432,9 @@ public class DBAdapter {
         return result > 0;
     }
 
-    public Location getLocationById(int locationId) {
+    public static Location getLocationById(int locationId) {
         String sql = "SELECT * FROM Location WHERE id = ?";
-        Location location = jdbcTemplate.queryForObject(sql, new Object[]{locationId}, (rs, rowNum) ->
+        Location location = template.queryForObject(sql, new Object[]{locationId}, (rs, rowNum) ->
                 new Location(
                         rs.getInt("id"),
                         Types.LocType.valueOf(rs.getString("type")),
@@ -437,11 +451,9 @@ public class DBAdapter {
     }
 
     // Placeholder for the method to fetch species - you'll need to implement this based on your database schema
-    private List<Types.SpeciesAvailable> fetchSpeciesForLocation(int locationId) {
+    private static List<Types.SpeciesAvailable> fetchSpeciesForLocation(int locationId) {
         // Implement the query to fetch species for the location
         // For example, query a junction table that links locations to species, if that's how your data is structured
         return new ArrayList<>(); // Return the actual list of species
     }
-
-
 }
