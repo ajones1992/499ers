@@ -3,7 +3,7 @@ package com.metrostate.ics499.ers;
 import java.util.*;
 
 /**
- * List of all available locations (Shelters or Foster homes) in the system. Also
+ * List of all available locations (Shelters or Foster homes) in the system. Also,
  * responsible for transferring animals between shelters.
  */
 public class LocationList {
@@ -45,11 +45,24 @@ public class LocationList {
 
     /**
      * Adds a Shelter or Foster location ot the list of available locations.
+     * Updates the database.
      *
      * @param location location to be added
      */
     public void addLocation(Location location) {
-        mapOfLocations.putIfAbsent((Integer)location.getId(), location);
+      if (mapOfLocations.putIfAbsent((Integer)location.getId(), location) == null) {
+          DBAdapter.insert(location);
+      }
+    }
+
+    /**
+     * Loads a database table of Locations into the LocationList.
+     */
+    public void loadDatabaseIntoMap(){
+        List<Location> locations = DBAdapter.getAllLocations();
+        for (Location loc: locations) {
+            mapOfLocations.putIfAbsent((Integer)loc.getId(), loc);
+        }
     }
 
     /**
@@ -84,5 +97,25 @@ public class LocationList {
         } else {
             return false;
         }
+    }
+
+    public String toString() {
+        StringBuffer str = new StringBuffer();
+        for (Location loc : getAllLocations()) {
+            str.append("-" + loc.toString() + "\n");
+            str.append("\tSPECIES AVAILABLE:\n");
+            for (Types.SpeciesAvailable s: loc.getSpecies()) {
+                str.append("\t\t-" + s.toString() + "\n");
+            }
+            str.append("\tANIMALS:\n");
+            for (Animal a: loc.getAnimals()) {
+                str.append("\t\t-" + a.toString() + "\n");
+                str.append("\t\t\tRECORDS:\n");
+                for(Record r : a.getRecords()) {
+                    str.append("\t\t\t-" + r.toString() + "\n");
+                }
+            }
+        }
+        return str.toString();
     }
 }

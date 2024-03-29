@@ -36,8 +36,16 @@ public class Location {
         animals = new ArrayList<>();
     }
 
+    /**
+     * Adds an animal to this location and updates the database. Returns true
+     * if the animal is not null and the location is not at max capacity.
+     *
+     * @param addition animal to be added
+     * @return true if the animal was added; false otherwise
+     */
     public boolean addAnimal(@org.jetbrains.annotations.NotNull Animal addition){
         if (species.contains(addition.getSpecies()) && !atCapacity()) {
+            DBAdapter.insert(addition, this);
             return animals.add(addition);
         } else {
             return false;
@@ -53,8 +61,16 @@ public class Location {
         return maxCapacity <= animals.size();
     }
 
+    /**
+     * Adds an available species to this location and updates the database.
+     * Returns true if the species was added; false otherwise
+     *
+     * @param addition species to be added to availability
+     * @return true if the species was added; false otherwise
+     */
     public boolean addSpecies(Types.SpeciesAvailable addition){
         if (!species.contains(addition)) {
+            DBAdapter.insert(addition, this);
             return species.add(addition);
         } else {
             return false;

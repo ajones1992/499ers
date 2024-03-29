@@ -36,9 +36,16 @@ public class Animal {
         this.records = new ArrayList<>();
     }
 
+    /**
+     * Adds a Record to this Animal, while also updating the
+     * Database to reflect the relation
+     *
+     * @param record record to be added
+     */
     public void addRecord(Record record) {
         if (record != null) {
             this.records.add(record);
+            DBAdapter.insert(record, this);
         }
     }
 

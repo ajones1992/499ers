@@ -18,16 +18,12 @@ public class Application implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		// set up
-		DBAdapter database = DBAdapter.getInstance();
-		Location startLocation = database.queryLocation("Location_ID", "3").get(0);
-		Animal startAnimal = database.queryAnimal("Location_ID", "3").get(0);
-		masterList.addLocation( startLocation);
-		startLocation.addAnimal(startAnimal);
+		masterList.loadDatabaseIntoMap();
 
 		//display initial state
 		System.out.println("APPLICATION START");
-		System.out.println("Location in master List: " + masterList.getLocation(3));
-		System.out.printf("Animal in %s: %s", startLocation.getName(), startAnimal.toString());
+		System.out.println("Everything in master List: ");
+		System.out.println(masterList);
 
 		/*-------------------- TEST SOMEWHERE AFTER THIS --------------------*/
 
