@@ -11,7 +11,7 @@ import org.springframework.core.annotation.Order;
 public class Application implements CommandLineRunner {
 	private static LocationList masterList = new LocationList();
 
-	public LocationList getMasterList(){
+	public static LocationList getMasterList(){
 		return masterList;
 	}
 
