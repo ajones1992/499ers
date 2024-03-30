@@ -9,7 +9,11 @@ import org.springframework.core.annotation.Order;
 @Order(2)
 @SpringBootApplication
 public class Application implements CommandLineRunner {
-	private static final LocationList masterList = new LocationList();
+	private static LocationList masterList = new LocationList();
+
+	public static LocationList getMasterList(){
+		return masterList;
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
