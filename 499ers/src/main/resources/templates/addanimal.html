@@ -5,37 +5,55 @@
     <title>ShelterApp: Add Animal</title>
 </head>
 <body>
-<h1>Please enter the information for a new animal: </h1>
-<label for="loc">Choose a location:</label>
+    <h1>Please enter the information for a new animal: </h1>
+    <label for="loc">Choose a location:</label>
 
-<select name="loc" id="loc">
-    <option value="loc1">Puppy Lovers</option>
-    <option value="loc2">Cat's Meow</option>
-    <option value="loc3">Love Birds</option>
-    <option value="loc4">Hopping Bunnies</option>
-</select>
+    <select name="loc" id="loc">
+        <option value="loc1">Puppy Lovers</option>
+        <option value="loc2">Cat's Meow</option>
+        <option value="loc3">Love Birds</option>
+        <option value="loc4">Hopping Bunnies</option>
+    </select>
 
-<p>Select the animal's type: </p>
-<input type="radio" id="dog" name="animal_type" value="DOG">
-<label for="dog">Dog</label><br>
-<input type="radio" id="cat" name="animal_type" value="CAT">
-<label for="cat">Cat</label><br>
-<input type="radio" id="bird" name="animal_type" value="BIRD">
-<label for="bird">Bird</label><br>
-<input type="radio" id="rabbit" name="animal_type" value="RABBIT">
-<label for="rabbit">Rabbit</label> <br>
+    <div class="form-container">
+        <form action="/addanimal" method="post" id="add-animal">
+            <p>Select the animal's type: </p>
+            <div class="input-container">
+                <input type="radio" id="dog" name="animal_type" value="DOG">
+                <label for="dog">Dog</label><br>
+                <input type="radio" id="cat" name="animal_type" value="CAT">
+                <label for="cat">Cat</label><br>
+                <input type="radio" id="bird" name="animal_type" value="BIRD">
+                <label for="bird">Bird</label><br>
+                <input type="radio" id="rabbit" name="animal_type" value="RABBIT">
+                <label for="rabbit">Rabbit</label><br>
+            </div>
 
-<label for="name">Enter the animal's name:</label>
-<input type="text" id="name" /> <br>
+            <div class="input-container">
+                <label for="name">Enter the animal's name:</label>
+                <input type="text" id="name" /> <br>
+            </div>
 
-<label for="weight">Enter the animal's weight:</label>
-<input type="number" id="weight" /> <br>
+            <div class="input-container">
+                <label for="weight">Enter the animal's weight:</label>
+                <input type="number" id="weight" /> <br>
+            </div>
 
-<label for="dob">Date of Birth:</label>
-<input type="date" id="dob" name="dob"> <br>
+            <div class="input-container">
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" name="dob"> <br>
+            </div>
 
-<label for="datereceived">Date Received:</label>
-<input type="date" id="datereceived" name="datereceived"> <br>
+            <div class="input-container">
+                <label for="datereceived">Date Received:</label>
+                <input type="date" id="datereceived" name="datereceived"> <br>
+            </div>
+
+            <div class="input-container">
+                <input type="submit" value="Submit">
+            </div>
+        </form>
+    </div>
 
 <a href="/dataaddedsuccess">Success</a> <br>
 <a href="/dataaddedfailure">Fail</a> <br>
