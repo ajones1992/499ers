@@ -6,35 +6,32 @@
 </head>
 <body>
 <h1>Please enter the information for a new location: </h1>
-<form th:action="@{/addlocation}" th:object="${location}" method="post">
-    <p>Select the location type: </p>
-    <input type="radio" id="shelter" name="type" value="SHELTER" th:field="*{type}">
-    <label for="shelter">Shelter</label><br>
-    <input type="radio" id="fosterhome" name="type" value="FOSTER_HOME" th:field="*{type}">
-    <label for="fosterhome">Foster Home</label><br>
+<p>Select the location type: </p>
+<input type="radio" id="shelter" name="loc_type" value="SHELTER">
+<label for="shelter">Shelter</label><br>
+<input type="radio" id="fosterhome" name="loc_type" value="FOSTER_HOME">
+<label for="fosterhome">Foster Home</label><br>
 
-    <label for="name">Enter the location name:</label>
-    <input type="text" id="name" th:field="*{name}" /> <br>
+<label for="name">Enter the location name:</label>
+<input type="text" id="name" /> <br>
 
-    <label for="address">Enter the address:</label>
-    <input type="text" id="address" th:field="*{address}" /> <br>
+<label for="address">Enter the address:</label>
+<input type="text" id="address" /> <br>
 
-    <label for="capacity">Enter the location's capacity:</label>
-    <input type="number" id="capacity" th:field="*{maxCapacity}" /> <br>
+<label for="capacity">Enter the location's capacity:</label>
+<input type="number" id="capacity" /> <br>
 
-    <p>Select the animal types handled at this location: </p>
-    <!-- Since these are multiple values, handle them separately in the controller -->
-    <input type="checkbox" id="dog" name="species" value="DOG">
-    <label for="dog">Dog</label><br>
-    <input type="checkbox" id="cat" name="species" value="CAT">
-    <label for="cat">Cat</label><br>
-    <input type="checkbox" id="bird" name="species" value="BIRD">
-    <label for="bird">Bird</label><br>
-    <input type="checkbox" id="rabbit" name="species" value="RABBIT">
-    <label for="rabbit">Rabbit</label><br>
+<p>Select the animal types handled at this location: </p>
+<input type="checkbox" id="dog" name="dog" value="DOG">
+<label for="dog">Dog</label><br>
+<input type="checkbox" id="cat" name="cat" value="CAT">
+<label for="cat">Cat</label><br>
+<input type="checkbox" id="bird" name="bird" value="BIRD">
+<label for="bird">Bird</label><br>
+<input type="checkbox" id="rabbit" name="rabbit" value="RABBIT">
+<label for="rabbit">Rabbit</label><br>
 
-    <input type="submit" value="Submit"/>
-</form>
-<!-- Removed direct links to success/failure to use form submission handling instead -->
+<a href="/dataaddedsuccess">Success</a> <br/>
+<a href="/dataaddedfailure">Fail</a> <br/>
 </body>
 </html>

@@ -36,17 +36,6 @@ public class Location {
         animals = new ArrayList<>();
     }
 
-    public Location() {
-        this.id = idCounter++;
-        this.type = Types.LocType.SHELTER; // Assuming SHELTER as a default, change as needed
-        this.name = "";
-        this.address = "";
-        this.maxCapacity = 0; // Assuming 0 as a logical default
-        this.species = new ArrayList<>();
-        this.animals = new ArrayList<>();
-    }
-
-
     /**
      * Adds an animal to this location and updates the database. Returns true
      * if the animal is not null and the location is not at max capacity.
