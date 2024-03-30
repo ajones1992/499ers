@@ -52,7 +52,6 @@ class AnimalUnitTest {
     @Test
     @DisplayName("Testing addRecord")
     void testAddRecord() {
-        Person bogey = new Person(Types.Designation.SHELTER_STAFF);
         LocalDate recordDate = LocalDate.now();
         Record cliffordTestRecord = new Record(recordDate, Types.RecordType.MEDICAL,
                 "Testing a new record :)");
@@ -64,7 +63,6 @@ class AnimalUnitTest {
     @Test
     @DisplayName("Testing removeRecord")
     void testRemoveRecord() {
-        Person bogey = new Person(Types.Designation.SHELTER_STAFF);
         LocalDate recordDate = LocalDate.now();
         Record cliffordTestRecord = new Record(recordDate, Types.RecordType.MEDICAL,
                 "Testing a new record :)");
