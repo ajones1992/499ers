@@ -1,18 +1,44 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>ShelterApp: Select Location Animals</title>
 </head>
 <body>
-    <h1>Please select a location: </h1>
-    <select name="loc" id="loc">
-        <option value="loc1">Puppy Lovers</option>
-        <option value="loc2">Cat's Meow</option>
-        <option value="loc3">Love Birds</option>
-        <option value="loc4">Hopping Bunnies</option>
-    </select> <br>
+<h1>Please select a location: </h1>
 
-    <a href="/showlocanimals.html">Show Animals</a> <br/>
+<form action="/selectLoc" method="post">
+    <select name="locID">
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+    </select>
+    <input type="submit" value="Submit">
+</form>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Species</th>
+        <th>Weight</th>
+        <th>Date of Birth</th>
+        <th>Intake Date</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="animal : ${animals}">
+        <td th:text="${animal.id}"></td>
+        <td th:text="${animal.name}"></td>
+        <td th:text="${animal.species}"></td>
+        <td th:text="${animal.weight}"></td>
+        <td th:text="${animal.DOB}"></td>
+        <td th:text="${animal.intakeDate}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/index.html">Back to Home</a>
 </body>
 </html>
