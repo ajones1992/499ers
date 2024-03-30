@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 
 @Controller
-
 public class AddAnimalController {
 
     @RequestMapping(value = "/addanimal", method = RequestMethod.GET)
