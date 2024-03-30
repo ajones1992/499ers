@@ -3,6 +3,7 @@ package com.metrostate.ics499.ers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ import java.util.Objects;
  * dbAdapter acts as an adapter from the Java/Interface side of the project to the
  * SQL database.
  */
+@Component
 public class DBAdapter {
 
     // singleton
@@ -30,8 +32,7 @@ public class DBAdapter {
      */
     @Autowired
     public DBAdapter(JdbcTemplate template) {
-        template = template;
-        databaseAccess = this;
+        this.template = template;
     }
 
     public static DBAdapter getInstance(JdbcTemplate template) {
