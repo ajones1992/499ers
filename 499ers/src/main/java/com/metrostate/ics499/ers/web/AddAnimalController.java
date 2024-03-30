@@ -22,7 +22,7 @@ public class AddAnimalController {
         return "addanimal";
     }
 
-    @RequestMapping(path = "/error", method = RequestMethod.POST)
+    @RequestMapping(path = "/add", method = RequestMethod.POST)
     public String contactFormSubmission(@RequestBody MultiValueMap values){
 
         Application.getMasterList().getLocation(1).addAnimal(createAnimal(values));
