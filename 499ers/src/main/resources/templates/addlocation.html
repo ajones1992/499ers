@@ -6,32 +6,51 @@
 </head>
 <body>
 <h1>Please enter the information for a new location: </h1>
-<p>Select the location type: </p>
-<input type="radio" id="shelter" name="loc_type" value="SHELTER">
-<label for="shelter">Shelter</label><br>
-<input type="radio" id="fosterhome" name="loc_type" value="FOSTER_HOME">
-<label for="fosterhome">Foster Home</label><br>
+<div class="form-container">
+    <form action="/addloc" method="post" id="add-location">
+        <p>Select the location type: </p>
+        <div>
+            <input type="radio" id="shelter" name="loc_type" value="SHELTER">
+            <label for="shelter">Shelter</label><br>
+            <input type="radio" id="fosterhome" name="loc_type" value="FOSTER_HOME">
+            <label for="fosterhome">Foster Home</label><br>
+        </div>
 
-<label for="name">Enter the location name:</label>
-<input type="text" id="name" /> <br>
+        <label for="name">Enter the location name:</label>
+        <div>
+            <input type="text" id="name" name="name" placeholder="Name"/> <br>
+        </div>
 
-<label for="address">Enter the address:</label>
-<input type="text" id="address" /> <br>
+        <label for="address">Enter the address:</label>
+        <div>
+            <input type="text" id="address" name="address" placeholder="Address"/> <br>
+        </div>
 
-<label for="capacity">Enter the location's capacity:</label>
-<input type="number" id="capacity" /> <br>
+        <label for="capacity">Enter the location's capacity:</label>
+        <div>
+            <input type="number" id="capacity" name="capacity" placeholder="0"/> <br>
+        </div>
 
-<p>Select the animal types handled at this location: </p>
-<input type="checkbox" id="dog" name="dog" value="DOG">
-<label for="dog">Dog</label><br>
-<input type="checkbox" id="cat" name="cat" value="CAT">
-<label for="cat">Cat</label><br>
-<input type="checkbox" id="bird" name="bird" value="BIRD">
-<label for="bird">Bird</label><br>
-<input type="checkbox" id="rabbit" name="rabbit" value="RABBIT">
-<label for="rabbit">Rabbit</label><br>
+        <p>Select the animal types handled at this location: </p>
+        <div>
+            <input type="hidden" name="dog" value="no">
+            <input type="checkbox" id="dog" name="dog" value="DOG">
+            <label for="dog">Dog</label><br>
+            <input type="hidden" name="cat" value="no">
+            <input type="checkbox" id="cat" name="cat" value="CAT">
+            <label for="cat">Cat</label><br>
+            <input type="hidden" name="bird" value="no">
+            <input type="checkbox" id="bird" name="bird" value="BIRD">
+            <label for="bird">Bird</label><br>
+            <input type="hidden" name="rabbit" value="no">
+            <input type="checkbox" id="rabbit" name="rabbit" value="RABBIT">
+            <label for="rabbit">Rabbit</label><br>
+        </div>
 
-<a href="/dataaddedsuccess">Success</a> <br/>
-<a href="/dataaddedfailure">Fail</a> <br/>
+        <div class="input-container">
+            <input type="submit" value="Submit">
+        </div>
+    </form>
+</div>
 </body>
 </html>
