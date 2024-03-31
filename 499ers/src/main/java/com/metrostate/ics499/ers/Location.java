@@ -5,7 +5,7 @@ import java.util.List;
 
 
 public class Location {
-    private static int idCounter = 1;
+    private static int idCounter = 10;
     private final int id;
     private final Types.LocType type;
     private String name;

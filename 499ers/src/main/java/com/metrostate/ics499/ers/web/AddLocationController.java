@@ -22,7 +22,6 @@ public class AddLocationController {
 
     @RequestMapping(path = "/addloc", method = RequestMethod.POST)
     public String contactFormSubmission(@RequestBody MultiValueMap values){
-        System.out.println(values.toString());
         Location loc = createLocation(values);
         Application.getMasterList().addLocation(loc);
 
