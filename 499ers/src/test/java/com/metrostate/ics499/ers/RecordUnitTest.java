@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class RecordUnitTest {
 
     LocalDate recordDate;
-    Person bogey;
     Record test1;
     Record test2;
     Record test3;

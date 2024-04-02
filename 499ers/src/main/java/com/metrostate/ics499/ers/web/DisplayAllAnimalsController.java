@@ -20,7 +20,7 @@ public class DisplayAllAnimalsController {
 
     @GetMapping
     public String getAllAnimals(Model model) {
-        List<Animal> animals = DBAdapter.getAllAnimals(); // Use the instance method
+        List<Animal> animals = DBAdapter.getAllAnimals();
         model.addAttribute("animals", animals);
         return "displayallanimals";
     }

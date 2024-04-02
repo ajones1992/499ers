@@ -122,14 +122,14 @@ public class DBInitializer implements CommandLineRunner {
     private void testInsertAnimal() {
         System.out.println("Test Animal Insert");
         Animal myAnimal = new Animal("George", Types.SpeciesAvailable.DOG, 100.5, LocalDate.now(), LocalDate.now());
-        Location myLoc = DBAdapter.queryLocation("Location_ID", "1").get(0);
+        Location myLoc = DBAdapter.queryLocation("Location_ID", "101").get(0);
         DBAdapter.insert(myAnimal, myLoc);
     }
 
     private void testInsertAnimal2() {
         System.out.println("Test Animal Insert");
         Animal myAnimal = new Animal("George the 2nd", Types.SpeciesAvailable.DOG, 100.5, LocalDate.now(), LocalDate.now());
-        Location myLoc = DBAdapter.queryLocation("Location_ID", "1").get(0);
+        Location myLoc = DBAdapter.queryLocation("Location_ID", "101").get(0);
         DBAdapter.insert(myAnimal, myLoc);
     }
 
@@ -182,7 +182,7 @@ public class DBInitializer implements CommandLineRunner {
             DBAdapter.update(original, modified);
         }
         results = new ArrayList<Location>(
-                DBAdapter.queryLocation("Location_ID", "2"));
+                DBAdapter.queryLocation("Location_ID", "102"));
         if (!results.isEmpty()) {
             Location original = results.get(0);
             System.out.printf("Modified Original: %d, %s, %s, %s, %d\n", original.getId(), original.getName(),
@@ -192,14 +192,14 @@ public class DBInitializer implements CommandLineRunner {
 
     private void testInsertSpecies() {
         System.out.println("Test SpeciesAvailable Insert");
-        Location myLoc = DBAdapter.queryLocation("Location_ID", "1").get(0);
+        Location myLoc = DBAdapter.queryLocation("Location_ID", "101").get(0);
         DBAdapter.insert(Types.SpeciesAvailable.RABBIT, myLoc);
     }
 
     private void testQuerySpecies(){
         System.out.println("Test SpeciesAvailable Query");
 
-        Location myLoc = DBAdapter.queryLocation("Location_ID", "1").get(0);
+        Location myLoc = DBAdapter.queryLocation("Location_ID", "101").get(0);
         System.out.printf("Query for all species at %s\n", myLoc.getName());
         List<Types.SpeciesAvailable> species = DBAdapter.querySpeciesAvailable(myLoc);
         for (Types.SpeciesAvailable s: species) {
