@@ -38,45 +38,71 @@ public class DBInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        try {
-            reset();
-        } catch (DataAccessException e) {
-            // do not reset
-        }
+        reset();
 
         //Create the database table:
         initDatabase();
         fillDatabase();
 
-        //tests
+        //Initialize DBAdapter
         DBAdapter.initDBAdapter(jdbcTemplate);
+        runTests();
+
+    }
+
+    /**
+     * Drops each table in the database to prep the table to be reset.
+     */
+    public void reset() {
+        try {
+            jdbcTemplate.execute("DROP TABLE Animal");
+        } catch (DataAccessException e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            jdbcTemplate.execute("DROP TABLE Location");
+        } catch (DataAccessException e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            jdbcTemplate.execute("DROP TABLE Record");
+        } catch (DataAccessException e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            jdbcTemplate.execute("DROP TABLE Species_Available");
+        } catch (DataAccessException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("Tables dropped.");
+    }
+
+    /**
+     * Runs tests on Database access
+     */
+    private void runTests() {
         testInsertAnimal();
         testInsertAnimal2();
         displayAnimals();
         testQueryAnimal();
         displayLocations();
         testInsertLocation();
-        testQueryLocation();
         testUpdateLocation();
         displayLocations();
+        testQueryLocation();
         testInsertSpecies();
         displaySpeciesAvailable();
         testQuerySpecies();
         testInsertRecord();
         displayRecords();
         testQueryRecord();
-
     }
 
-    public void reset() {
-        jdbcTemplate.execute("DROP TABLE Animal");
-        jdbcTemplate.execute("DROP TABLE Person");
-        jdbcTemplate.execute("DROP TABLE Location");
-        jdbcTemplate.execute("DROP TABLE Record");
-        jdbcTemplate.execute("DROP TABLE Species_Available");
-        System.out.println("Tables dropped.");
-    }
-
+    /**
+     * Initializes the databases with the tables from the "schema.sql" file.
+     *
+     * @throws FileNotFoundException if the "schema.sql" file is not found
+     */
     public void initDatabase() throws FileNotFoundException {
         try {
             URL resource = this.getClass().getClassLoader().getResource("schema.sql");
@@ -101,6 +127,12 @@ public class DBInitializer implements CommandLineRunner {
         return statement.toString();
     }
 
+    /**
+     * Inserts the database with preliminary data from the "insert.sql" file
+     * so that it can be tested.
+     *
+     * @throws FileNotFoundException if the "insert.sql" file cannot be found
+     */
     public void fillDatabase() throws FileNotFoundException {
         try {
             URL resource = this.getClass().getClassLoader().getResource("insert.sql");
@@ -113,6 +145,7 @@ public class DBInitializer implements CommandLineRunner {
             throw new FileNotFoundException("Missing Resource File: insert.sql");
         } catch (UncategorizedSQLException e) {
             System.out.println("Database already filled");
+            System.out.println(e.getMessage());
         }
     }
 
@@ -136,9 +169,9 @@ public class DBInitializer implements CommandLineRunner {
     // test animal Query
     private void testQueryAnimal() {
         System.out.println("Test Query Animal");
-        System.out.println("Query for animal with id 102");
+        System.out.println("Query for animal with name George");
         ArrayList<Animal> results = new ArrayList<Animal>(
-                DBAdapter.queryAnimal("Animal_ID", "102"));
+                DBAdapter.queryAnimal("Animal_Name", "George"));
         System.out.println("Results: ");
         for (Animal animal : results) {
             System.out.println(animal);
@@ -160,7 +193,7 @@ public class DBInitializer implements CommandLineRunner {
     // test insert on Location
     private void testInsertLocation() {
         System.out.println("Test Insert Location");
-        Location myLoc = new Location(4, Types.LocType.SHELTER, "MyShelter", "500 Address St",
+        Location myLoc = new Location(104, Types.LocType.SHELTER, "MyShelter", "500 Address St",
                 30);
         DBAdapter.insert(myLoc);
     }
@@ -209,7 +242,7 @@ public class DBInitializer implements CommandLineRunner {
 
     private void testInsertRecord() {
         System.out.println("Test insert Record");
-        Record myRecord = new Record(6, LocalDate.now(),
+        Record myRecord = new Record(106, LocalDate.now(),
                 Types.RecordType.OTHER, "Inserted new Record");
         Animal animal = DBAdapter.queryAnimal("Animal_Name", "Max").get(0);
         DBAdapter.insert(myRecord, animal);

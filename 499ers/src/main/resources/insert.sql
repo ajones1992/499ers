@@ -1,11 +1,3 @@
-INSERT INTO Person (Person_ID, Person_Name, Phone, Address, Designation) VALUES
-(101, 'John Doe', '334-539-7260', '123 Main St', 'ADOPTEE'),
-(102, 'Robert Nelson', '741-539-6108', '456 Elm St', 'FOSTER_STAFF'),
-(103, 'Antonio Jones', '736-896-4759', '789 Oak St', 'SHELTER_STAFF'),
-(104, 'Herbert Thomas', '350-809-3690', '012 Pine St', 'ADOPTEE'),
-(105, 'Charles Johnson', '712-322-7899', '345 Birch St', 'SHELTER_STAFF');
-
-
 INSERT INTO Location (Location_ID, Location_Name, Location_Type, Address, Capacity) VALUES
 (101, 'Main Shelter', 'SHELTER', '101 Shelter Rd', 100),
 (102, 'Foster Home #1', 'FOSTER_HOME', '202 Foster Lane', 5),

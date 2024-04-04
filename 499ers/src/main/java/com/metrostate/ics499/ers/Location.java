@@ -14,6 +14,10 @@ public class Location {
     private List<Animal> animals;
     private int maxCapacity;
 
+    public static void setStartid(int start) {
+        idCounter = start;
+    }
+
     // Constructor for reconstructing a Location from the database
     public Location(int id, Types.LocType type, String name, String address, int maxCapacity) {
         this.id = id;

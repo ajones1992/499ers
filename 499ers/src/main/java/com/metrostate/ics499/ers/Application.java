@@ -5,6 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.annotation.Order;
 
+import java.util.ArrayList;
+
 
 @Order(2)
 @SpringBootApplication
@@ -25,10 +27,10 @@ public class Application implements CommandLineRunner {
 		masterList.loadDatabaseIntoMap();
 
 		//display initial state
-		System.out.println("APPLICATION START");
+
 		System.out.println("Everything in master List: ");
 		System.out.println(masterList);
-
+		System.out.println("APPLICATION START");
 		/*-------------------- TEST SOMEWHERE AFTER THIS --------------------*/
 
 	}

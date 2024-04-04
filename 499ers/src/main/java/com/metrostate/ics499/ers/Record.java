@@ -9,6 +9,10 @@ public class Record {
     private Types.RecordType type;
     private String details;
 
+    public static void setStartid(int start) {
+        idCounter = start;
+    }
+
     public Record(LocalDate updateDate, Types.RecordType type, String details) {
         this.id = idCounter++;
         this.updateDate = updateDate;

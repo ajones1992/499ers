@@ -60,9 +60,28 @@ public class LocationList {
      */
     public void loadDatabaseIntoMap(){
         List<Location> locations = DBAdapter.getAllLocations();
+        setStartIds(locations);
         for (Location loc: locations) {
             mapOfLocations.putIfAbsent((Integer)loc.getId(), loc);
         }
+    }
+
+    private void setStartIds(List<Location> locations) {
+        int locationStart = 0;
+        int animalStart = 0;
+        int recordStart = 0;
+        for (Location l : locations) {
+            locationStart = Math.max(locationStart, l.getId());
+            for (Animal a : l.getAnimals()) {
+                animalStart = Math.max(animalStart, a.getId());
+                for (Record r : a.getRecords()) {
+                    recordStart = Math.max(recordStart, r.getId());
+                }
+            }
+        }
+        Location.setStartid(++locationStart);
+        Animal.setStartid(++animalStart);
+        Record.setStartid(++recordStart);
     }
 
     /**

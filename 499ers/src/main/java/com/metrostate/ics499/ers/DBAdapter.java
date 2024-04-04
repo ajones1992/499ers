@@ -2,6 +2,7 @@ package com.metrostate.ics499.ers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -75,25 +76,29 @@ public class DBAdapter {
     /**
      * Inserts the specified species into the species available table, linking
      * the location to the species in the database. Returns true if the
-     * operation was successful.
+     * operation was successful; false otherwise.
      *
      * @param species species to be linked to location
      * @param location location with the specified species available
-     * @return true if operation successful
+     * @return true if operation successful; false otherwise.
      */
-    public static boolean insert (Types.SpeciesAvailable species, Location location) {
+    public static boolean insert(Types.SpeciesAvailable species, Location location) {
         String sqlStatement = String.format("INSERT INTO Species_Available " +
                 "VALUES (%d, '%s')", location.getId(), species.toString());
-        template.execute(sqlStatement);
-        return true;
+        try {
+            template.execute(sqlStatement);
+            return true;
+        } catch (DataAccessException e) {
+            return false;
+        }
     }
 
     /**
      * Inserts the specified Location into the Location table within the database.
-     * Returns true if the operation was successful.
+     * Returns true if the operation was successful; false otherwise.
      *
      * @param location location to be inserted
-     * @return true if operation successful
+     * @return true if operation successful; false otherwise
      */
     public static boolean insert(Location location) {
         int id = location.getId();
@@ -103,17 +108,21 @@ public class DBAdapter {
         int max = location.getMaxCapacity();
         String sqlStatement = String.format("INSERT INTO Location " +
                         "VALUES (%d, '%s', '%s', '%s', %d);", id, name, type, address, max);
-        template.execute(sqlStatement);
-        return true;
+        try {
+            template.execute(sqlStatement);
+            return true;
+        } catch (DataAccessException e) {
+            return false;
+        }
     }
 
     /**
      * Inserts the specified record into the Record table, tied to the provided
-     * animal.
+     * animal. Returns true if operation successful; false otherwise.
      *
      * @param newRecord record to be inserted
      * @param animal the animal to which the record is attached
-     * @return true if operation successful
+     * @return true if operation successful; false otherwise
      */
     public static boolean insert(Record newRecord, Animal animal) {
         int recID = newRecord.getId();
@@ -124,41 +133,12 @@ public class DBAdapter {
         String sqlStatement = String.format("INSERT INTO Record " +
                 "VALUES (%d, %d, '%s', '%s', '%s');", recID, animalID,
                 updateDate.toString(), type.toString(), details);
-        template.execute(sqlStatement);
-        return true;
-    }
-
-    /**
-     * Uses a delete statement in the form of a string to delete a
-     * specific or set of entries in the database. Returns true if
-     * the operation was successful. (Note: This will be overloaded
-     * to include arguments for an animal, Person, or Location)
-     *
-     * @param DeleteStatement the delete statement in sql
-     * @return true if operation successful; false otherwise
-     * @throws SQLException throws when the SQL statement is malformed
-     */
-    public static boolean delete(String DeleteStatement) throws SQLException {
-        template.execute(DeleteStatement);
-        return true;
-    }
-
-    public static boolean delete(Animal animal) throws SQLException {
-        return false;
-    }
-
-    /**
-     * Uses an update statement in the form of a string to update a
-     * specific or set of entries in the database. (Note: This will be
-     * overloaded to include arguments for an animal, Person, or Location)
-     *
-     * @param updateStatement the update statement in sql format
-     * @return true if operation successful; false otherwise
-     * @throws SQLException throws when internal methods fail
-     */
-    public static boolean update(String updateStatement) throws SQLException {
-        template.execute(updateStatement);
-        return true;
+        try {
+            template.execute(sqlStatement);
+            return true;
+        } catch (DataAccessException e) {
+            return false;
+        }
     }
 
     /**
@@ -218,11 +198,11 @@ public class DBAdapter {
         if (searchKey.equalsIgnoreCase("Location_ID")) {
             statement.append(String.format("Location_ID = '%d';", Integer.parseInt(query)));
         } else if (searchKey.equalsIgnoreCase("Location_Name")) {
-            statement.append(String.format("Location_Name = '%s';", query));
+            statement.append(String.format("Location_Name LIKE '%%%s%%';", query));
         } else if (searchKey.equalsIgnoreCase("Location_Type")) {
             statement.append(String.format("Location_Type = '%s';", query));
         } else if (searchKey.equalsIgnoreCase("Address")) {
-            statement.append(String.format("Address = '%s';", query));
+            statement.append(String.format("Address LIKE '%%%s%%';", query));
         } else if (searchKey.equalsIgnoreCase("Capacity")) {
             statement.append(String.format("Capacity = '%d';", Integer.parseInt(query)));
         } else {
@@ -334,7 +314,7 @@ public class DBAdapter {
         if (searchKey.equalsIgnoreCase("Animal_ID")) {
             statement.append(String.format("Animal_ID = '%d';", Integer.parseInt(query)));
         } else if (searchKey.equalsIgnoreCase("Animal_Name")) {
-            statement.append(String.format("Animal_Name = '%s';", query));
+            statement.append(String.format("Animal_Name LIKE '%%%s%%';", query));
         } else if (searchKey.equalsIgnoreCase("Animal_Type")) {
             statement.append(String.format("Animal_Type = '%s';", query));
         } else if (searchKey.equalsIgnoreCase("Weight")) {

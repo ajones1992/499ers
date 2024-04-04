@@ -16,6 +16,10 @@ public class Animal {
     private Types.ExitCode code;
     private List<Record> records;
 
+    public static void setStartid(int start) {
+        idCounter = start;
+    }
+
     public Animal(String name, Types.SpeciesAvailable species, double weight, LocalDate dob, LocalDate intakeDate) {
         this.id = idCounter++;
         this.name = name;
@@ -48,6 +52,7 @@ public class Animal {
             DBAdapter.insert(record, this);
         }
     }
+
 
     public void removeRecord(Record record) {
         this.records.remove(record);
