@@ -21,7 +21,6 @@ public class DisplayLocationsController {
     public String getAllLocations(Model model) {
         List<Location> locations = DBAdapter.getAllLocations();
 
-        System.out.println(locations.get(1));
         model.addAttribute("locations", locations);
         return "displaylocations";
     }
