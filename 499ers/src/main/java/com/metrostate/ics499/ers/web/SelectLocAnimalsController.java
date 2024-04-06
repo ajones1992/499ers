@@ -3,9 +3,7 @@ package com.metrostate.ics499.ers.web;
 
 import com.metrostate.ics499.ers.Application;
 import com.metrostate.ics499.ers.Location;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.ui.Model;
-import com.metrostate.ics499.ers.Animal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;

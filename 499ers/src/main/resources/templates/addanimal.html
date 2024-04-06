@@ -7,13 +7,15 @@
 <body>
 <h1>Please enter the information for a new animal:</h1>
 <div class="form-container">
-    <form action="/add" method="post" id="add-animal">
-        <label for="loc">Choose a location:</label>
-        <select name="locationId" id="loc">
+    <form th:action="@{add}" method="post" th:object="${locChoice}">
+        <select th:field="*{choice}" name = "locID">
+            <option th:each="loc : ${locOptions}" th:value="${loc}" th:text="${loc}"></option>
+        </select>
+       <!--<select name="locationId" id="loc">
             <option value="101">Main Shelter</option>
             <option value="102">Foster Home #1</option>
             <option value="103">Foster Home #2</option>
-        </select>
+        </select> -->
 
         <p>Select the animal's type:</p>
         <div class="input-container">
