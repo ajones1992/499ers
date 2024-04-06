@@ -19,7 +19,6 @@ public class SelectLocAnimalsController {
     // creates the form object as an attribute
     @RequestMapping(value = "/selectlocanimals", method = RequestMethod.GET)
     public String getSelLocAnimals(Model model) {
-
         model.addAttribute("locChoice", new FormChoice());
         return "selectlocanimals";
     }
@@ -52,7 +51,6 @@ public class SelectLocAnimalsController {
 
 // This class is for the form submission
 class FormChoice {
-
     String choice;
     public String getChoice() {
         return choice;

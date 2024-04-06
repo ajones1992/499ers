@@ -45,7 +45,7 @@ public class DBInitializer implements CommandLineRunner {
 
         //Initialize DBAdapter
         DBAdapter.initDBAdapter(jdbcTemplate);
-        runTests();
+        // runTests(); // add back in for testing (REMOVE FOR FINAL VERSION)
 
     }
 

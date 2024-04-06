@@ -7,7 +7,7 @@
 <body>
 <h1>Search for Animal: </h1>
 <div class="form-container">
-    <form action="/search" method="post" id="search-animal">
+    <form th:action="@{search}" method="post" th:object="${searchValue}">
 
         <div class="input-container">
             <label for="name">Enter name:</label>
@@ -19,5 +19,34 @@
         </div>
     </form>
 </div>
+<br>
+<table>
+    <thead>
+    <tr>
+        <th>ID|</th>
+        <th>Name|</th>
+        <th>Species|</th>
+        <th>Weight|</th>
+        <th>Date of Birth|</th>
+        <th>Intake Date|</th>
+        <th>Exit Date|</th>
+        <th>Exit Code|</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="animal : ${animals}">
+        <td th:text="${animal.id}"></td>
+        <td th:text="${animal.name}"></td>
+        <td th:text="${animal.species}"></td>
+        <td th:text="${animal.weight}"></td>
+        <td th:text="${animal.DOB}"></td>
+        <td th:text="${animal.intakeDate}"></td>
+        <td th:text="${animal.exitDate}"></td>
+        <td th:text="${animal.code}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<br><a href="/index.html">Back to Home</a>
 </body>
 </html>
