@@ -2,43 +2,65 @@ package com.metrostate.ics499.ers.web;
 
 import com.metrostate.ics499.ers.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 
 
 @Controller
 public class AddAnimalController {
 
     // Handler to display the form
-    @GetMapping("/addanimal")
-    public String showAddAnimalForm() {
+    @RequestMapping(value = "/addanimal", method = RequestMethod.GET)
+    public String showAddAnimalForm(Model model) {
+
+        model.addAttribute("locChoice", new FormChoice());
         return "addanimal";
     }
 
+    // This creates a model attribute that is a list of location names
+    // This is what the dropdown is populated with
+    @ModelAttribute("locOptions")
+    public List<String> getOptions() {
+        ArrayList<String> options = new ArrayList<>();
+        for (Location loc : Application.getMasterList().getAllLocations()) {
+            options.add(loc.getName());
+        }
+        return options;
+    }
+
     @PostMapping("/add")
-    public String addAnimal(@RequestBody MultiValueMap<String, String> formData) {
+    public String addAnimal(@RequestBody MultiValueMap<String, String> formData, @ModelAttribute("locChoice") FormChoice locChoice, Model model) {
 
         // Extract the location ID from the form data
-        int locationId = Integer.parseInt(formData.getFirst("locationId"));
+        Location loc = getLocation(locChoice);
 
-        // Use the Application class or your service layer to fetch the Location
-        Location location = Application.getMasterList().getLocation(locationId);
-
-        if (location != null) {
+        if (true ) {
             // Create the Animal object from form data
             Animal animal = createAnimal(formData);
-            // Add the Animal to the specified Location
-            location.addAnimal(animal);
+
+            //Add the Animal to the specified Location
+            loc.addAnimal(animal);
         }
         return "redirect:dataaddedsuccess.html";
     }
 
     public String removeBrackets(String str){
         return str.replace("[", "").replace("]", "");
+    }
+
+    public Location getLocation(FormChoice choice) {
+        for (Location loc : Application.getMasterList().getAllLocations()) {
+            // Check if the names match for this location and the selected location
+            if (loc.getName().equalsIgnoreCase(choice.getChoice())) {
+                return loc;
+            }
+        }
+        return null;
     }
 
     public String getName(Object obj){
