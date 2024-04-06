@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class AddAnimalController {
 
-    // Handler to display the form
+    // Handler to set up the form with a dynamic dropdown feature
     @RequestMapping(value = "/addanimal", method = RequestMethod.GET)
     public String showAddAnimalForm(Model model) {
 
@@ -49,10 +49,6 @@ public class AddAnimalController {
         return "redirect:dataaddedsuccess.html";
     }
 
-    public String removeBrackets(String str){
-        return str.replace("[", "").replace("]", "");
-    }
-
     public Location getLocation(FormChoice choice) {
         for (Location loc : Application.getMasterList().getAllLocations()) {
             // Check if the names match for this location and the selected location
@@ -61,6 +57,14 @@ public class AddAnimalController {
             }
         }
         return null;
+    }
+
+
+    /*
+     *Methods to parse submitted form data into usable objects/primitives.
+     */
+    public String removeBrackets(String str){
+        return str.replace("[", "").replace("]", "");
     }
 
     public String getName(Object obj){
@@ -87,6 +91,7 @@ public class AddAnimalController {
         return LocalDate.parse(inputEntryDate);
     }
 
+    // Create Animal from data parsed from the submitted form
     public Animal createAnimal(MultiValueMap values){
         String name = getName(values.get("name"));
         Types.SpeciesAvailable type = getType(values.get("animal_type"));
