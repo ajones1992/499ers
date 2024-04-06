@@ -5,23 +5,35 @@ import java.time.LocalDate;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 
 @Controller
 public class AddAnimalController {
 
-    @RequestMapping(value = "/addanimal", method = RequestMethod.GET)
-    public String getAnimal() {
+    // Handler to display the form
+    @GetMapping("/addanimal")
+    public String showAddAnimalForm() {
         return "addanimal";
     }
 
-    @RequestMapping(path = "/add", method = RequestMethod.POST)
-    public String contactFormSubmission(@RequestBody MultiValueMap values){
+    @PostMapping("/add")
+    public String addAnimal(@RequestBody MultiValueMap<String, String> formData) {
 
-        Application.getMasterList().getLocation(1).addAnimal(createAnimal(values));
+        // Extract the location ID from the form data
+        int locationId = Integer.parseInt(formData.getFirst("locationId"));
+
+        // Use the Application class or your service layer to fetch the Location
+        Location location = Application.getMasterList().getLocation(locationId);
+
+        if (location != null) {
+            // Create the Animal object from form data
+            Animal animal = createAnimal(formData);
+            // Add the Animal to the specified Location
+            location.addAnimal(animal);
+        }
         return "redirect:dataaddedsuccess.html";
     }
 
