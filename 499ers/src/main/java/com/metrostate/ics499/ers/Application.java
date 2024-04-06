@@ -25,11 +25,6 @@ public class Application implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		// set up
 		masterList.loadDatabaseIntoMap();
-
-		//display initial state
-
-		System.out.println("Everything in master List: ");
-		System.out.println(masterList);
 		System.out.println("APPLICATION START");
 		/*-------------------- TEST SOMEWHERE AFTER THIS --------------------*/
 
