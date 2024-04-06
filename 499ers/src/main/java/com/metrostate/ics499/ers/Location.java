@@ -7,7 +7,7 @@ import java.util.List;
 public class Location {
     private static int idCounter = 10;
     private final int id;
-    private final Types.LocType type;
+    private Types.LocType type;
     private String name;
     private String address;
     private List<Types.SpeciesAvailable> species;
@@ -103,6 +103,11 @@ public class Location {
     }
     public Types.LocType getType(){
         return type;
+    }
+
+    //new update for UpdateLocationController by Lytong
+    public void setType(Types.LocType type) {
+        this.type = type;
     }
 
     public String getName(){
