@@ -36,7 +36,6 @@ public class AddRecordController {
 
     @PostMapping("/addrec")
     public String addRecord(@RequestBody MultiValueMap<String, String> formData, @ModelAttribute("aniChoice") FormChoice aniChoice, Model model) {
-        System.out.println(String.valueOf(formData.get("record_type")));
 
         // Extract the location ID from the form data
         Animal ani = getAnimal(aniChoice);
@@ -65,7 +64,6 @@ public class AddRecordController {
     }
 
     public String getDetails(Object obj){
-        System.out.println(String.valueOf(obj));
         return removeBrackets(String.valueOf(obj));
     }
 
