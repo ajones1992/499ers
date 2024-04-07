@@ -5,8 +5,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.annotation.Order;
 
-import java.util.ArrayList;
-
 
 @Order(2)
 @SpringBootApplication

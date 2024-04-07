@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ShelterApp: Search for Animal</title>
+</head>
+<body>
+<h1>Search for Animal's Records: </h1>
+<div class="form-container">
+    <form th:action="@{searchforrecord}" method="post" th:object="${searchValue}">
+
+        <div class="input-container">
+            <label for="name">Enter animal's name:</label>
+            <input type="text" id="name" name="name" placeholder="Name"/> <br>
+        </div>
+
+        <div class="input-container">
+            <input type="submit" value="Submit">
+        </div>
+    </form>
+</div>
+<br>
+<table>
+    <thead>
+    <tr>
+        <th>ID|</th>
+        <th>Type|</th>
+        <th>Update Date|</th>
+        <th>Details|</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="record : ${records}">
+        <td th:text="${record.id}"></td>
+        <td th:text="${record.type}"></td>
+        <td th:text="${record.updateDate}"></td>
+        <td th:text="${record.details}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<br><a href="/index.html">Back to Home</a>
+</body>
+</html>
