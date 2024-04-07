@@ -49,14 +49,3 @@ public class SelectLocAnimalsController {
     }
 }
 
-// This class is for the form submission
-class FormChoice {
-    String choice;
-    public String getChoice() {
-        return choice;
-    }
-
-    public void setChoice(String choice) {
-        this.choice = choice;
-    }
-}
