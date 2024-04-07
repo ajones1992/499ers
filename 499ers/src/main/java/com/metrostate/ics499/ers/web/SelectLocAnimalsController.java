@@ -26,10 +26,14 @@ public class SelectLocAnimalsController {
     // This creates a model attribute that is a list of location names
     // This is what the dropdown is populated with
     @ModelAttribute("locOptions")
-    public List<String> getOptions() {
-        ArrayList<String> options = new ArrayList<>();
+    public List<FormSelection> getOptions() {
+        FormSelection temp;
+        ArrayList<FormSelection> options = new ArrayList<>();
         for (Location loc : Application.getMasterList().getAllLocations()) {
-            options.add(loc.getName());
+            temp = new FormSelection();
+            temp.setChoice(loc.getName());
+            temp.setChoiceID(loc.getId());
+            options.add(temp);
         }
         return options;
     }
@@ -39,24 +43,12 @@ public class SelectLocAnimalsController {
     public String formSub(@ModelAttribute("locChoice") FormChoice locChoice, Model model){
         for (Location loc_ : Application.getMasterList().getAllLocations()) {
             // Check if the names match for this location and the selected location
-            if (loc_.getName().equalsIgnoreCase(locChoice.getChoice())) {
+            if (loc_.getId() == Integer.parseInt(locChoice.getChoice())) {
                 // Add the list of animals to be displayed as an attribute
                 model.addAttribute("animals", loc_.getAnimals());
                 return "selectlocanimals";
             }
         }
         return "redirect:/error.html";
-    }
-}
-
-// This class is for the form submission
-class FormChoice {
-    String choice;
-    public String getChoice() {
-        return choice;
-    }
-
-    public void setChoice(String choice) {
-        this.choice = choice;
     }
 }

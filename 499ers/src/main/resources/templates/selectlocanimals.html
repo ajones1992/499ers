@@ -10,7 +10,7 @@
 <!-- THIS IS A DROPDOWN OF ALL LOCATIONS IN THE DATABASE -->
 <form th:action="@{selectLoc}" method="post" th:object="${locChoice}">
     <select th:field="*{choice}" name = "locID">
-        <option th:each="loc : ${locOptions}" th:value="${loc}" th:text="${loc}"></option>
+        <option th:each="loc : ${locOptions}" th:value="${loc.choiceID}" th:text="${loc.choice}"></option>
     </select>
     <input type="submit" value="Submit">
 </form>

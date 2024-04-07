@@ -10,7 +10,7 @@
     <form th:action="@{add}" method="post" th:object="${locChoice}">
         <p>Select the location to add to:</p>
         <select th:field="*{choice}" name = "locID">
-            <option th:each="loc : ${locOptions}" th:value="${loc}" th:text="${loc}"></option>
+            <option th:each="loc : ${locOptions}" th:value="${loc.choiceID}" th:text="${loc.choice}"></option>
         </select>
 
         <p>Select the animal's type:</p>

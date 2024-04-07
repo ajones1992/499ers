@@ -25,10 +25,14 @@ public class AddAnimalController {
     // This creates a model attribute that is a list of location names
     // This is what the dropdown is populated with
     @ModelAttribute("locOptions")
-    public List<String> getOptions() {
-        ArrayList<String> options = new ArrayList<>();
+    public List<FormSelection> getOptions() {
+        FormSelection temp;
+        ArrayList<FormSelection> options = new ArrayList<>();
         for (Location loc : Application.getMasterList().getAllLocations()) {
-            options.add(loc.getName());
+            temp = new FormSelection();
+            temp.setChoice(loc.getName());
+            temp.setChoiceID(loc.getId());
+            options.add(temp);
         }
         return options;
     }
@@ -52,7 +56,7 @@ public class AddAnimalController {
     public Location getLocation(FormChoice choice) {
         for (Location loc : Application.getMasterList().getAllLocations()) {
             // Check if the names match for this location and the selected location
-            if (loc.getName().equalsIgnoreCase(choice.getChoice())) {
+            if (loc.getId() == Integer.parseInt(choice.getChoice())) {
                 return loc;
             }
         }
