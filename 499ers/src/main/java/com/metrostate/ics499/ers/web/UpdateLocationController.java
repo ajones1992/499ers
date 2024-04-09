@@ -15,6 +15,7 @@ public class UpdateLocationController {
 
     private final DBAdapter dbAdapter;
     private static final Logger log = LoggerFactory.getLogger(UpdateLocationController.class);
+    private Location editLocation;
 
     @Autowired
     public UpdateLocationController(DBAdapter dbAdapter) {
@@ -32,9 +33,9 @@ public class UpdateLocationController {
     @GetMapping("/updatelocation/edit/{Location_ID}")
     public String showUpdateForm(@PathVariable("Location_ID") int id, Model model) {
         log.info("Showing update form for Location_ID: {}", id);
-        Location location = dbAdapter.getLocationById(id);
-        if (location != null) {
-            model.addAttribute("location", location);
+        editLocation = dbAdapter.getLocationById(id);
+        if (editLocation != null) {
+            model.addAttribute("location", editLocation);
             return "edit-location";
         }
         return "redirect:/updatelocation";
@@ -47,10 +48,10 @@ public class UpdateLocationController {
                                  RedirectAttributes redirectAttributes) {
         // Set the ID on the location object to ensure it matches the path variable
         location.setId(id);
-
+        
         log.info("Updating location: {}", location);
 
-        if (dbAdapter.updateLocation(location)) {
+        if (DBAdapter.update(editLocation, location)) {
             redirectAttributes.addFlashAttribute("message", "Location updated successfully.");
         } else {
             redirectAttributes.addFlashAttribute("error", "Failed to update location.");

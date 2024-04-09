@@ -165,7 +165,7 @@ public class DBAdapter {
             updateStatement.append(String.format("Capacity = '%d',", updatedLoc.getMaxCapacity()));
         }
         updateStatement.deleteCharAt(updateStatement.length() - 1);
-        updateStatement.append(String.format("WHERE Location_ID = %d;", oldLoc.getId()));
+        updateStatement.append(String.format(" WHERE Location_ID = %d;", oldLoc.getId()));
         template.execute(updateStatement.toString());
         return true;
     }
