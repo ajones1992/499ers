@@ -437,4 +437,41 @@ public class DBAdapter {
         // For example, query a junction table that links locations to species, if that's how your data is structured
         return new ArrayList<>(); // Return the actual list of species
     }
+
+
+//    public boolean updateLocation(Location location) {
+//        String sql = "UPDATE Location SET " +
+//                "Location_Name = ?, " +
+//                "Location_Type = ?, " +
+//                "Address = ?, " +
+//                "Capacity = ? " +
+//                "WHERE Location_ID = ?";
+//
+//        try {
+//            // Execute the update statement using JdbcTemplate
+//            int rowsAffected = template.update(
+//                    sql,
+//                    location.getName(),
+//                    location.getType().toString(),
+//                    location.getAddress(),
+//                    location.getMaxCapacity(),
+//                    location.getId()
+//            );
+//            return rowsAffected > 0; // If one or more rows are affected, the update is successful
+//        } catch (Exception e) {
+//            // Log the exception and return false, indicating the update failed
+//            // You can use a logging framework or simply print the stack trace
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
+
+    public boolean updateLocation(Location location) {
+        // Assuming you have a method that only updates the address field
+        String sql = "UPDATE Location SET address = ? WHERE id = ?";
+        int rowsAffected = template.update(sql, location.getAddress(), location.getId());
+        return rowsAffected > 0;
+    }
+
+
 }

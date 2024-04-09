@@ -1,69 +1,120 @@
 package com.metrostate.ics499.ers.web;
 
-import com.metrostate.ics499.ers.Application;
+import org.springframework.ui.Model;
+import com.metrostate.ics499.ers.DBAdapter;
 import com.metrostate.ics499.ers.Location;
 import com.metrostate.ics499.ers.Types;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class UpdateLocationController {
 
-    // Display the update form with current location details
+    @Autowired
+    private DBAdapter dbAdapter;
+
     @GetMapping("/updatelocation/{id}")
     public String showUpdateForm(@PathVariable("id") int id, Model model) {
-        Location location = Application.getMasterList().getLocation(id);
+        Location location = dbAdapter.getLocationById(id);
         if (location != null) {
             model.addAttribute("location", location);
             return "updatelocation";
         } else {
-            // handle location not found
-            return "error";
+            // Handle "not found" case
+            return "redirect:/locationNotFound";
         }
     }
 
-    // Process the form submission
-    @PostMapping("/updateloc")
-    public String updateLocation(@RequestParam MultiValueMap<String, String> formData, RedirectAttributes redirectAttributes) {
-        int locationId = Integer.parseInt(formData.getFirst("locationId"));
-        Location existingLocation = Application.getMasterList().getLocation(locationId);
-
-        if (existingLocation != null) {
-            // Directly update the existing Location object
-            existingLocation.setName(formData.getFirst("name"));
-            existingLocation.setAddress(formData.getFirst("address"));
-            existingLocation.setMaxCapacity(Integer.parseInt(formData.getFirst("capacity")));
-            // Assuming you adjust Location class to allow setting type, or you skip updating type if it's immutable
-            // existingLocation.setType(getType(formData.getFirst("loc_type")));
-            existingLocation.setSpecies(getSpeciesHandled(formData)); // Adjust the Location class to support this if needed
-
-            // If using a service/repository, save the updated Location to the database here
-
-            redirectAttributes.addFlashAttribute("successMessage", "Location updated successfully!");
-            return "redirect:/displaylocations";
+    @PostMapping("/updatelocation")
+    public String updateLocationAddress(@RequestParam("id") int id,
+                                        @RequestParam("address") String newAddress,
+                                        RedirectAttributes redirectAttributes) {
+        Location location = dbAdapter.getLocationById(id);
+        if (location != null) {
+            location.setAddress(newAddress); // Update the address
+            boolean isSuccess = dbAdapter.updateLocation(location);
+            if (isSuccess) {
+                redirectAttributes.addFlashAttribute("successMessage", "Location address updated successfully!");
+                return "redirect:/displaylocations";
+            } else {
+                redirectAttributes.addFlashAttribute("errorMessage", "Failed to update location address.");
+                return "redirect:/error"; // Redirect to an error page
+            }
         } else {
-            // Handle location not found
-            return "error";
+            redirectAttributes.addFlashAttribute("errorMessage", "Location not found.");
+            return "redirect:/error"; // Redirect to an error page
         }
     }
 
+    private Location createLocationFromForm(MultiValueMap<String, String> formData, int locationId) {
+        Types.LocType type = getType(formData.getFirst("loc-type"));
+        String name = getName(formData.getFirst("name"));
+        String address = getAddress(formData.getFirst("address"));
+        int capacity = getCapacity(formData.getFirst("capacity"));
+        List<Types.SpeciesAvailable> list = getSpeciesHandled(formData);
 
-    // Helper methods
-    private Types.LocType getType(String typeString) {
-        return Types.LocType.valueOf(typeString.toUpperCase());
+        Location location = new Location(type, name, address, capacity, list);
+        return location;
     }
 
-    private List<Types.SpeciesAvailable> getSpeciesHandled(MultiValueMap<String, String> formData) {
-        List<Types.SpeciesAvailable> speciesList = new ArrayList<>();
-        if (formData.containsKey("dog")) speciesList.add(Types.SpeciesAvailable.DOG);
-        if (formData.containsKey("cat")) speciesList.add(Types.SpeciesAvailable.CAT);
-        if (formData.containsKey("bird")) speciesList.add(Types.SpeciesAvailable.BIRD);
-        if (formData.containsKey("rabbit")) speciesList.add(Types.SpeciesAvailable.RABBIT);
-        return speciesList;
+    public String removeBrackets(String str){
+        return str.replace("[", "").replace("]", "");
+    }
+
+
+    public String getName(Object obj){
+        return removeBrackets(String.valueOf(obj));
+    }
+
+
+    public Types.LocType getType(Object obj){
+        if(String.valueOf(obj).contains("SHELTER"))
+            return Types.LocType.SHELTER;
+        return Types.LocType.FOSTER_HOME;
+    }
+
+    public String getAddress(Object obj){
+        return removeBrackets(String.valueOf(obj));
+    }
+
+    public int getCapacity(Object obj){
+        String inputWeight = removeBrackets(String.valueOf(obj));
+        return Integer.parseInt(String.valueOf(inputWeight));
+    }
+
+    public List<Types.SpeciesAvailable> getSpeciesHandled(MultiValueMap values) {
+        List<Types.SpeciesAvailable> list = new ArrayList<>();
+        if(values.get("dog") != null)
+            list.add(Types.SpeciesAvailable.DOG);
+        if(values.get("cat") != null)
+            list.add(Types.SpeciesAvailable.CAT);
+        if(values.get("bird") != null)
+            list.add(Types.SpeciesAvailable.BIRD);
+        if(values.get("rabbit") != null)
+            list.add(Types.SpeciesAvailable.RABBIT);
+        return list;
+    }
+
+    public boolean handlesDog(Object obj){
+        return String.valueOf(obj).contains("DOG");
+    }
+
+    public boolean handlesCat(Object obj){
+        return String.valueOf(obj).contains("CAT");
+    }
+
+    public boolean handlesBird(Object obj){
+        return String.valueOf(obj).contains("BIRD");
+    }
+
+    public boolean handlesRabbit(Object obj){
+        return String.valueOf(obj).contains("RABBIT");
     }
 }

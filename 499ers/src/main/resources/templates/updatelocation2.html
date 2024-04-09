@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Location</title>
+</head>
+<body>
+<h1>Update Location</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Address</th>
+        <th>Capacity</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="location : ${locations}">
+        <td th:text="${location.id}"></td>
+        <td th:text="${location.name}"></td>
+        <td th:text="${location.type}"></td>
+        <td th:text="${location.address}"></td>
+        <td th:text="${location.maxCapacity}"></td>
+        <td>
+            <!-- Update Link for each location -->
+            <a th:href="@{/updatelocation/{id}(id=${location.id})}">Update</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/index.html">Back to Home</a>
+</body>
+</html>
+
