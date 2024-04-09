@@ -2,7 +2,40 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{../styles.css}" />
     <title>ShelterApp: Add Animal</title>
+    <style>
+        .form-container {
+            height: 700px;
+            width: 600px;
+            max-width: 650px;
+        }
+
+        .radio-group {
+            display: flex;
+            justify-content: start;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .radio-group label {
+            margin-right: 5px;
+        }
+
+        .input-container {
+            margin-bottom: 15px;
+        }
+
+        .input-container label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .input-container input[type="submit"] {
+            width: auto;
+        }
+    </style>
+
 </head>
 <body>
 <h1>Please enter the information for a new animal:</h1>
