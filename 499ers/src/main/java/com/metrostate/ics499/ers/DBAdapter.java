@@ -414,14 +414,14 @@ public class DBAdapter {
     }
 
     public static Location getLocationById(int locationId) {
-        String sql = "SELECT * FROM Location WHERE id = ?";
+        String sql = "SELECT * FROM Location WHERE Location_ID = ?";
         Location location = template.queryForObject(sql, new Object[]{locationId}, (rs, rowNum) ->
                 new Location(
-                        rs.getInt("id"),
-                        Types.LocType.valueOf(rs.getString("type")),
-                        rs.getString("name"),
-                        rs.getString("address"),
-                        rs.getInt("maxCapacity")
+                        rs.getInt("Location_ID"),
+                        Types.LocType.valueOf(rs.getString("Location_Type")),
+                        rs.getString("Location_Name"),
+                        rs.getString("Address"),
+                        rs.getInt("Capacity")
                 ));
 
         // Assuming you have a method to fetch species for a given locationId
@@ -430,6 +430,7 @@ public class DBAdapter {
 
         return location;
     }
+
 
     // Placeholder for the method to fetch species - you'll need to implement this based on your database schema
     private static List<Types.SpeciesAvailable> fetchSpeciesForLocation(int locationId) {

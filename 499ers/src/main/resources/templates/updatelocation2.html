@@ -15,6 +15,7 @@
         <th>Type</th>
         <th>Address</th>
         <th>Capacity</th>
+        <th>Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -25,8 +26,7 @@
         <td th:text="${location.address}"></td>
         <td th:text="${location.maxCapacity}"></td>
         <td>
-            <!-- Update Link for each location -->
-            <a th:href="@{/updatelocation/{id}(id=${location.id})}">Update</a>
+            <a th:href="@{/updatelocation2/edit/{id}(id=${location.id})}">Edit</a>
         </td>
     </tr>
     </tbody>
@@ -35,4 +35,3 @@
 <a href="/index.html">Back to Home</a>
 </body>
 </html>
-
