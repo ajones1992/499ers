@@ -9,12 +9,12 @@
 <h1>Please enter the information for a new animal:</h1>
 <div class="form-container">
     <form th:action="@{addrec}" method="post" th:object="${aniChoice}">
-        <p>Select the location to add to:</p>
+        <p>Select the animal that the record is for:</p>
         <select th:field="*{choice}" name = "aniID">
             <option th:each="ani : ${aniOptions}" th:value="${ani}" th:text="${ani}"></option>
         </select>
 
-        <p>Select the detailedRecord's type:</p>
+        <p>Select the record type:</p>
         <div class="input-container">
             <input type="radio" id="MEDICAL" name="record_type" value="MEDICAL">
             <label for="MEDICAL">Medical</label><br>
@@ -25,7 +25,7 @@
         </div> <br>
 
         <div class="input-container">
-            <label for="textbox">Enter the detailedRecord details:</label> <br>
+            <label for="textbox">Enter the details of the record:</label> <br>
             <textarea id="textbox" name="textbox" rows="5" cols="50"></textarea> <br>
         </div>
 

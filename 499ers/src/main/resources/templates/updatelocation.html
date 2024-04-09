@@ -1,64 +1,42 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
+<<<<<<< HEAD
     <title>ShelterApp: Update Location</title>
     <link rel="stylesheet" th:href="@{../styles.css}" />
+=======
+    <title>Update Location</title>
+>>>>>>> master
 </head>
 <body>
-<h1>Select Location to Update</h1>
+<h1>Update Location</h1>
 
-<!-- Dropdown for selecting which location to update -->
-<form th:action="@{/updatelocation}" method="post">
-    <label for="locID">Select Location:</label>
-    <select id="locID" name="locID" required onchange="document.location.href='/updatelocation/' + this.value">
-        <option value="">Choose...</option>
-        <option th:each="loc : ${locOptions}" th:value="${loc.id}" th:text="${loc.name}"></option>
-    </select>
-    <noscript>
-        <input type="submit" value="Select">
-    </noscript>
-</form>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Address</th>
+        <th>Capacity</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="location : ${locations}">
+        <td th:text="${location.id}"></td>
+        <td th:text="${location.name}"></td>
+        <td th:text="${location.type}"></td>
+        <td th:text="${location.address}"></td>
+        <td th:text="${location.maxCapacity}"></td>
+        <td>
+            <a th:href="@{/updatelocation/edit/{id}(id=${location.id})}">Edit</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
-<h2>Update Location Information</h2>
-<div th:if="${location != null}">
-    <form th:action="@{/updateloc}" method="post" id="update-location">
-        <input type="hidden" th:value="${location.id}" name="locationId"/>
-
-        <label for="name">Location Name:</label>
-        <input type="text" id="name" th:name="name" th:placeholder="Name" th:value="${location.name}"/> <br/>
-
-        <label for="address">Address:</label>
-        <input type="text" id="address" th:name="address" th:placeholder="Address" th:value="${location.address}"/> <br/>
-
-        <label for="capacity">Capacity:</label>
-        <input type="number" id="capacity" th:name="capacity" th:placeholder="0" th:value="${location.capacity}"/> <br/>
-
-        <fieldset>
-            <legend>Select the location type:</legend>
-            <input type="radio" id="shelter" th:name="loc_type" value="SHELTER" th:checked="${location.type == 'SHELTER'}">
-            <label for="shelter">Shelter</label><br>
-            <input type="radio" id="fosterhome" th:name="loc_type" value="FOSTER_HOME" th:checked="${location.type == 'FOSTER_HOME'}">
-            <label for="fosterhome">Foster Home</label><br>
-        </fieldset>
-
-        <fieldset>
-            <legend>Select the animal types handled at this location:</legend>
-            <!-- Checkbox checked state should be dynamically set based on the location's species -->
-            <input type="checkbox" id="dog" th:name="dog" value="DOG" th:checked="${#lists.contains(location.species, 'DOG')}">
-            <label for="dog">Dog</label><br>
-            <input type="checkbox" id="cat" th:name="cat" value="CAT" th:checked="${#lists.contains(location.species, 'CAT')}">
-            <label for="cat">Cat</label><br>
-            <input type="checkbox" id="bird" th:name="bird" value="BIRD" th:checked="${#lists.contains(location.species, 'BIRD')}">
-            <label for="bird">Bird</label><br>
-            <input type="checkbox" id="rabbit" th:name="rabbit" value="RABBIT" th:checked="${#lists.contains(location.species, 'RABBIT')}">
-            <label for="rabbit">Rabbit</label><br>
-        </fieldset>
-
-        <div class="input-container">
-            <input type="submit" value="Update">
-        </div>
-    </form>
-</div>
+<a href="/index.html">Back to Home</a>
 </body>
 </html>

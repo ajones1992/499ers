@@ -10,7 +10,9 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * dbAdapter acts as an adapter from the Java/Interface side of the project to the
@@ -163,7 +165,7 @@ public class DBAdapter {
             updateStatement.append(String.format("Capacity = '%d',", updatedLoc.getMaxCapacity()));
         }
         updateStatement.deleteCharAt(updateStatement.length() - 1);
-        updateStatement.append(String.format("WHERE Location_ID = %d;", oldLoc.getId()));
+        updateStatement.append(String.format(" WHERE Location_ID = %d;", oldLoc.getId()));
         template.execute(updateStatement.toString());
         return true;
     }
@@ -414,14 +416,14 @@ public class DBAdapter {
     }
 
     public static Location getLocationById(int locationId) {
-        String sql = "SELECT * FROM Location WHERE id = ?";
+        String sql = "SELECT * FROM Location WHERE Location_ID = ?";
         Location location = template.queryForObject(sql, new Object[]{locationId}, (rs, rowNum) ->
                 new Location(
-                        rs.getInt("id"),
-                        Types.LocType.valueOf(rs.getString("type")),
-                        rs.getString("name"),
-                        rs.getString("address"),
-                        rs.getInt("maxCapacity")
+                        rs.getInt("Location_ID"),
+                        Types.LocType.valueOf(rs.getString("Location_Type")),
+                        rs.getString("Location_Name"),
+                        rs.getString("Address"),
+                        rs.getInt("Capacity")
                 ));
 
         // Assuming you have a method to fetch species for a given locationId
@@ -431,10 +433,53 @@ public class DBAdapter {
         return location;
     }
 
+
     // Placeholder for the method to fetch species - you'll need to implement this based on your database schema
     private static List<Types.SpeciesAvailable> fetchSpeciesForLocation(int locationId) {
         // Implement the query to fetch species for the location
         // For example, query a junction table that links locations to species, if that's how your data is structured
         return new ArrayList<>(); // Return the actual list of species
     }
+
+
+//    public boolean updateLocation(Location location) {
+//        String sql = "UPDATE Location SET " +
+//                "Location_Name = ?, " +
+//                "Location_Type = ?, " +
+//                "Address = ?, " +
+//                "Capacity = ? " +
+//                "WHERE Location_ID = ?";
+//
+//        try {
+//            // Execute the update statement using JdbcTemplate
+//            int rowsAffected = template.update(
+//                    sql,
+//                    location.getName(),
+//                    location.getType().toString(),
+//                    location.getAddress(),
+//                    location.getMaxCapacity(),
+//                    location.getId()
+//            );
+//            return rowsAffected > 0; // If one or more rows are affected, the update is successful
+//        } catch (Exception e) {
+//            // Log the exception and return false, indicating the update failed
+//            // You can use a logging framework or simply print the stack trace
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
+
+    public boolean updateLocation(Location location) {
+        final Logger log = LoggerFactory.getLogger(DBAdapter.class);
+        // Assuming you have a method that only updates the address field
+        String sql = "UPDATE Location SET Address = ? WHERE Location_ID = ?";
+        log.info("Attempting to update location: {}", location);
+        int rowsAffected = template.update(sql, location.getAddress(), location.getId());
+
+        boolean updateSucceeded = rowsAffected > 0;
+        log.info("Update operation successful: {}", updateSucceeded);
+        return rowsAffected > 0;
+    }
+
+
 }

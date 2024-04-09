@@ -6,13 +6,18 @@ import java.util.List;
 
 public class Location {
     private static int idCounter = 10;
-    private final int id;
+    private int id;
     private Types.LocType type;
     private String name;
     private String address;
     private List<Types.SpeciesAvailable> species;
     private List<Animal> animals;
     private int maxCapacity;
+
+    // No-argument constructor
+    public Location() {
+        super();
+    }
 
     public static void setStartid(int start) {
         idCounter = start;
@@ -117,6 +122,10 @@ public class Location {
     public void setName(String name) {
         this.name = name;
     }
+    public void setId(int id) {
+        this.id = id;
+    }
+
 
     public String getAddress(){
         return address;
