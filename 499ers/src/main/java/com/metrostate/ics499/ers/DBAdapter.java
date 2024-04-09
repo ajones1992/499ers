@@ -1,6 +1,7 @@
 package com.metrostate.ics499.ers;
 
 
+import com.metrostate.ics499.ers.web.UpdateLocationCon2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,6 +12,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * dbAdapter acts as an adapter from the Java/Interface side of the project to the
@@ -468,9 +471,14 @@ public class DBAdapter {
 //    }
 
     public boolean updateLocation(Location location) {
+        final Logger log = LoggerFactory.getLogger(DBAdapter.class);
         // Assuming you have a method that only updates the address field
-        String sql = "UPDATE Location SET address = ? WHERE id = ?";
+        String sql = "UPDATE Location SET Address = ? WHERE Location_ID = ?";
+        log.info("Attempting to update location: {}", location);
         int rowsAffected = template.update(sql, location.getAddress(), location.getId());
+
+        boolean updateSucceeded = rowsAffected > 0;
+        log.info("Update operation successful: {}", updateSucceeded);
         return rowsAffected > 0;
     }
 
