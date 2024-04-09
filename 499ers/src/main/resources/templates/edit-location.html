@@ -7,7 +7,7 @@
 <body>
 <h1>Edit Location</h1>
 
-<form th:action="@{/updatelocation2/update/{id}(id=${location.id})}" th:method="post">
+<form th:action="@{/updatelocation/update/{id}(id=${location.id})}" th:method="post">
     <input type="hidden" th:value="${location.id}" name="id"/>
     <div>
         <label for="name">Name:</label>
@@ -30,6 +30,6 @@
     </div>
 </form>
 
-<a href="/updatelocation2">Cancel</a>
+<a href="/updatelocation">Cancel</a>
 </body>
 </html>
