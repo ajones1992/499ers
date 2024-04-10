@@ -37,22 +37,22 @@ public class DBInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        reset();
-
-        //Create the database table:
-        initDatabase();
-        fillDatabase();
-
         //Initialize DBAdapter
         DBAdapter.initDBAdapter(jdbcTemplate);
-        // runTests(); // add back in for testing (REMOVE FOR FINAL VERSION)
-
     }
 
     /**
+     * Resets the table with basic schema and entries.
+     */
+    private void dropThenInitialize() throws FileNotFoundException {
+        reset();
+        initDatabase();
+        fillDatabase();
+    }
+    /**
      * Drops each table in the database to prep the table to be reset.
      */
-    public void reset() {
+    private void reset() {
         try {
             jdbcTemplate.execute("DROP TABLE Animal");
         } catch (DataAccessException e) {
@@ -82,6 +82,7 @@ public class DBInitializer implements CommandLineRunner {
     private void runTests() {
         testInsertAnimal();
         testInsertAnimal2();
+        testUpdateAnimal();
         displayAnimals();
         testQueryAnimal();
         displayLocations();
@@ -93,6 +94,7 @@ public class DBInitializer implements CommandLineRunner {
         displaySpeciesAvailable();
         testQuerySpecies();
         testInsertRecord();
+        testUpdateRecord();
         displayRecords();
         testQueryRecord();
     }
@@ -163,6 +165,30 @@ public class DBInitializer implements CommandLineRunner {
         Animal myAnimal = new Animal("George the 2nd", Types.SpeciesAvailable.DOG, 100.5, LocalDate.now(), LocalDate.now());
         Location myLoc = DBAdapter.queryLocation("Location_ID", "101").get(0);
         DBAdapter.insert(myAnimal, myLoc);
+    }
+
+    private void testUpdateAnimal() {
+        System.out.println("Test Update Location");
+        System.out.println("Update for Animal id 102");
+        ArrayList<Animal> results = new ArrayList<Animal>(
+                DBAdapter.queryAnimal("Animal_ID", "102"));
+        if (!results.isEmpty()) {
+            Animal original = results.get(0);
+            System.out.println("Original: " + original.toString());
+            Animal modified = new Animal(original.getId(), original.getName(),
+                    original.getSpecies(), original.getWeight() + 5,
+                    original.getDOB(), LocalDate.now());
+            modified.setCode(Types.ExitCode.ADOPT);
+            System.out.println("Changes: " + modified);
+            System.out.println("Execute update.");
+            DBAdapter.update(original, modified);
+        }
+        results = new ArrayList<Animal>(
+                DBAdapter.queryAnimal("Animal_ID", "102"));
+        if (!results.isEmpty()) {
+            Animal original = results.get(0);
+            System.out.println("Modified Original: " + original);
+        }
     }
 
     // test animal Query
@@ -254,6 +280,26 @@ public class DBInitializer implements CommandLineRunner {
         List<Record> records = DBAdapter.queryRecords(animal);
         for (Record r: records) {
             System.out.println(r.toString());
+        }
+    }
+    private void testUpdateRecord() {
+        System.out.println("Test Update Record");
+        System.out.println("Update for record id 105");
+        Animal animal = DBAdapter.queryAnimal("Animal_ID", "105").get(0);
+        ArrayList<Record> results = new ArrayList<Record>(DBAdapter.queryRecords(animal));
+        if (!results.isEmpty()) {
+            Record original = results.get(0);
+            System.out.println("Original: " + original.toString());
+            Record modified = new Record(original.getId(), LocalDate.now(),
+                    original.getType(), original.getDetails() + "-edit-");
+            System.out.println("Changes: " + modified);
+            System.out.println("Execute update.");
+            DBAdapter.update(original, modified);
+        }
+        results = new ArrayList<Record>(DBAdapter.queryRecords(animal));
+        if (!results.isEmpty()) {
+            Record original = results.get(0);
+            System.out.println("Modified Original: " + original);
         }
     }
 

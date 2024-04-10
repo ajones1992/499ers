@@ -171,6 +171,62 @@ public class DBAdapter {
     }
 
     /**
+     * Updates an Animal in the database to match the updated Animal.
+     *
+     * @param original The original Animal with no modified fields
+     * @param updatedAnimal The updated Animal with modified fields
+     * @return true if the operation was successful
+     */
+    public static boolean update(Animal original, Animal updatedAnimal) {
+        StringBuffer updateStatement = new StringBuffer("UPDATE Animal SET ");
+        if (!(original.getName().equals(updatedAnimal.getName()))) {
+            updateStatement.append(String.format("Animal_Name = '%s',", updatedAnimal.getName()));
+        }
+        if (original.getWeight() != updatedAnimal.getWeight()) {
+            updateStatement.append(String.format("Weight = '%f',", updatedAnimal.getWeight()));
+        }
+        if (!(original.getDOB().equals(updatedAnimal.getDOB()))) {
+            updateStatement.append(String.format("DOB = '%s',", updatedAnimal.getDOB().toString()));
+        }
+        if (!(original.getIntakeDate().equals(updatedAnimal.getIntakeDate()))) {
+            updateStatement.append(String.format("Received_Date = '%s',", updatedAnimal.getIntakeDate().toString()));
+        }
+        if (original.getExitDate() == null ||
+                !(original.getExitDate().equals(updatedAnimal.getExitDate()))) {
+            updateStatement.append(String.format("Exit_Date = '%s',", updatedAnimal.getExitDate()));
+        }
+        if (original.getCode() == null ||
+                !(original.getCode().toString().equals(updatedAnimal.getCode().toString()))) {
+            updateStatement.append(String.format("Exit_Code = '%s',", updatedAnimal.getCode()));
+        }
+        updateStatement.deleteCharAt(updateStatement.length() - 1);
+        updateStatement.append(String.format(" WHERE Animal_ID = %d;", original.getId()));
+        template.execute(updateStatement.toString());
+        return true;
+    }
+
+    /**
+     * Updates a record in the database to match the updated record.
+     *
+     * @param original The original record with no modified fields
+     * @param updatedRecord The updated record with modified fields
+     * @return true if the operation was successful
+     */
+    public static boolean update(Record original, Record updatedRecord) {
+        StringBuffer updateStatement = new StringBuffer("UPDATE Record SET ");
+        if (!(original.getUpdateDate().equals(updatedRecord.getUpdateDate()))) {
+            updateStatement.append(String.format("Update_Date = '%s',", updatedRecord.getUpdateDate().toString()));
+        }
+        if (!(original.getDetails().equals(updatedRecord.getDetails()))) {
+            updateStatement.append(String.format("Details = '%s',", updatedRecord.getDetails()));
+        }
+        updateStatement.deleteCharAt(updateStatement.length() - 1);
+        updateStatement.append(String.format(" WHERE Animal_ID = %d;", original.getId()));
+        template.execute(updateStatement.toString());
+        return true;
+    }
+
+    /**
      * Returns a list of locations from the database based on the provided
      * search key and search term.
      *
