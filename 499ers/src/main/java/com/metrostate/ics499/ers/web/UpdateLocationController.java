@@ -25,7 +25,6 @@ public class UpdateLocationController {
     @Autowired
     public UpdateLocationController(DBAdapter dbAdapter) {
         this.dbAdapter = dbAdapter;
-        System.out.println("Update Controller autowired dbAdapter");
     }
 
     // Display a list of all locations
