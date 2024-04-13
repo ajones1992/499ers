@@ -21,11 +21,9 @@ public class Application implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		// set up
 		masterList.loadDatabaseIntoMap();
 		System.out.println("APPLICATION START");
 		/*-------------------- TEST SOMEWHERE AFTER THIS --------------------*/
-
 	}
 }
 

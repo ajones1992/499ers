@@ -1,5 +1,7 @@
 package com.metrostate.ics499.ers;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,13 +21,13 @@ public class Location implements Updatable<Location> {
     }
 
     // Constructor for reconstructing a Location from the database
-    public Location(int id, Types.LocType type, String name, String address, int maxCapacity) {
+    public Location(int id, Types.LocType type, String name, String address, int maxCapacity, List<Types.SpeciesAvailable> species) {
         this.id = id;
         this.type = type;
         this.name = name;
         this.address = address;
         this.maxCapacity = maxCapacity;
-        this.species = new ArrayList<>();
+        this.species = species;
         animals = new ArrayList<>();
     }
 
@@ -107,10 +109,10 @@ public class Location implements Updatable<Location> {
     public void setName(String name) {
         this.name = name;
     }
+
     public void setId(int id) {
         this.id = id;
     }
-
 
     public String getAddress(){
         return address;

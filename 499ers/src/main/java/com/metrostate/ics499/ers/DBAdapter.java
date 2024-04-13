@@ -295,7 +295,7 @@ public class DBAdapter {
         String address = rs.getString("Address");
         int capacity = rs.getInt("Capacity");
         Location location = new Location(id, type, name, address,
-                capacity);
+                capacity, null);
         List<Types.SpeciesAvailable> species = querySpeciesAvailable(location);
         location.setSpecies(species);
         List<Animal> animals = queryAnimal("Location_Id", Integer.toString(location.getId()));
@@ -491,7 +491,8 @@ public class DBAdapter {
                         Types.LocType.valueOf(rs.getString("Location_Type")),
                         rs.getString("Location_Name"),
                         rs.getString("Address"),
-                        rs.getInt("Capacity")
+                        rs.getInt("Capacity"),
+                        null
                 ));
 
         // Assuming you have a method to fetch species for a given locationId

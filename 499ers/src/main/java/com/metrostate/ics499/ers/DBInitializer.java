@@ -219,7 +219,7 @@ public class DBInitializer implements CommandLineRunner {
     private void testInsertLocation() {
         System.out.println("Test Insert Location");
         Location myLoc = new Location(104, Types.LocType.SHELTER, "MyShelter", "500 Address St",
-                30);
+                30, null);
         DBAdapter.insert(myLoc);
     }
 
@@ -233,7 +233,7 @@ public class DBInitializer implements CommandLineRunner {
             System.out.printf("Original: %d, %s, %s, %s, %d\n", original.getId(), original.getName(),
                     original.getType(), original.getAddress(), original.getMaxCapacity());
             Location modified = new Location(original.getId(), Types.LocType.SHELTER, "FH #1",
-                    original.getAddress(), original.getMaxCapacity() + 5);
+                    original.getAddress(), original.getMaxCapacity() + 5, null);
             System.out.printf("Changes: %d, %s, %s, %s, %d\n", modified.getId(), modified.getName(),
                     modified.getType(), modified.getAddress(), modified.getMaxCapacity());
             System.out.println("Execute update.");
