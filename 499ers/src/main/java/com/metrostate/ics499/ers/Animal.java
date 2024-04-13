@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Animal {
+public class Animal implements Updatable<Animal> {
     private static int idCounter = 1;
     private int id;
     private String name;
@@ -124,10 +124,29 @@ public class Animal {
                 ", animal_Type='" + species + '\'' +
                 ", animal_Name='" + name + '\'' +
                 ", animal_weight=" + weight +
+                ", DOB =" + DOB +
                 ", intake_date=" + intakeDate +
                 ", exit_date=" + exitDate +
                 ", code=" + code +
                 " }";
+    }
+
+    @Override
+    public boolean update(Animal update) {
+        if (DBAdapter.update(this, update)) {
+            this.setId(update.getId());
+            this.setSpecies(update.getSpecies());
+            this.setName(update.getName());
+            this.setWeight(update.getWeight());
+            this.setDOB(update.getDOB());
+            this.setIntakeDate(update.getIntakeDate());
+            this.setExitDate(update.getExitDate());
+            this.setCode(update.getCode());
+            this.setRecords(update.getRecords());
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 
