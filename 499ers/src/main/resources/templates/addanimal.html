@@ -6,80 +6,98 @@
     <title>ShelterApp: Add Animal</title>
     <style>
         .form-container {
-            height: 700px;
-            width: 600px;
-            max-width: 650px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            width: 400px;
+            margin: auto;
         }
 
         .radio-group {
             display: flex;
-            justify-content: start;
-            gap: 15px;
-            margin-bottom: 15px;
+            justify-content: space-around;
+            margin-bottom: 1rem;
         }
 
         .radio-group label {
-            margin-right: 5px;
+            font-weight: 600;
         }
 
         .input-container {
-            margin-bottom: 15px;
+            margin-bottom: 1rem;
         }
 
         .input-container label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 0.5rem;
         }
 
-        .input-container input[type="submit"] {
-            width: auto;
+        .input-container input[type="text"],
+        .input-container input[type="number"],
+        .input-container input[type="date"],
+        .input-container select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 2px solid #e4e7eb;
+            border-radius: 4px;
+            font-size: 0.9rem;
         }
+
     </style>
-
 </head>
 <body>
-<h1>Please enter the information for a new animal:</h1>
+<h1>Add a New Animal</h1>
 <div class="form-container">
     <form th:action="@{add}" method="post" th:object="${locChoice}">
-        <p>Select the location to add to:</p>
-        <select th:field="*{choice}" name = "locID">
-            <option th:each="loc : ${locOptions}" th:value="${loc.choiceID}" th:text="${loc.choice}"></option>
-        </select>
-
-        <p>Select the animal's type:</p>
         <div class="input-container">
-            <input type="radio" id="DOG" name="animal_type" value="DOG">
-            <label for="DOG">Dog</label><br>
-            <input type="radio" id="CAT" name="animal_type" value="CAT">
-            <label for="CAT">Cat</label><br>
-            <input type="radio" id="BIRD" name="animal_type" value="BIRD">
-            <label for="BIRD">Bird</label><br>
-            <input type="radio" id="RABBIT" name="animal_type" value="RABBIT">
-            <label for="RABBIT">Rabbit</label><br>
+            <label for="locID">Select the location to add to:</label>
+            <select th:field="*{choice}" id="locID" name="locID">
+                <option th:each="loc : ${locOptions}" th:value="${loc.choiceID}" th:text="${loc.choice}"></option>
+            </select>
+        </div>
+
+        <label>Select the animal's type:</label>
+        <div class="radio-group">
+            <label>
+                <input type="radio" id="DOG" name="animal_type" value="DOG">
+                Dog
+            </label>
+            <label>
+                <input type="radio" id="CAT" name="animal_type" value="CAT">
+                Cat
+            </label>
+            <label>
+                <input type="radio" id="BIRD" name="animal_type" value="BIRD">
+                Bird
+            </label>
+            <label>
+                <input type="radio" id="RABBIT" name="animal_type" value="RABBIT">
+                Rabbit
+            </label>
         </div>
 
         <div class="input-container">
-            <label for="name">Enter the animal's name:</label>
-            <input type="text" id="name" name="name" placeholder="Name"/> <br>
+            <label for="name">Animal's Name:</label>
+            <input type="text" id="name" name="name" placeholder="Name"/>
         </div>
 
         <div class="input-container">
-            <label for="weight">Enter the animal's weight:</label>
-            <input type="number" id="weight" name="weight" placeholder="0"/> <br>
+            <label for="weight">Weight (lbs):</label>
+            <input type="number" id="weight" name="weight" placeholder="Weight"/>
         </div>
 
         <div class="input-container">
             <label for="dob">Date of Birth:</label>
-            <input type="date" id="dob" name="dob"> <br>
+            <input type="date" id="dob" name="dob"/>
         </div>
 
         <div class="input-container">
             <label for="datereceived">Date Received:</label>
-            <input type="date" id="datereceived" name="datereceived"> <br>
+            <input type="date" id="datereceived" name="datereceived"/>
         </div>
 
         <div class="input-container">
-            <input type="submit" value="Submit">
+            <input type="submit" value="Add Animal">
         </div>
     </form>
 </div>

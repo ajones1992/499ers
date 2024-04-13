@@ -2,13 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>ShelterApp: Add Location</title>
     <link rel="stylesheet" th:href="@{../styles.css}" />
+    <title>ShelterApp: Add Location</title>
     <style>
-        .form-container {
-            width: 500px;
-            margin-top: 20px;
-        }
 
         .form-container input[type="text"],
         .form-container input[type="number"],
@@ -19,15 +15,11 @@
             margin-bottom: 10px;
         }
 
-        .form-container div {
-            margin-bottom: 20px;
-        }
-
         .form-container .input-container input[type="submit"] {
             margin-top: 20px;
         }
-    </style>
 
+    </style>
 </head>
 <body>
 <h1>Please enter the information for a new location: </h1>
@@ -36,40 +28,40 @@
         <p>Select the location type: </p>
         <div>
             <input type="radio" id="shelter" name="loc_type" value="SHELTER">
-            <label for="shelter">Shelter</label><br>
+            <label for="shelter">Shelter</label>
             <input type="radio" id="fosterhome" name="loc_type" value="FOSTER_HOME">
-            <label for="fosterhome">Foster Home</label><br>
+            <label for="fosterhome">Foster Home</label>
         </div>
 
-        <label for="name">Enter the location name:</label>
+        <p for="name">Enter the location name:</p>
         <div>
-            <input type="text" id="name" name="name" placeholder="Name"/> <br>
+            <input type="text" id="name" name="name" placeholder="Name"/>
         </div>
 
-        <label for="address">Enter the address:</label>
+        <p for="address">Enter the address:</p>
         <div>
-            <input type="text" id="address" name="address" placeholder="Address"/> <br>
+            <input type="text" id="address" name="address" placeholder="Address"/>
         </div>
 
-        <label for="capacity">Enter the location's capacity:</label>
+        <p for="capacity">Enter the location's capacity:</p>
         <div>
-            <input type="number" id="capacity" name="capacity" placeholder="0"/> <br>
+            <input type="number" id="capacity" name="capacity" placeholder="0"/>
         </div>
 
         <p>Select the animal types handled at this location: </p>
         <div>
             <input type="hidden" name="dog" value="no">
             <input type="checkbox" id="dog" name="dog" value="DOG">
-            <label for="dog">Dog</label><br>
+            <label for="dog">Dog</label>
             <input type="hidden" name="cat" value="no">
             <input type="checkbox" id="cat" name="cat" value="CAT">
-            <label for="cat">Cat</label><br>
+            <label for="cat">Cat</label>
             <input type="hidden" name="bird" value="no">
             <input type="checkbox" id="bird" name="bird" value="BIRD">
-            <label for="bird">Bird</label><br>
+            <label for="bird">Bird</label>
             <input type="hidden" name="rabbit" value="no">
             <input type="checkbox" id="rabbit" name="rabbit" value="RABBIT">
-            <label for="rabbit">Rabbit</label><br>
+            <label for="rabbit">Rabbit</label>
         </div>
 
         <div class="input-container">
