@@ -46,10 +46,6 @@ public class Record {
         return type;
     }
 
-    public void setType(Types.RecordType type) {
-        this.type = type;
-    }
-
     public String getDetails() {
         return details;
     }
