@@ -19,13 +19,13 @@ public class Location implements Updatable<Location> {
     }
 
     // Constructor for reconstructing a Location from the database
-    public Location(int id, Types.LocType type, String name, String address, int maxCapacity) {
+    public Location(int id, Types.LocType type, String name, String address, int maxCapacity, List<Types.SpeciesAvailable> species) {
         this.id = id;
         this.type = type;
         this.name = name;
         this.address = address;
         this.maxCapacity = maxCapacity;
-        this.species = new ArrayList<>();
+        this.species = species;
         animals = new ArrayList<>();
     }
 

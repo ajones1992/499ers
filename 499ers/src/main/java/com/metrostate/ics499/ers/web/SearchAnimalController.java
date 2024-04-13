@@ -2,6 +2,7 @@ package com.metrostate.ics499.ers.web;
 
 import com.metrostate.ics499.ers.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -72,6 +73,14 @@ public class SearchAnimalController {
      */
     public List<Animal> searchAnimal(MultiValueMap values){
         String name = getName(values.get("name"));
-        return DBAdapter.queryAnimal("Animal_Name", name);
+        List<Animal> results = new ArrayList<>();
+        
+        for (Animal ani: Application.getMasterList().getAllAnimals()) {
+            if(ani.getName().contains(name)){
+                results.add(ani);
+            }
+        }
+
+        return results;
     }
 }

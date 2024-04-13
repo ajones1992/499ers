@@ -2,6 +2,7 @@ package com.metrostate.ics499.ers.web;
 
 import com.metrostate.ics499.ers.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -72,6 +73,14 @@ public class SearchLocationController {
      */
     public List<Location> searchLocation (MultiValueMap values){
         String name = getName(values.get("name"));
-        return DBAdapter.queryLocation("Location_Name", name);
+        List<Location> results = new ArrayList<>();
+
+        for (Location loc: Application.getMasterList().getAllLocations()) {
+            if(loc.getName().contains(name)){
+                results.add(loc);
+            }
+        }
+
+        return results;
     }
 }
