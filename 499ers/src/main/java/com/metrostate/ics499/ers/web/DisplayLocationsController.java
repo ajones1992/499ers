@@ -1,5 +1,6 @@
 package com.metrostate.ics499.ers.web;
 
+import com.metrostate.ics499.ers.Application;
 import com.metrostate.ics499.ers.DBAdapter;
 import com.metrostate.ics499.ers.Location;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class DisplayLocationsController {
 
     @GetMapping
     public String getAllLocations(Model model) {
-        List<Location> locations = DBAdapter.getAllLocations();
+        List<Location> locations = Application.getMasterList().getAllLocations();
 
         model.addAttribute("locations", locations);
         return "displaylocations";
