@@ -2,7 +2,7 @@ package com.metrostate.ics499.ers;
 
 import java.time.LocalDate;
 
-public class Record {
+public class Record implements Updatable<Record> {
     private static int idCounter = 1;
     private int id;
     private LocalDate updateDate;
@@ -63,4 +63,15 @@ public class Record {
                 this.id, this.updateDate.toString(), this.type.toString(), this.details);
     }
 
+    @Override
+    public boolean update(Record update) {
+        if (DBAdapter.update(this, update)) {
+            this.setUpdateDate(update.getUpdateDate());
+            this.setType(update.getType());
+            this.setDetails(update.getDetails());
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

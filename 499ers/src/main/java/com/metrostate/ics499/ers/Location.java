@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Location {
+public class Location implements Updatable<Location> {
     private static int idCounter = 10;
     private int id;
     private Types.LocType type;
@@ -156,12 +156,29 @@ public class Location {
     }
 
     public void setAnimals(List<Animal> animals){
-        this.animals.clear();
-        this.animals.addAll(animals);
+        if (animals != null) {
+            this.animals.clear();
+            this.animals.addAll(animals);
+        }
     }
 
     public String toString(){
         return id + ": " + name;
     }
 
+    @Override
+    public boolean update(Location update) {
+        if (DBAdapter.update(this, update)) {
+            this.setId(update.getId());
+            this.setType(update.getType());
+            this.setName(update.getName());
+            this.setAddress(update.getAddress());
+            this.setMaxCapacity(update.getMaxCapacity());
+            this.setSpecies(update.getSpecies());
+            this.setAnimals(update.getAnimals());
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
