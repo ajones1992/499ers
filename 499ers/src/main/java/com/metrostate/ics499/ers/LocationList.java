@@ -45,6 +45,25 @@ public class LocationList {
         return animals;
     }
 
+    public List<Record> getAllRecords(){
+        List<Record> records = new ArrayList<>();
+        List<Location> shelters = new ArrayList<>(mapOfLocations.values());
+
+        for (Animal animal : getAllAnimals()) {
+            records.addAll(animal.getRecords());
+        }
+
+        return records;
+    }
+
+    public Record getRecord(int id){
+        for (Record rec:getAllRecords()) {
+            if(rec.getId()==id)
+                return rec;
+        }
+        return null;
+    }
+
     /**
      * Adds a Shelter or Foster location ot the list of available locations.
      * Updates the database.

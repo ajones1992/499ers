@@ -1,42 +1,78 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-<<<<<<< HEAD
     <title>ShelterApp: Update Location</title>
     <link rel="stylesheet" th:href="@{../styles.css}" />
-=======
-    <title>Update Location</title>
->>>>>>> master
+    <style>
+        .form-container {
+            width: 500px;
+            margin-top: 20px;
+        }
+
+        .form-container input[type="text"],
+        .form-container input[type="number"],
+        .form-container input[type="checkbox"],
+        .form-container input[type="radio"],
+        .form-container select,
+        .form-container label {
+            margin-bottom: 10px;
+        }
+
+        .form-container div {
+            margin-bottom: 20px;
+        }
+
+        .form-container .input-container input[type="submit"] {
+            margin-top: 20px;
+        }
+    </style>
+
 </head>
 <body>
-<h1>Update Location</h1>
+<h1>Please enter the updated information (if applicable): </h1>
+<div class="form-container">
+    <form th:action="@{updatelocation}" method="post" th:object="${locChoice}">
+        <p>Select the animal to update:</p>
+        <select th:field="*{choice}" name = "locID">
+            <option th:each="loc : ${locOptions}" th:value="${loc.choiceID}" th:text="${loc.choice}"></option>
+        </select>
 
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Address</th>
-        <th>Capacity</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="location : ${locations}">
-        <td th:text="${location.id}"></td>
-        <td th:text="${location.name}"></td>
-        <td th:text="${location.type}"></td>
-        <td th:text="${location.address}"></td>
-        <td th:text="${location.maxCapacity}"></td>
-        <td>
-            <a th:href="@{/updatelocation/edit/{id}(id=${location.id})}">Edit</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+        <label for="name">Enter the location name:</label>
+        <div>
+            <input type="text" id="name" name="name" placeholder="Name"/> <br>
+        </div>
 
-<a href="/index.html">Back to Home</a>
+        <label for="address">Enter the address:</label>
+        <div>
+            <input type="text" id="address" name="address" placeholder="Address"/> <br>
+        </div>
+
+        <label for="capacity">Enter the location's capacity:</label>
+        <div>
+            <input type="number" id="capacity" name="capacity" placeholder="0"/> <br>
+        </div>
+
+        <p>Select the animal types handled at this location: </p>
+        <div>
+            <input type="hidden" name="dog" value="no">
+            <input type="checkbox" id="dog" name="dog" value="DOG">
+            <label for="dog">Dog</label><br>
+            <input type="hidden" name="cat" value="no">
+            <input type="checkbox" id="cat" name="cat" value="CAT">
+            <label for="cat">Cat</label><br>
+            <input type="hidden" name="bird" value="no">
+            <input type="checkbox" id="bird" name="bird" value="BIRD">
+            <label for="bird">Bird</label><br>
+            <input type="hidden" name="rabbit" value="no">
+            <input type="checkbox" id="rabbit" name="rabbit" value="RABBIT">
+            <label for="rabbit">Rabbit</label><br>
+        </div>
+
+        <div class="input-container">
+            <input type="submit" value="Submit">
+        </div>
+    </form>
+</div>
 </body>
 </html>

@@ -1,14 +1,11 @@
 package com.metrostate.ics499.ers.web;
 
 import com.metrostate.ics499.ers.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +14,7 @@ public class UpdateAnimalController {
 
     // Handler to set up the form with a dynamic dropdown feature
     @RequestMapping(value = "/updateanimal", method = RequestMethod.GET)
-    public String showAddAnimalForm(Model model) {
+    public String showUpdateAnimalForm(Model model) {
 
         model.addAttribute("aniChoice", new FormChoice());
         return "updateanimal";
@@ -39,7 +36,7 @@ public class UpdateAnimalController {
     }
 
     @PostMapping("/updateanimal")
-    public String addAnimal(@RequestBody MultiValueMap<String, String> formData, @ModelAttribute("aniChoice") FormChoice aniChoice, Model model) {
+    public String updateAnimal(@RequestBody MultiValueMap<String, String> formData, @ModelAttribute("aniChoice") FormChoice aniChoice, Model model) {
 
         // Extract the animal ID from the form data
         updateAnimal(formData, getAnimalID(aniChoice));
@@ -48,12 +45,7 @@ public class UpdateAnimalController {
     }
 
     public int getAnimalID(FormChoice choice) {
-        for (Animal ani : Application.getMasterList().getAllAnimals()) {
-            if (ani.getId() == Integer.parseInt(choice.getChoice())) {
-                return ani.getId();
-            }
-        }
-        return -1;
+        return Integer.parseInt(choice.getChoice());
     }
 
 
@@ -81,11 +73,13 @@ public class UpdateAnimalController {
         double weight = getWeight(values.get("weight"));
         Animal oldAni = Application.getMasterList().getAnimal(id);
 
-        if(!name.equalsIgnoreCase("") && !oldAni.getName().equalsIgnoreCase(name)){
-            Application.getMasterList().getAnimal(id).setName(name);
+        if(name.equalsIgnoreCase("") || oldAni.getName().equalsIgnoreCase(name)){
+            name = oldAni.getName();
         }
-        if(Double.compare(weight, 0.0) != 0 && Double.compare(weight, oldAni.getWeight()) != 0){
-            Application.getMasterList().getAnimal(id).setWeight(weight);
+        if(Double.compare(weight, 0.0) == 0 || Double.compare(weight, oldAni.getWeight()) == 0){
+            weight = oldAni.getWeight();
         }
+
+        Application.getMasterList().getAnimal(id).update(new Animal(id, name, oldAni.getSpecies(), weight, oldAni.getDOB(), oldAni.getIntakeDate()));
     }
 }
