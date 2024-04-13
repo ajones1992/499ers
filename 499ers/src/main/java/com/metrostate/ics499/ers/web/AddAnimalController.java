@@ -43,13 +43,13 @@ public class AddAnimalController {
         // Extract the location ID from the form data
         Location loc = getLocation(locChoice);
 
-        if (true ) {
-            // Create the Animal object from form data
-            Animal animal = createAnimal(formData);
 
-            //Add the Animal to the specified Location
-            loc.addAnimal(animal);
-        }
+        // Create the Animal object from form data
+        Animal animal = createAnimal(formData);
+
+        //Add the Animal to the specified Location
+        loc.addAnimal(animal);
+
         return "redirect:dataaddedsuccess.html";
     }
 

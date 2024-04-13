@@ -27,6 +27,14 @@ public class LocationList {
         }
     }
 
+    public Animal getAnimal(int id){
+        for (Animal ani:getAllAnimals()) {
+            if(ani.getId()==id)
+                return ani;
+        }
+        return null;
+    }
+
     /**
      * Generates a list of all Animals in all Locations
      *

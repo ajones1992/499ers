@@ -1,5 +1,6 @@
 package com.metrostate.ics499.ers.web;
 
+import com.metrostate.ics499.ers.Application;
 import com.metrostate.ics499.ers.DBAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -20,7 +21,7 @@ public class DisplayAllAnimalsController {
 
     @GetMapping
     public String getAllAnimals(Model model) {
-        List<Animal> animals = DBAdapter.getAllAnimals();
+        List<Animal> animals = Application.getMasterList().getAllAnimals();
         model.addAttribute("animals", animals);
         return "displayallanimals";
     }
