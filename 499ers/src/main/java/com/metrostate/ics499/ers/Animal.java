@@ -135,11 +135,8 @@ public class Animal implements Updatable<Animal> {
     public boolean update(Animal update) {
         if (DBAdapter.update(this, update)) {
             this.setId(update.getId());
-            this.setSpecies(update.getSpecies());
             this.setName(update.getName());
             this.setWeight(update.getWeight());
-            this.setDOB(update.getDOB());
-            this.setIntakeDate(update.getIntakeDate());
             this.setExitDate(update.getExitDate());
             this.setCode(update.getCode());
             this.setRecords(update.getRecords());
