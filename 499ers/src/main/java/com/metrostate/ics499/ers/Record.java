@@ -63,7 +63,6 @@ public class Record implements Updatable<Record> {
     public boolean update(Record update) {
         if (DBAdapter.update(this, update)) {
             this.setUpdateDate(update.getUpdateDate());
-            this.setType(update.getType());
             this.setDetails(update.getDetails());
             return true;
         } else {
