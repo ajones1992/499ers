@@ -58,59 +58,6 @@ public class Animal {
         this.records.remove(record);
     }
 
-    public void updateRecord(Record updatedRecord) {
-        if (updatedRecord == null) {
-            throw new IllegalArgumentException("Record to update cannot be null");
-        }
-
-        for (int i = 0; i < this.records.size(); i++) {
-            // Check if this record has the same ID as the updatedRecord
-            if (this.records.get(i).getId() == updatedRecord.getId()) {
-                // If found, replace it with the updatedRecord
-                this.records.set(i, updatedRecord);
-                break; // Stop the loop after updating
-            }
-        }
-    }
-
-    // Add this method to match the class diagram
-    public void updateAnimalEntry() {
-        if (name != null && !name.trim().isEmpty()) {
-            this.name = name;
-        }
-        if (species != null) {
-            this.species = species;
-        }
-        if (weight > 0) {
-            this.weight = weight;
-        }
-        if (DOB != null) {
-            this.DOB = DOB;
-        }
-        if (intakeDate != null) {
-            this.intakeDate = intakeDate;
-        }
-        if (exitDate != null) {
-            this.exitDate = exitDate;
-        }
-        if (code != null) {
-            this.code = code;
-        }
-    }
-
-    public void synchronizeWithDatabase(DBAdapter dbAdapter) {
-        boolean success = dbAdapter.updateAnimal(this);
-        if (!success) {
-            // Handle failure (throw an exception, log an error, etc.)
-            System.err.println("Failed to update animal in database.");
-        }
-    }
-
-    public void handleAdoption(LocalDate adoptionDate, Types.ExitCode exitCode) {
-        this.exitDate = adoptionDate;
-        this.code = exitCode; // Assuming Types.ExitCode.ADOPT represents a successful adoption
-    }
-
     public int getId() {
         return id;
     }
@@ -131,10 +78,6 @@ public class Animal {
         return species;
     }
 
-    public void setSpecies(Types.SpeciesAvailable species) {
-        this.species = species;
-    }
-
     public double getWeight() {
         return weight;
     }
@@ -147,16 +90,8 @@ public class Animal {
         return DOB;
     }
 
-    public void setDOB(LocalDate DOB) {
-        this.DOB = DOB;
-    }
-
     public LocalDate getIntakeDate() {
         return intakeDate;
-    }
-
-    public void setIntakeDate(LocalDate intakeDate) {
-        this.intakeDate = intakeDate;
     }
 
     public LocalDate getExitDate() {

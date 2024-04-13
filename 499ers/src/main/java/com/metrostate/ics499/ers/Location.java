@@ -14,11 +14,6 @@ public class Location {
     private List<Animal> animals;
     private int maxCapacity;
 
-    // No-argument constructor
-    public Location() {
-        super();
-    }
-
     public static void setStartid(int start) {
         idCounter = start;
     }
@@ -88,16 +83,6 @@ public class Location {
 
     public boolean removeSpecies(Types.SpeciesAvailable takeaway){
         return species.remove(takeaway);
-    }
-
-    public String showAnimals(){
-        String str = "Location: " + id + "\n";
-
-        for (Animal ani: animals) {
-            str += ani.toString();
-            str += "\n";
-        }
-        return str;
     }
 
     // GETTERS AND SETTERS ############################################################################################
