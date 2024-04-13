@@ -75,20 +75,4 @@ public class AddLocationController {
             list.add(Types.SpeciesAvailable.RABBIT);
         return list;
     }
-
-    public boolean handlesDog(Object obj){
-        return String.valueOf(obj).contains("DOG");
-    }
-
-    public boolean handlesCat(Object obj){
-        return String.valueOf(obj).contains("CAT");
-    }
-
-    public boolean handlesBird(Object obj){
-        return String.valueOf(obj).contains("BIRD");
-    }
-
-    public boolean handlesRabbit(Object obj){
-        return String.valueOf(obj).contains("RABBIT");
-    }
 }
