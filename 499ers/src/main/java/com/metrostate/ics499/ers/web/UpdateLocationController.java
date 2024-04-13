@@ -51,7 +51,7 @@ public class UpdateLocationController {
         
         log.info("Updating location: {}", location);
 
-        if (DBAdapter.update(editLocation, location)) {
+        if (editLocation.update(location)) {
             redirectAttributes.addFlashAttribute("message", "Location updated successfully.");
         } else {
             redirectAttributes.addFlashAttribute("error", "Failed to update location.");

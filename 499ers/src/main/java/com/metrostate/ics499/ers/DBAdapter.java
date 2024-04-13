@@ -146,28 +146,32 @@ public class DBAdapter {
     /**
      * Updates a Location in the database to match the updated Location.
      *
-     * @param oldLoc The old Location with no modified fields
+     * @param original The old Location with no modified fields
      * @param updatedLoc The updated Location with modified fields
      * @return true if the operation was successful
      */
-    public static boolean update(Location oldLoc, Location updatedLoc) {
+    public static boolean update(Location original, Location updatedLoc) {
         StringBuffer updateStatement = new StringBuffer("UPDATE Location SET ");
-        if (!(oldLoc.getName().equals(updatedLoc.getName()))) {
+        if (!(original.getName().equals(updatedLoc.getName()))) {
             updateStatement.append(String.format("Location_Name = '%s',", updatedLoc.getName()));
         }
-        if (!(oldLoc.getType().toString().equals(updatedLoc.getType().toString()))) {
+        if (!(original.getType().toString().equals(updatedLoc.getType().toString()))) {
             updateStatement.append(String.format("Location_Type = '%s',", updatedLoc.getType().toString()));
         }
-        if (!(oldLoc.getAddress().equals(updatedLoc.getAddress()))) {
+        if (!(original.getAddress().equals(updatedLoc.getAddress()))) {
             updateStatement.append(String.format("Address = '%s',", updatedLoc.getAddress()));
         }
-        if (oldLoc.getMaxCapacity() != updatedLoc.getMaxCapacity()) {
+        if (original.getMaxCapacity() != updatedLoc.getMaxCapacity()) {
             updateStatement.append(String.format("Capacity = '%d',", updatedLoc.getMaxCapacity()));
         }
         updateStatement.deleteCharAt(updateStatement.length() - 1);
-        updateStatement.append(String.format(" WHERE Location_ID = %d;", oldLoc.getId()));
-        template.execute(updateStatement.toString());
-        return true;
+        updateStatement.append(String.format(" WHERE Location_ID = %d;", original.getId()));
+        try {
+            template.execute(updateStatement.toString());
+            return true;
+        } catch (DataAccessException e) {
+            return false;
+        }
     }
 
     /**
@@ -201,8 +205,12 @@ public class DBAdapter {
         }
         updateStatement.deleteCharAt(updateStatement.length() - 1);
         updateStatement.append(String.format(" WHERE Animal_ID = %d;", original.getId()));
-        template.execute(updateStatement.toString());
-        return true;
+        try {
+            template.execute(updateStatement.toString());
+            return true;
+        } catch (DataAccessException e) {
+            return false;
+        }
     }
 
     /**
@@ -222,8 +230,12 @@ public class DBAdapter {
         }
         updateStatement.deleteCharAt(updateStatement.length() - 1);
         updateStatement.append(String.format(" WHERE Animal_ID = %d;", original.getId()));
-        template.execute(updateStatement.toString());
-        return true;
+        try {
+            template.execute(updateStatement.toString());
+            return true;
+        } catch (DataAccessException e) {
+            return false;
+        }
     }
 
     /**
