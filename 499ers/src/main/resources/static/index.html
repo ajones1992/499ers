@@ -2,23 +2,56 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Action Selection</title>
+    <title>Animal Rescue Collective</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+
     <style>
+        .hero {
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            font-family: 'Indie Flower', cursive;
+            font-weight: bold;
+        }
+
+        .hero h2 {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
         .links-container {
             display: grid;
-            grid-template-columns: repeat(2, auto);
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 20px;
-            justify-content: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .links-container a {
+            padding: 1rem;
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            font-size: 0.9rem;
+            color: #627d98;
         }
     </style>
 </head>
 <body>
+<div class="hero">
     <h1>Animal Rescue Collective</h1>
+</div>
 
-    <h2>Please Select an Option:</h2>
-
-    <div class="links-container">
+<div class="links-container">
     <a href="/addlocation">Add Location</a>
     <a href="/addanimal">Add Animal</a>
     <a href="/addrecord">Add Record</a>
@@ -31,7 +64,10 @@
     <a href="/searchanimal">Search for Animals</a>
     <a href="/searchlocation">Search for Locations</a>
     <a href="/searchrecord">Search for Records</a>
-    </div>
+</div>
 
+<footer>
+    Helping Paws & Hearts - One Animal at a Time
+</footer>
 </body>
 </html>
