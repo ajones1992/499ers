@@ -13,6 +13,15 @@
             margin: auto;
         }
 
+        .input-container textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+            margin-bottom: 1rem;
+        }
+
     </style>
 </head>
 <body>
@@ -26,17 +35,23 @@
 
         <p>Select the record type:</p>
         <div class="input-container">
-            <input type="radio" id="MEDICAL" name="record_type" value="MEDICAL">
-            <label for="MEDICAL">Medical</label><br>
-            <input type="radio" id="BEHAVIORAL" name="record_type" value="BEHAVIORAL">
-            <label for="BEHAVIORAL">Behavioral</label><br>
-            <input type="radio" id="OTHER" name="record_type" value="OTHER">
-            <label for="OTHER">Other</label><br>
-        </div> <br>
+            <label for="MEDICAL">
+                <input type="radio" id="MEDICAL" name="record_type" value="MEDICAL">
+                Medical
+            </label>
+            <label for="BEHAVIORAL">
+                <input type="radio" id="BEHAVIORAL" name="record_type" value="BEHAVIORAL">
+                Behavioral
+            </label>
+            <label for="OTHER">
+                <input type="radio" id="OTHER" name="record_type" value="OTHER">
+                Other
+            </label>
+        </div>
 
         <div class="input-container">
-            <label for="textbox">Enter the details of the record:</label> <br>
-            <textarea id="textbox" name="textbox" rows="5" cols="50"></textarea> <br>
+            <label for="textbox">Enter the details of the record:</label>
+            <textarea id="textbox" name="textbox" rows="5" cols="50"></textarea>
         </div>
 
         <div class="input-container">

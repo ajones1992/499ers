@@ -4,6 +4,46 @@
     <meta charset="UTF-8">
     <title>ShelterApp: Search for Location</title>
     <link rel="stylesheet" th:href="@{../styles.css}" />
+    <style>
+        .form-container {
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            width: 400px;
+            margin: auto;
+        }
+
+        .radio-group {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 1rem;
+        }
+
+        .radio-group label {
+            font-weight: 600;
+        }
+
+        .input-container {
+            margin-bottom: 1rem;
+        }
+
+        .input-container label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-container input[type="text"],
+        .input-container input[type="number"],
+        .input-container input[type="date"],
+        .input-container select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 2px solid #e4e7eb;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+    </style>
+
 </head>
 <body>
 <h1>Search for Location: </h1>
@@ -24,12 +64,12 @@
 <table>
     <thead>
     <tr>
-        <th>ID|</th>
-        <th>Name|</th>
-        <th>Type|</th>
-        <th>Address|</th>
-        <th>Max Capacity|</th>
-        <th>Species Available|</th>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Address</th>
+        <th>Max Capacity</th>
+        <th>Species Available</th>
     </tr>
     </thead>
     <tbody>
