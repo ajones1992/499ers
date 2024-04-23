@@ -65,8 +65,11 @@ public class UpdateLocationController {
     }
 
     public int getCapacity(Object obj){
-        String inputWeight = removeBrackets(String.valueOf(obj));
-        return Integer.parseInt(String.valueOf(inputWeight));
+        String inputCapacity = removeBrackets(String.valueOf(obj));
+        if(inputCapacity.equalsIgnoreCase("")){
+            return 0;
+        }
+        return Integer.parseInt(String.valueOf(inputCapacity));
     }
 
     public List<Types.SpeciesAvailable> getSpeciesHandled(MultiValueMap values) {

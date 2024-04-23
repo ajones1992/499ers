@@ -1,40 +1,94 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>ShelterApp: Update Location</title>
     <link rel="stylesheet" th:href="@{../styles.css}" />
-    <title>Update Location</title>
+    <title>ShelterApp: Update Location</title>
+    <style>
+        .form-container {
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            width: 400px;
+            margin: auto;
+        }
+
+        .radio-group {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 1rem;
+        }
+
+        .radio-group label {
+            font-weight: 600;
+        }
+
+        .input-container {
+            margin-bottom: 1rem;
+        }
+
+        .input-container label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-container input[type="text"],
+        .input-container input[type="number"],
+        .input-container input[type="date"],
+        .input-container select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 2px solid #e4e7eb;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+    </style>
 
 </head>
 <body>
-<h1>Update Location</h1>
+<h1>Please enter the information to update a location:</h1>
+<div class="form-container">
+    <form th:action="@{updatelocation}" method="post" th:object="${locChoice}">
+        <p>Select the location to update:</p>
+        <select th:field="*{choice}" name = "locID">
+            <option th:each="loc : ${locOptions}" th:value="${loc.choiceID}" th:text="${loc.choice}"></option>
+        </select>
 
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Address</th>
-        <th>Capacity</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="location : ${locations}">
-        <td th:text="${location.id}"></td>
-        <td th:text="${location.name}"></td>
-        <td th:text="${location.type}"></td>
-        <td th:text="${location.address}"></td>
-        <td th:text="${location.maxCapacity}"></td>
-        <td>
-            <a th:href="@{/updatelocation/edit/{id}(id=${location.id})}">Edit</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+        <div class="input-container">
+            <label for="name">Enter the location name:</label>
+            <input type="text" id="name" name="name" placeholder="Name"/> <br>
+        </div>
 
-<a href="/index.html">Back to Home</a>
+        <div class="input-container">
+            <label for="address">Enter the location address:</label>
+            <input type="text" id="address" name="address" placeholder="Address"/> <br>
+        </div>
+
+        <div class="input-container">
+            <label for="capacity">Enter the location's max capacity:</label>
+            <input type="number" id="capacity" step="1" name="capacity" placeholder="0"/> <br>
+        </div>
+
+        <p>Select the animal types handled at this location: </p>
+        <div>
+            <input type="hidden" name="dog" value="no">
+            <input type="checkbox" id="dog" name="dog" value="DOG">
+            <label for="dog">Dog</label>
+            <input type="hidden" name="cat" value="no">
+            <input type="checkbox" id="cat" name="cat" value="CAT">
+            <label for="cat">Cat</label>
+            <input type="hidden" name="bird" value="no">
+            <input type="checkbox" id="bird" name="bird" value="BIRD">
+            <label for="bird">Bird</label>
+            <input type="hidden" name="rabbit" value="no">
+            <input type="checkbox" id="rabbit" name="rabbit" value="RABBIT">
+            <label for="rabbit">Rabbit</label>
+        </div>
+
+        <div class="input-container">
+            <input type="submit" value="Submit">
+        </div>
+    </form>
+</div>
 </body>
 </html>
