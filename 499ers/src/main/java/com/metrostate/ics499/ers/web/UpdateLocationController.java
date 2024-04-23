@@ -74,13 +74,13 @@ public class UpdateLocationController {
 
     public List<Types.SpeciesAvailable> getSpeciesHandled(MultiValueMap values) {
         List<Types.SpeciesAvailable> list = new ArrayList<>();
-        if(values.get("dog") != null)
+        if(String.valueOf(values.get("dog")).contains("DOG"))
             list.add(Types.SpeciesAvailable.DOG);
-        if(values.get("cat") != null)
+        if(String.valueOf(values.get("cat")).contains("CAT"))
             list.add(Types.SpeciesAvailable.CAT);
-        if(values.get("bird") != null)
+        if(String.valueOf(values.get("bird")).contains("BIRD"))
             list.add(Types.SpeciesAvailable.BIRD);
-        if(values.get("rabbit") != null)
+        if(String.valueOf(values.get("rabbit")).contains("RABBIT"))
             list.add(Types.SpeciesAvailable.RABBIT);
         return list;
     }
@@ -103,6 +103,8 @@ public class UpdateLocationController {
         if(capacity == 0 || oldLoc.getMaxCapacity() == capacity){
             capacity = oldLoc.getMaxCapacity();
         }
-        Application.getMasterList().getLocation(id).update(new Location(oldLoc.getId(), oldLoc.getType(), name, address, capacity, list));
+
+        Location updateLoc = new Location(oldLoc.getId(), oldLoc.getType(), name, address, capacity, list);
+        Application.getMasterList().getLocation(id).update(updateLoc);
     }
 }

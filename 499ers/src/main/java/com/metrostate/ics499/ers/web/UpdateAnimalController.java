@@ -73,7 +73,7 @@ public class UpdateAnimalController {
         double weight = getWeight(values.get("weight"));
         Animal oldAni = Application.getMasterList().getAnimal(id);
 
-        if(name.equalsIgnoreCase("") || oldAni.getName().equalsIgnoreCase(name)){
+        if(name.equalsIgnoreCase("") || oldAni.getName().equals(name)){
             name = oldAni.getName();
         }
         if(Double.compare(weight, 0.0) == 0 || Double.compare(weight, oldAni.getWeight()) == 0){

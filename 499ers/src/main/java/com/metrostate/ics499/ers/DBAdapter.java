@@ -112,6 +112,26 @@ public class DBAdapter {
                         "VALUES (%d, '%s', '%s', '%s', %d);", id, name, type, address, max);
         try {
             template.execute(sqlStatement);
+            for (Types.SpeciesAvailable t : location.getSpecies()) {
+                insert(t, location);
+            }
+            return true;
+        } catch (DataAccessException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Delete relation between species and location. returns true if
+     * entry was deleted; false otherwise*
+     * @param species set species
+     * @param location set location
+     * @return true if entry deleted; false otherwise
+     */
+    public static boolean delete(Types.SpeciesAvailable species, Location location) {
+        String sqlStatement = String.format("DELETE FROM Species_Available" +"WHERE Location_ID = %d AND Species_Type = '%s'", location.getId(), species.toString());
+        try {
+            template.execute(sqlStatement);
             return true;
         } catch (DataAccessException e) {
             return false;
@@ -151,6 +171,8 @@ public class DBAdapter {
      * @return true if the operation was successful
      */
     public static boolean update(Location original, Location updatedLoc) {
+        Boolean helpIns = false;
+        Boolean helpDel = false;
         StringBuffer updateStatement = new StringBuffer("UPDATE Location SET ");
         if (!(original.getName().equals(updatedLoc.getName()))) {
             updateStatement.append(String.format("Location_Name = '%s',", updatedLoc.getName()));
@@ -164,12 +186,30 @@ public class DBAdapter {
         if (original.getMaxCapacity() != updatedLoc.getMaxCapacity()) {
             updateStatement.append(String.format("Capacity = '%d',", updatedLoc.getMaxCapacity()));
         }
+        if (!(original.getSpecies().equals(updatedLoc.getSpecies()))) {
+            // this is for adding new types
+            for (Types.SpeciesAvailable type : updatedLoc.getSpecies()) {
+                if (!(original.getSpecies().contains(type))) {
+                    helpIns = insert(type, original);
+                }
+            }
+            // this is for removing missing types
+            for (Types.SpeciesAvailable type : original.getSpecies()) {
+                if (!(updatedLoc.getSpecies().contains(type))) {
+                    // remove from species available table this type
+                    helpDel = delete(type, original);
+                }
+            }
+        }
         updateStatement.deleteCharAt(updateStatement.length() - 1);
         updateStatement.append(String.format(" WHERE Location_ID = %d;", original.getId()));
         try {
             template.execute(updateStatement.toString());
             return true;
         } catch (DataAccessException e) {
+            if(helpIns || helpDel){
+                return true;
+            }
             return false;
         }
     }
@@ -295,7 +335,7 @@ public class DBAdapter {
         String address = rs.getString("Address");
         int capacity = rs.getInt("Capacity");
         Location location = new Location(id, type, name, address,
-                capacity, null);
+                capacity, new ArrayList<Types.SpeciesAvailable>());
         List<Types.SpeciesAvailable> species = querySpeciesAvailable(location);
         location.setSpecies(species);
         List<Animal> animals = queryAnimal("Location_Id", Integer.toString(location.getId()));

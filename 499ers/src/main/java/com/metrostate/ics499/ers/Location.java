@@ -135,7 +135,10 @@ public class Location implements Updatable<Location> {
     }
 
     public void setSpecies(List<Types.SpeciesAvailable> species) {
-        this.species = species;
+        if (species != null && this.species != null) {
+            this.species.clear();
+            this.species.addAll(species);
+        }
     }
 
     public List<Animal> getAnimals(){
@@ -162,7 +165,6 @@ public class Location implements Updatable<Location> {
             this.setAddress(update.getAddress());
             this.setMaxCapacity(update.getMaxCapacity());
             this.setSpecies(update.getSpecies());
-            this.setAnimals(update.getAnimals());
             return true;
         } else {
             return false;

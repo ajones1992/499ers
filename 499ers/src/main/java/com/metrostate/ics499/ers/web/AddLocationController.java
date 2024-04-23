@@ -65,13 +65,13 @@ public class AddLocationController {
 
     public List<Types.SpeciesAvailable> getSpeciesHandled(MultiValueMap values) {
         List<Types.SpeciesAvailable> list = new ArrayList<>();
-        if(values.get("dog") != null)
+        if(String.valueOf(values.get("dog")).contains("DOG"))
             list.add(Types.SpeciesAvailable.DOG);
-        if(values.get("cat") != null)
+        if(String.valueOf(values.get("cat")).contains("CAT"))
             list.add(Types.SpeciesAvailable.CAT);
-        if(values.get("bird") != null)
+        if(String.valueOf(values.get("bird")).contains("BIRD"))
             list.add(Types.SpeciesAvailable.BIRD);
-        if(values.get("rabbit") != null)
+        if(String.valueOf(values.get("rabbit")).contains("RABBIT"))
             list.add(Types.SpeciesAvailable.RABBIT);
         return list;
     }
