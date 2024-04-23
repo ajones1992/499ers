@@ -103,7 +103,6 @@ public class UpdateLocationController {
         if(capacity == 0 || oldLoc.getMaxCapacity() == capacity){
             capacity = oldLoc.getMaxCapacity();
         }
-
         Location updateLoc = new Location(oldLoc.getId(), oldLoc.getType(), name, address, capacity, list);
         Application.getMasterList().getLocation(id).update(updateLoc);
     }

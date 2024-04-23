@@ -29,7 +29,7 @@ public class AddLocationController {
     }
 
     private Location createLocation(MultiValueMap values) {
-        Types.LocType type = getType(values.get("loc-type"));
+        Types.LocType type = getType(values.get("loc_type"));
         String name = getName(values.get("name"));
         String address = getAddress(values.get("address"));
         int capacity = getCapacity(values.get("capacity"));

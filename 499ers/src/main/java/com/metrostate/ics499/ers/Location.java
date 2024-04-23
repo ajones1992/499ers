@@ -153,7 +153,8 @@ public class Location implements Updatable<Location> {
     }
 
     public String toString(){
-        return id + ": " + name;
+        return String.format("LOCATION [ id = %d, name = %s, Type = %s, address = %s, capacity = %d, species = %s, animal count = %d]",
+                id, name, type.toString(), address, maxCapacity, species.toString(), animals.size());
     }
 
     @Override

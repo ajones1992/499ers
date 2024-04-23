@@ -71,8 +71,12 @@ public class DBAdapter {
         String sqlStatement = String.format("INSERT INTO Animal " +
                         "VALUES (%d, '%s', '%s', %f, '%s', '%s', '%s', '%s', %d);",
                 id, name, type, weight, dob, intake, exit, code, locId);
-        template.execute(sqlStatement);
-        return true;
+        try {
+            template.execute(sqlStatement);
+            return true;
+        } catch (DataAccessException e) {
+            return false;
+        }
     }
 
     /**
@@ -112,8 +116,10 @@ public class DBAdapter {
                         "VALUES (%d, '%s', '%s', '%s', %d);", id, name, type, address, max);
         try {
             template.execute(sqlStatement);
-            for (Types.SpeciesAvailable t : location.getSpecies()) {
-                insert(t, location);
+            for (Types.SpeciesAvailable species : location.getSpecies()) {
+                boolean hasSucceeded;
+                hasSucceeded = insert(species, location);
+                if (!hasSucceeded) return false;
             }
             return true;
         } catch (DataAccessException e) {
@@ -129,7 +135,8 @@ public class DBAdapter {
      * @return true if entry deleted; false otherwise
      */
     public static boolean delete(Types.SpeciesAvailable species, Location location) {
-        String sqlStatement = String.format("DELETE FROM Species_Available" +"WHERE Location_ID = %d AND Species_Type = '%s'", location.getId(), species.toString());
+        String sqlStatement = String.format("DELETE FROM Species_Available" +
+                " WHERE Location_ID = %d AND Species_Type = '%s'", location.getId(), species.toString());
         try {
             template.execute(sqlStatement);
             return true;
@@ -171,45 +178,51 @@ public class DBAdapter {
      * @return true if the operation was successful
      */
     public static boolean update(Location original, Location updatedLoc) {
-        Boolean helpIns = false;
-        Boolean helpDel = false;
+        boolean changeLocationTable = false;
         StringBuffer updateStatement = new StringBuffer("UPDATE Location SET ");
         if (!(original.getName().equals(updatedLoc.getName()))) {
+            changeLocationTable = true;
             updateStatement.append(String.format("Location_Name = '%s',", updatedLoc.getName()));
         }
         if (!(original.getType().toString().equals(updatedLoc.getType().toString()))) {
+            changeLocationTable = true;
             updateStatement.append(String.format("Location_Type = '%s',", updatedLoc.getType().toString()));
         }
         if (!(original.getAddress().equals(updatedLoc.getAddress()))) {
+            changeLocationTable = true;
             updateStatement.append(String.format("Address = '%s',", updatedLoc.getAddress()));
         }
         if (original.getMaxCapacity() != updatedLoc.getMaxCapacity()) {
+            changeLocationTable = true;
             updateStatement.append(String.format("Capacity = '%d',", updatedLoc.getMaxCapacity()));
-        }
-        if (!(original.getSpecies().equals(updatedLoc.getSpecies()))) {
-            // this is for adding new types
-            for (Types.SpeciesAvailable type : updatedLoc.getSpecies()) {
-                if (!(original.getSpecies().contains(type))) {
-                    helpIns = insert(type, original);
-                }
-            }
-            // this is for removing missing types
-            for (Types.SpeciesAvailable type : original.getSpecies()) {
-                if (!(updatedLoc.getSpecies().contains(type))) {
-                    // remove from species available table this type
-                    helpDel = delete(type, original);
-                }
-            }
         }
         updateStatement.deleteCharAt(updateStatement.length() - 1);
         updateStatement.append(String.format(" WHERE Location_ID = %d;", original.getId()));
         try {
-            template.execute(updateStatement.toString());
+            if (changeLocationTable) {
+                template.execute(updateStatement.toString());
+            }
+            if (!(original.getSpecies().equals(updatedLoc.getSpecies()))) {
+                // this is for adding new types
+                for (Types.SpeciesAvailable type : updatedLoc.getSpecies()) {
+                    boolean hasSucceeded = true;
+                    if (!(original.getSpecies().contains(type))) {
+                        hasSucceeded = insert(type, original);
+                    }
+                    if (!hasSucceeded) return false;
+
+                }
+                // this is for removing missing types
+                for (Types.SpeciesAvailable type : original.getSpecies()) {
+                    boolean hasSucceeded = true;
+                    if (!(updatedLoc.getSpecies().contains(type))) {
+                        hasSucceeded = delete(type, original);
+                    }
+                    if (!hasSucceeded) return false;
+                }
+            }
             return true;
         } catch (DataAccessException e) {
-            if(helpIns || helpDel){
-                return true;
-            }
             return false;
         }
     }
@@ -223,30 +236,48 @@ public class DBAdapter {
      */
     public static boolean update(Animal original, Animal updatedAnimal) {
         StringBuffer updateStatement = new StringBuffer("UPDATE Animal SET ");
+        boolean changeAnimalTable = false;
         if (!(original.getName().equals(updatedAnimal.getName()))) {
+            changeAnimalTable = true;
             updateStatement.append(String.format("Animal_Name = '%s',", updatedAnimal.getName()));
         }
         if (original.getWeight() != updatedAnimal.getWeight()) {
+            changeAnimalTable = true;
             updateStatement.append(String.format("Weight = '%f',", updatedAnimal.getWeight()));
         }
         if (!(original.getDOB().equals(updatedAnimal.getDOB()))) {
+            changeAnimalTable = true;
             updateStatement.append(String.format("DOB = '%s',", updatedAnimal.getDOB().toString()));
         }
         if (!(original.getIntakeDate().equals(updatedAnimal.getIntakeDate()))) {
+            changeAnimalTable = true;
             updateStatement.append(String.format("Received_Date = '%s',", updatedAnimal.getIntakeDate().toString()));
         }
         if (original.getExitDate() == null ||
                 !(original.getExitDate().equals(updatedAnimal.getExitDate()))) {
+            changeAnimalTable = true;
             updateStatement.append(String.format("Exit_Date = '%s',", updatedAnimal.getExitDate()));
         }
         if (original.getCode() == null ||
                 !(original.getCode().toString().equals(updatedAnimal.getCode().toString()))) {
+            changeAnimalTable = true;
             updateStatement.append(String.format("Exit_Code = '%s',", updatedAnimal.getCode()));
         }
         updateStatement.deleteCharAt(updateStatement.length() - 1);
         updateStatement.append(String.format(" WHERE Animal_ID = %d;", original.getId()));
         try {
-            template.execute(updateStatement.toString());
+            if (changeAnimalTable) {
+                template.execute(updateStatement.toString());
+            }
+            if (!(original.getRecords().equals(updatedAnimal.getRecords()))) {
+                for (Record update : updatedAnimal.getRecords()) {
+                    if (original.getRecords().contains(update)) {
+                        boolean hasSucceeded;
+                        hasSucceeded = insert(update, original);
+                        if (!hasSucceeded) return false;
+                    }
+                }
+            }
             return true;
         } catch (DataAccessException e) {
             return false;
@@ -532,7 +563,7 @@ public class DBAdapter {
                         rs.getString("Location_Name"),
                         rs.getString("Address"),
                         rs.getInt("Capacity"),
-                        null
+                        new ArrayList<Types.SpeciesAvailable>()
                 ));
 
         // Assuming you have a method to fetch species for a given locationId
@@ -549,34 +580,6 @@ public class DBAdapter {
         // For example, query a junction table that links locations to species, if that's how your data is structured
         return new ArrayList<>(); // Return the actual list of species
     }
-
-
-//    public boolean updateLocation(Location location) {
-//        String sql = "UPDATE Location SET " +
-//                "Location_Name = ?, " +
-//                "Location_Type = ?, " +
-//                "Address = ?, " +
-//                "Capacity = ? " +
-//                "WHERE Location_ID = ?";
-//
-//        try {
-//            // Execute the update statement using JdbcTemplate
-//            int rowsAffected = template.update(
-//                    sql,
-//                    location.getName(),
-//                    location.getType().toString(),
-//                    location.getAddress(),
-//                    location.getMaxCapacity(),
-//                    location.getId()
-//            );
-//            return rowsAffected > 0; // If one or more rows are affected, the update is successful
-//        } catch (Exception e) {
-//            // Log the exception and return false, indicating the update failed
-//            // You can use a logging framework or simply print the stack trace
-//            e.printStackTrace();
-//            return false;
-//        }
-//    }
 
     public boolean updateLocation(Location location) {
         final Logger log = LoggerFactory.getLogger(DBAdapter.class);

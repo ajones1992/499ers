@@ -139,7 +139,6 @@ public class Animal implements Updatable<Animal> {
             this.setWeight(update.getWeight());
             this.setExitDate(update.getExitDate());
             this.setCode(update.getCode());
-            this.setRecords(update.getRecords());
             return true;
         } else {
             return false;
